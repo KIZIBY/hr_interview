@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Status colors</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;font-family:var(--font-sans);color:var(--x5-ink)}
+  h3{font-size:11px;font-weight:500;color:var(--x5-ink-quiet);margin:0 0 10px;letter-spacing:.04em}
+  .group{margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .swatch{border-radius:10px;overflow:hidden;border:1px solid var(--x5-divider)}
+  .chip{height:72px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;font-size:13px}
+  .meta{padding:9px 11px;background:#fff}
+  .name{font-size:12px;font-weight:500;line-height:1.2;margin-bottom:2px}
+  .hex{font-size:11px;color:var(--x5-ink-quiet);font-variant-numeric:tabular-nums}
+  .role{font-size:10px;color:var(--x5-ink-quiet);margin-top:2px}
+</style></head>
+<body>
+  <div class="group">
+    <h3>Success — выполнено, в плане, рост</h3>
+    <div class="grid">
+      <div class="swatch"><div class="chip" style="background:#048C45">Сильный сигнал</div><div class="meta"><div class="name">Success deep</div><div class="hex">#048C45</div><div class="role">Финансовая динамика</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#1E8737">В плане</div><div class="meta"><div class="name">Success</div><div class="hex">#1E8737</div><div class="role">Дельты, KPI</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#5FAF2D">Положительно</div><div class="meta"><div class="name">Success bright</div><div class="hex">#5FAF2D</div><div class="role">Подсветка тренда</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#C3EB91;color:#0F5A05">Спокойно</div><div class="meta"><div class="name">Mint</div><div class="hex">#C3EB91</div><div class="role">Заливка ячейки</div></div></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Warning — внимание, риски, отклонения</h3>
+    <div class="grid">
+      <div class="swatch"><div class="chip" style="background:#F5A000">Под наблюдением</div><div class="meta"><div class="name">Warn</div><div class="hex">#F5A000</div><div class="role">Янтарный статус</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FA8223">Тревога</div><div class="meta"><div class="name">Warn bright</div><div class="hex">#FA8223</div><div class="role">Бар диаграммы</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFE5C7;color:#A45200">Подсветка</div><div class="meta"><div class="name">Warn soft</div><div class="hex">#FFE5C7</div><div class="role">Заливка ячейки</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#A45200">Подпись</div><div class="meta"><div class="name">Warn deep</div><div class="hex">#A45200</div><div class="role">Текст на soft</div></div></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Danger / Risk — блокеры, провалы, превышение</h3>
+    <div class="grid">
+      <div class="swatch"><div class="chip" style="background:#E52825">Блокер</div><div class="meta"><div class="name">Danger</div><div class="hex">#E52825</div><div class="role">Критический риск</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F23024">Падение</div><div class="meta"><div class="name">Danger bright</div><div class="hex">#F23024</div><div class="role">Дельта вниз</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFD7D5;color:#9A1411">Подсветка</div><div class="meta"><div class="name">Danger soft</div><div class="hex">#FFD7D5</div><div class="role">Заливка ячейки</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#9A1411">Подпись</div><div class="meta"><div class="name">Danger deep</div><div class="hex">#9A1411</div><div class="role">Текст на soft</div></div></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <h3>Info / Neutral — информационные акценты</h3>
+    <div class="grid">
+      <div class="swatch"><div class="chip" style="background:#6CA4C3">Информация</div><div class="meta"><div class="name">Info</div><div class="hex">#6CA4C3</div><div class="role">Нейтральный сигнал</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#94BBD1;color:#1F4D6B">Подсветка</div><div class="meta"><div class="name">Info soft</div><div class="hex">#94BBD1</div><div class="role">Заливка</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#DC2D50">Выделено</div><div class="meta"><div class="name">Magenta</div><div class="hex">#DC2D50</div><div class="role">Альтернативный акцент</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#50148C">Стратегия</div><div class="meta"><div class="name">Purple</div><div class="hex">#50148C</div><div class="role">Точка фокуса</div></div></div>
+    </div>
+  </div>
+</body></html>

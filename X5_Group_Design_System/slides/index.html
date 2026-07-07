@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><title>X5 Strategy — Slide deck</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<script src="../deck-stage.js" defer></script>
+<style>
+  html,body{margin:0;background:#101218;color:#fff;font-family:var(--font-sans)}
+  section{position:relative;width:1280px;height:720px;background:#fff;color:var(--x5-ink);overflow:hidden;font-family:var(--font-sans)}
+  .body{position:absolute;left:44px;right:44px;top:44px;bottom:100px;display:flex;flex-direction:column}
+  h1{margin:0;font-weight:500}
+  h2{margin:0;font-weight:500;font-size:36px;line-height:1.1;letter-spacing:-.005em}
+  .footer{position:absolute;left:44px;right:44px;bottom:44px;height:36px;display:flex;align-items:center;justify-content:space-between}
+  .footer img{height:24px}
+  .footer .pg{font-size:12px;color:var(--x5-ink-quiet);font-weight:500;font-variant-numeric:tabular-nums}
+
+  /* TITLE */
+  .t-wash{position:absolute;inset:auto -120px -200px auto;width:780px;height:780px;
+    background:radial-gradient(closest-side,rgba(195,235,145,.55),rgba(155,195,15,.18) 45%,rgba(255,255,255,0) 75%);pointer-events:none}
+  .t-inner{position:absolute;left:44px;right:44px;top:44px;display:flex;flex-direction:column}
+  .t-h1{font-size:120px;line-height:.86;letter-spacing:-.02em;font-weight:500;max-width:1100px;margin:0;position:relative}
+  .t-meta{margin-top:56px;display:flex;flex-direction:column;align-items:flex-start;gap:24px;position:relative}
+  .t-sub{font-size:32px;font-weight:500;color:var(--x5-ink);line-height:1.1}
+  .t-badge{display:inline-flex;align-items:center;height:48px;padding:0 22px;background:var(--x5-logo-mono-ink);color:#fff;border-radius:999px;font-size:18px;font-weight:500}
+  .t-logo{position:absolute;left:44px;bottom:44px;height:36px;z-index:2}
+
+  /* CONTENT */
+  .c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1;margin-top:8px}
+  .c-card{padding:22px;border-radius:14px;background:#fff;border:1px solid var(--x5-divider);display:flex;flex-direction:column;gap:10px}
+  .c-card.alt{background:#EFEFF0;border-color:transparent}
+  .c-card.green{background:#EBF2D0;border-color:transparent}
+  .c-eye{font-size:12px;font-weight:600;color:var(--x5-ink-quiet)}
+  .c-title{font-size:20px;font-weight:500;line-height:1.2}
+  .c-body{font-size:13px;line-height:1.5;color:var(--x5-ink-muted);margin:0}
+  .c-stage{display:inline-flex;width:28px;height:28px;border-radius:999px;background:var(--x5-logo-mono-ink);color:#fff;align-items:center;justify-content:center;font-size:12px;font-weight:500;margin-bottom:4px}
+
+  /* TWO-COL */
+  .tc{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;margin-top:8px}
+  .tc-col{padding:24px;border-radius:14px;border:1px solid var(--x5-divider);display:flex;flex-direction:column;gap:14px}
+  .tc-col.future{background:#EBF2D0;border-color:transparent}
+  .tc-label{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;align-self:flex-start}
+  .tc-label.gray{background:#EFEFF0;color:var(--x5-logo-mono-ink)}
+  .tc-label.green{background:#0F5A05;color:#fff}
+  .tc-h3{font-size:24px;font-weight:500;line-height:1.15;margin:0}
+  .tc-pt{display:flex;gap:10px;font-size:14px;line-height:1.45}
+  .tc-pt .b{flex-shrink:0;width:6px;height:6px;border-radius:99px;background:var(--x5-logo-mono-ink);margin-top:8px}
+  .tc-col.future .tc-pt .b{background:#0F5A05}
+
+  /* STATEMENT */
+  .st-h{margin:auto 0;max-width:1100px}
+  .st-kicker{font-size:14px;font-weight:600;color:var(--x5-grass);margin-bottom:18px}
+  .st-h1{font-size:80px;line-height:.92;letter-spacing:-.02em;margin:0;font-weight:500}
+  .st-h1 em{font-style:normal;color:var(--x5-grass)}
+  .st-sub{margin-top:24px;font-size:18px;line-height:1.5;color:var(--x5-ink-muted);max-width:780px}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;flex:1;margin-top:8px}
+  .kpi{padding:24px;border-radius:16px;background:#fff;border:1px solid var(--x5-divider);display:flex;flex-direction:column;gap:10px}
+  .kpi.lead{background:#EBF2D0;border-color:transparent}
+  .kpi-eye{font-size:12px;font-weight:600;color:var(--x5-ink-quiet)}
+  .num{font-size:64px;font-weight:500;line-height:.95;letter-spacing:-.02em;margin:6px 0 0}
+  .kpi.lead .num{color:#0F5A05}
+  .unit{font-size:16px;font-weight:500;color:var(--x5-ink-muted);line-height:1.2;margin-top:6px}
+  .desc{font-size:13px;line-height:1.45;color:var(--x5-ink-muted);margin-top:auto}
+  .delta{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#1E8737;margin-top:auto}
+</style></head>
+<body>
+<deck-stage>
+
+  <!-- 01 TITLE (3_light) -->
+  <section data-screen-label="01 Title">
+    <div class="t-wash"></div>
+    <div class="t-inner">
+      <h1 class="t-h1">AI-агент как единая точка покупок</h1>
+      <div class="t-meta">
+        <div class="t-sub">Презентация технологическому комитету</div>
+        <span class="t-badge">Апрель 2026</span>
+      </div>
+    </div>
+    <img class="t-logo" src="../assets/logos/x5-logo-color.svg" alt="X5">
+  </section>
+
+  <!-- 02 CONTENT (1_light) -->
+  <section data-screen-label="02 Content">
+    <div class="body">
+      <h2>В роли звена, призванного решить проблемы как покупателя, так и поставщика — лучше, чем это делают маркетплейсы</h2>
+      <div class="c-grid">
+        <div class="c-card alt">
+          <span class="c-stage">1</span>
+          <div class="c-eye">Боль клиента</div>
+          <div class="c-title">Сложно собирать комплексные покупки</div>
+          <p class="c-body">Сравнение по цене, качеству и релевантности личным потребностям требует ручного перебора каталогов и фильтров.</p>
+        </div>
+        <div class="c-card alt">
+          <span class="c-stage">2</span>
+          <div class="c-eye">Боль клиента</div>
+          <div class="c-title">Не всегда точно знают, что им нужно</div>
+          <p class="c-body">Поиск и фильтрация не помогают формировать осмысленные наборы с учётом контекста, предпочтений и ограничений.</p>
+        </div>
+        <div class="c-card green">
+          <span class="c-stage" style="background:#0F5A05">3</span>
+          <div class="c-eye" style="color:#0F5A05">Решение</div>
+          <div class="c-title">AI-агент как единая точка покупок</div>
+          <p class="c-body" style="color:var(--x5-logo-mono-ink)">Агент собирает контекст, ведёт диалог и закрывает покупку — без переключения между приложениями.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">03</span>
+    </div>
+  </section>
+
+  <!-- 03 TWO-COLUMN (2_light) -->
+  <section data-screen-label="03 Two-column">
+    <div class="body">
+      <h2>Технологии агентского ИИ создают возможность дизрапта клиентского опыта в e-com</h2>
+      <div class="tc">
+        <div class="tc-col">
+          <span class="tc-label gray">Клиентский опыт сейчас</span>
+          <h3 class="tc-h3">Покупатель выбирает любой канал и сам собирает корзину</h3>
+          <div class="tc-pt"><span class="b"></span><span>Приложения-селлеры борются за внимание покупателя</span></div>
+          <div class="tc-pt"><span class="b"></span><span>Покупатель согласовывает доставку в приложении селлера</span></div>
+          <div class="tc-pt"><span class="b"></span><span>Весь UX — внутри приложения селлера</span></div>
+        </div>
+        <div class="tc-col future">
+          <span class="tc-label green">Клиентский опыт с AI-агентом</span>
+          <h3 class="tc-h3">Один агент закрывает контекст, выбор, оплату и доставку</h3>
+          <div class="tc-pt"><span class="b"></span><span>Покупатель формулирует задачу, не товар</span></div>
+          <div class="tc-pt"><span class="b"></span><span>Агент агрегирует shoppable-трафик и сопоставляет варианты</span></div>
+          <div class="tc-pt"><span class="b"></span><span>Сделка проходит без переключения между приложениями</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">05</span>
+    </div>
+  </section>
+
+  <!-- 04 STATEMENT (11_light) -->
+  <section data-screen-label="04 Statement">
+    <div class="body">
+      <div class="st-h">
+        <div class="st-kicker">— Гипотеза</div>
+        <h1 class="st-h1">Создаём <em>agentic-commerce</em> платформу для покупок в бизнесах Х5 — и не только</h1>
+        <p class="st-sub">Платформа объединяет shoppable-трафик внутри экосистемы Х5 и подключает внешних партнёров через единый API.</p>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">09</span>
+    </div>
+  </section>
+
+  <!-- 05 KPI (12_light) -->
+  <section data-screen-label="05 KPI dashboard">
+    <div class="body">
+      <h2>Ключевые показатели платформы к 2027 году</h2>
+      <div class="kpis">
+        <div class="kpi lead">
+          <span class="kpi-eye">Партнёров</span>
+          <div class="num">2 000</div>
+          <div class="delta">↑ +180% YoY</div>
+        </div>
+        <div class="kpi">
+          <span class="kpi-eye">SKU в каталоге</span>
+          <div class="num">3 500+</div>
+          <div class="unit">тыс.</div>
+          <div class="desc">Включая non-food и смежные категории.</div>
+        </div>
+        <div class="kpi">
+          <span class="kpi-eye">GMV B2B-агента</span>
+          <div class="num">₽ 48</div>
+          <div class="unit">млрд</div>
+          <div class="desc">Базовый сценарий, P50.</div>
+        </div>
+        <div class="kpi">
+          <span class="kpi-eye">Маржа платформы</span>
+          <div class="num">7,4</div>
+          <div class="unit">%</div>
+          <div class="desc">Take-rate с учётом инфраструктуры.</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">15</span>
+    </div>
+  </section>
+
+</deck-stage>
+</body></html>

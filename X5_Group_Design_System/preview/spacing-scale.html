@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Spacing scale</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;font-family:var(--font-sans);color:var(--x5-ink)}
+  .row{display:grid;grid-template-columns:60px 60px 1fr;gap:16px;align-items:center;padding:6px 0}
+  .label{font-size:11px;color:var(--x5-ink-quiet);font-variant-numeric:tabular-nums;font-weight:500}
+  .px{font-size:12px;color:var(--x5-ink);font-variant-numeric:tabular-nums}
+  .bar{height:14px;background:#0F5A05;border-radius:3px}
+  h2{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--x5-ink-muted);font-weight:500;margin:0 0 10px}
+</style></head>
+<body>
+  <h2>Spacing scale · base 8 px on a 1280 px slide</h2>
+  <div class="row"><div class="label">space-1</div><div class="px">4 px</div><div class="bar" style="width:4px"></div></div>
+  <div class="row"><div class="label">space-2</div><div class="px">8 px</div><div class="bar" style="width:8px"></div></div>
+  <div class="row"><div class="label">space-3</div><div class="px">12 px</div><div class="bar" style="width:12px"></div></div>
+  <div class="row"><div class="label">space-4</div><div class="px">16 px</div><div class="bar" style="width:16px"></div></div>
+  <div class="row"><div class="label">space-6</div><div class="px">24 px</div><div class="bar" style="width:24px"></div></div>
+  <div class="row"><div class="label">space-8</div><div class="px">32 px</div><div class="bar" style="width:32px"></div></div>
+  <div class="row"><div class="label">space-12</div><div class="px">48 px</div><div class="bar" style="width:48px"></div></div>
+  <div class="row"><div class="label">slide-margin</div><div class="px">44 px</div><div class="bar" style="width:44px;background:#303145"></div></div>
+</body></html>

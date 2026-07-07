@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Radii</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;font-family:var(--font-sans);color:var(--x5-ink);display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:end}
+  .item{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .box{width:96px;height:60px;background:#EFEFF0;border:1px solid var(--x5-divider)}
+  .label{font-size:11px;color:var(--x5-ink-quiet);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+  .val{font-size:13px;color:var(--x5-ink);font-variant-numeric:tabular-nums;font-weight:500}
+</style></head>
+<body>
+  <div class="item"><div class="box" style="border-radius:4px"></div><div class="val">4 px</div><div class="label">radius-xs</div></div>
+  <div class="item"><div class="box" style="border-radius:8px"></div><div class="val">8 px</div><div class="label">radius-sm</div></div>
+  <div class="item"><div class="box" style="border-radius:16px"></div><div class="val">16 px</div><div class="label">radius-card</div></div>
+  <div class="item"><div class="box" style="border-radius:999px"></div><div class="val">pill · 999</div><div class="label">date badges, pills</div></div>
+</body></html>

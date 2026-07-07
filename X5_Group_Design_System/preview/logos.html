@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>X5 — Logos</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:center}
+  .tile{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;border-radius:12px;border:1px solid var(--x5-divider)}
+  .tile img{height:36px;width:auto}
+  .tile.dark{background:var(--x5-dark-green);border-color:var(--x5-dark-green)}
+  .tile.green{background:var(--x5-mint-fade);border-color:var(--x5-mint)}
+  .label{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--x5-ink-muted);font-weight:500}
+  .tile.dark .label{color:rgba(255,255,255,.7)}
+</style></head>
+<body>
+  <div class="tile">
+    <img src="../assets/logos/x5-logo-color.svg" alt="">
+    <div class="label">Color · default</div>
+  </div>
+  <div class="tile">
+    <img src="../assets/logos/x5-logo-dark.svg" alt="">
+    <div class="label">Mono · Ink #1A1430</div>
+  </div>
+  <div class="tile green">
+    <img src="../assets/logos/x5-logo-green.svg" alt="">
+    <div class="label">Mono · Grass #0F5A05</div>
+  </div>
+  <div class="tile dark">
+    <img src="../assets/logos/x5-logo-white.svg?v=2" alt="">
+    <div class="label">Inverse · #FFFFFF</div>
+  </div>
+</body></html>

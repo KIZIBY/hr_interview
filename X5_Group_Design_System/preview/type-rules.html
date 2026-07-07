@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Type rules</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;color:var(--x5-ink);font-family:var(--font-sans)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .card{padding:16px;border:1px solid var(--x5-divider);border-radius:12px}
+  .card h3{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--x5-ink-muted);font-weight:500;margin:0 0 10px}
+  .card p{font-size:14px;line-height:1.45;margin:0 0 6px}
+  .ok{color:var(--x5-success)}
+  .bad{color:var(--x5-danger);text-decoration:line-through}
+  ul{list-style:none;padding:0;margin:0;font-size:13px;line-height:1.6}
+  li::before{content:"— ";color:var(--x5-ink-quiet)}
+  .tag{display:inline-block;padding:2px 8px;background:#EBF2D0;color:#0F5A05;border-radius:999px;font-size:11px;font-weight:500;margin-right:6px}
+</style></head>
+<body>
+  <div class="grid">
+    <div class="card">
+      <h3>Family</h3>
+      <p style="font-size:24px;font-weight:500;line-height:1.1;margin-bottom:8px">X5 Sans · Medium 500</p>
+      <p style="font-size:24px;font-weight:400;line-height:1.1;margin-bottom:12px">X5 Sans · Regular 400</p>
+      <p style="font-size:12px;color:var(--x5-ink-muted)">Only two weights exist. Never substitute Bold/Light.</p>
+    </div>
+    <div class="card">
+      <h3>Headings — rules</h3>
+      <ul>
+        <li>Line-height 83–87%</li>
+        <li>Tracking −2% on H1</li>
+        <li>Maximum 3 lines</li>
+        <li>No hanging prepositions</li>
+        <li>Em-dash <strong>—</strong>, not hyphen <strong>-</strong></li>
+        <li>Sentence case only</li>
+      </ul>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>Casing</h3>
+      <p class="ok">✓ <span style="font-weight:500;font-size:18px">Боли клиентов и поставщиков</span></p>
+      <p class="ok">✓ <span style="font-weight:500;font-size:18px">AI-агент как единая точка покупок</span></p>
+      <p class="bad">✗ <span style="font-weight:500;font-size:18px">Боли Клиентов И Поставщиков!</span></p>
+      <p class="bad">✗ <span style="font-weight:500;font-size:18px">УЗНАЙ О НАШИХ ВОЗМОЖНОСТЯХ</span></p>
+    </div>
+  </div>
+</body></html>

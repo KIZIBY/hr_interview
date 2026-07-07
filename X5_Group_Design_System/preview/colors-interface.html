@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Interface scale</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;font-family:var(--font-sans);color:var(--x5-ink)}
+  h2{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--x5-ink-muted);font-weight:500;margin:0 0 12px}
+  .ramp{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--x5-divider);margin-bottom:16px}
+  .step{height:78px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px 10px;color:#fff;font-size:11px;font-variant-numeric:tabular-nums}
+  .step.dark{color:#fff}
+  .step.light{color:var(--x5-ink)}
+  .num{opacity:.7;font-size:10px}
+</style></head>
+<body>
+  <h2>accent x5 — green scale (digital/UI)</h2>
+  <div class="ramp">
+    <div class="step dark" style="background:#0F5A05"><span class="num">100</span>#0F5A05</div>
+    <div class="step dark" style="background:#3A8918"><span class="num">90</span>#3A8918</div>
+    <div class="step dark" style="background:#4E9C1F"><span class="num">80</span>#4E9C1F</div>
+    <div class="step dark" style="background:#5FAF2D"><span class="num">70</span>#5FAF2D</div>
+    <div class="step dark" style="background:#6FC031"><span class="num">60</span>#6FC031</div>
+    <div class="step light" style="background:#84C950"><span class="num">50</span>#84C950</div>
+    <div class="step light" style="background:#C3EB91"><span class="num">30</span>#C3EB91</div>
+  </div>
+</body></html>

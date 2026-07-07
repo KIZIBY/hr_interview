@@ -1,0 +1,298 @@
+/* ============================================================
+   X5 Strategy Design System — Colors & Typography
+   ------------------------------------------------------------
+   Scope: Internal strategic / analytical presentations for
+   X5 Group's strategy function.
+   Source of truth: DESIGN.md
+   ============================================================ */
+
+/* -------------------- Fonts -------------------- */
+@font-face {
+  font-family: "X5 Sans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("./fonts/X5Sans-Regular.woff2") format("woff2"),
+       url("./fonts/X5Sans-Regular.woff") format("woff"),
+       url("./fonts/X5Sans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "X5 Sans";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("./fonts/X5Sans-Medium.woff2") format("woff2"),
+       url("./fonts/X5Sans-Medium.woff") format("woff"),
+       url("./fonts/X5Sans-Medium.ttf") format("truetype");
+}
+
+/* X5 Sans Medium also exposed as a separate family for
+   places that hard-code family names (e.g. PPTX runs). */
+@font-face {
+  font-family: "X5 Sans Medium";
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("./fonts/X5Sans-Medium.woff2") format("woff2"),
+       url("./fonts/X5Sans-Medium.woff") format("woff"),
+       url("./fonts/X5Sans-Medium.ttf") format("truetype");
+}
+
+/* ============================================================
+   :root tokens
+   ============================================================ */
+:root {
+  /* ---------- Primary brand palette (brandbook pp.068–070) ---------- */
+  --x5-logo-green:        #5FAF2D;  /* Фирменный зелёный — logo leaf only */
+  --x5-grass:             #0F5A05;  /* Травяной — primary brand green */
+  --x5-dark-green:        #05320A;  /* Тёмно-зелёный — depth / OOH bg */
+  --x5-logo-black:        #000000;  /* Pure-black variant (rare) */
+  --x5-logo-mono-ink:     #1A1430;  /* Corporate near-black, slight violet undertone — default for mono lockup */
+  --x5-white:             #FFFFFF;
+
+  /* ---------- ESG graphic palette ("Ландшафт роста") ---------- */
+  --x5-olive:             #9BC30F;
+  --x5-mint:              #C3EB91;
+  --x5-mint-fade:         #EBFFD7;
+
+  /* ---------- Strategy deck text colors (PPTX templates) ---------- */
+  --x5-ink:               #303145;  /* primary text on light bgs */
+  --x5-ink-soft:          #404154;  /* slightly muted variant seen in deck */
+  --x5-ink-muted:         #4F5061;  /* secondary text */
+  --x5-ink-quiet:         #888E9C;  /* tertiary / captions */
+
+  /* ---------- Surfaces & dividers ---------- */
+  --x5-surface:           #FFFFFF;
+  --x5-surface-alt:       #F3F8FA;  /* very light blue-white from sample */
+  --x5-surface-grey:      #F2F2F2;
+  --x5-surface-soft:      #EFEFF0;  /* light neutral oval (slide 2) */
+  --x5-divider:           #DFE7EC;  /* hairline */
+  --x5-divider-strong:    #C4C6CE;
+  --x5-near-black:        #222626;  /* digital grey/100 */
+  --x5-near-black-2:      #222429;
+
+  /* ---------- Diagram / accent colors observed in sample deck ---------- */
+  --x5-blue:              #6CA4C3;  /* diagram fill, slide 2 */
+  --x5-blue-soft:         #94BBD1;
+  --x5-violet:            #B378D3;  /* alternate accent */
+  --x5-violet-soft:       #F5DCFF;
+  --x5-citrus:            #AAC936;  /* accent / pill */
+  --x5-citrus-soft:       #EBF2D0;
+
+  /* ---------- Status / data viz semantic ---------- */
+  --x5-success:           #1E8737;
+  --x5-success-bright:    #5FAF2D;
+  --x5-success-deep:      #048C45;
+  --x5-warn:              #F5A000;
+  --x5-warn-bright:       #FA8223;
+  --x5-danger:            #E52825;
+  --x5-danger-bright:     #F23024;
+  --x5-magenta:           #DC2D50;
+  --x5-purple:            #50148C;
+
+  /* ---------- Interface palette (digital scale, brandbook p.073) ---------- */
+  --x5-accent-100:        #0F5A05;
+  --x5-accent-90:         #3A8918;
+  --x5-accent-80:         #4E9C1F;
+  --x5-accent-70:         #5FAF2D;
+  --x5-accent-60:         #6FC031;
+  --x5-accent-50:         #84C950;
+  --x5-grey-100:          #222626;
+
+  /* ---------- Semantic aliases ---------- */
+  --fg-primary:           var(--x5-ink);
+  --fg-secondary:         var(--x5-ink-muted);
+  --fg-tertiary:          var(--x5-ink-quiet);
+  --fg-on-dark:           var(--x5-white);
+  --bg-canvas:            var(--x5-white);
+  --bg-soft:              var(--x5-surface-soft);
+  --bg-section:           var(--x5-surface-alt);
+  --border-hairline:      var(--x5-divider);
+  --border-strong:        var(--x5-divider-strong);
+  --accent-brand:         var(--x5-grass);
+
+  /* ---------- Typography ---------- */
+  --font-sans:            "X5 Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:            ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+
+  /* Type scale — values in px, derived from PPTX pt sizes
+     (1pt @ slide 33.87×19.05cm renders ~1.33px in 1280×720).
+     Sizes read directly from sample deck: 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 36, 40, 72pt */
+  --fs-h1-display:        96px;   /* title slide hero — corresponds to ~72pt */
+  --fs-h1:                64px;   /* large slide title */
+  --fs-h2:                40px;   /* section header */
+  --fs-h3:                28px;   /* subsection */
+  --fs-h4:                22px;   /* content heading */
+  --fs-body-lg:           18px;
+  --fs-body:              16px;
+  --fs-body-sm:           14px;
+  --fs-caption:           12px;
+  --fs-micro:             10px;
+
+  /* Line heights — brandbook §3.1 specifies headings 83–87%, subheads 110–120% */
+  --lh-display:           0.86;
+  --lh-heading:           1.10;
+  --lh-body:              1.45;
+  --lh-tight:             1.20;
+
+  /* Letter spacing — H1 tracking −2% per brandbook */
+  --ls-h1:                -0.02em;
+  --ls-h2:                -0.01em;
+  --ls-default:           0;
+
+  /* ---------- Layout / spacing ----------
+     Source: brandbook §4 ("Поле макета равно охранному полю логотипа = 1/2 logo height")
+     Derived from PPTX shape positions; observed margin = ~1.1cm on a 33.87×19.05cm slide
+     ≈ 3.25% of slide width. The base unit is 8px on a 1280px-wide canvas. */
+  --space-0:              0;
+  --space-1:              4px;
+  --space-2:              8px;
+  --space-3:              12px;
+  --space-4:              16px;
+  --space-5:              20px;
+  --space-6:              24px;
+  --space-8:              32px;
+  --space-10:             40px;
+  --space-12:             48px;
+  --space-16:             64px;
+  --space-20:             80px;
+
+  --slide-margin:         44px;   /* 1.1cm equivalent on 1280px slide */
+  --slide-w:              1280px; /* 33.87cm @ 96dpi (≈ 1280) */
+  --slide-h:              720px;  /* 19.05cm @ 96dpi */
+
+  /* ---------- Corner radii ---------- */
+  --radius-pill:          999px;  /* date badges / status pills */
+  --radius-card:          16px;
+  --radius-sm:            8px;
+  --radius-xs:            4px;
+
+  /* ---------- Shadows / elevation ---------- */
+  --shadow-card: 0 1px 2px rgba(48, 49, 69, 0.06),
+                 0 8px 24px rgba(48, 49, 69, 0.08);
+  --shadow-pop:  0 4px 12px rgba(48, 49, 69, 0.08),
+                 0 24px 48px rgba(48, 49, 69, 0.14);
+  --shadow-flat: 0 1px 0 rgba(48, 49, 69, 0.05);
+
+  /* ---------- Motion ---------- */
+  --ease-standard:        cubic-bezier(.2, 0, 0, 1);
+  --ease-emphasized:      cubic-bezier(.3, 0, 0, 1);
+  --dur-fast:             120ms;
+  --dur-base:             200ms;
+  --dur-slow:             320ms;
+}
+
+/* ============================================================
+   Element defaults — semantic mappings
+   ============================================================ */
+html, body {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-primary);
+  background: var(--bg-canvas);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .x5-h1 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-h1);
+  color: var(--fg-primary);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.x5-display {
+  font-size: var(--fs-h1-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-h1);
+  font-weight: var(--fw-medium);
+}
+
+h2, .x5-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-h2);
+  color: var(--fg-primary);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+h3, .x5-h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+  margin: 0;
+}
+
+h4, .x5-h4 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+  margin: 0;
+}
+
+p, .x5-body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-primary);
+  margin: 0;
+}
+
+.x5-body-sm  { font-size: var(--fs-body-sm); line-height: var(--lh-body); }
+.x5-caption  { font-size: var(--fs-caption); line-height: var(--lh-tight); color: var(--fg-secondary); }
+.x5-micro    { font-size: var(--fs-micro); line-height: var(--lh-tight); letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-tertiary); }
+
+.x5-medium   { font-weight: var(--fw-medium); }
+.x5-regular  { font-weight: var(--fw-regular); }
+
+/* Em-dash override — brandbook uses — not - */
+.x5-prose code, .x5-prose pre { font-family: var(--font-mono); }
+
+/* ============================================================
+   Reusable atoms
+   ============================================================ */
+
+/* Date badge — dark navy pill from title slides */
+.x5-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--x5-ink);
+  color: var(--x5-white);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-medium);
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.01em;
+}
+
+.x5-badge--light {
+  background: var(--x5-white);
+  color: var(--x5-ink);
+  border: 1px solid var(--x5-divider);
+}
+
+.x5-badge--green {
+  background: var(--x5-grass);
+  color: var(--x5-white);
+}
+
+/* Hairline divider */
+.x5-rule { height: 1px; background: var(--border-hairline); border: 0; }

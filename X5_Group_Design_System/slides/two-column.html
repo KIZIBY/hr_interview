@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><title>X5 — Two-column (2_light)</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;background:#E9EEF3}
+  .slide{position:relative;width:1280px;height:720px;box-sizing:border-box;background:#fff;overflow:hidden;font-family:var(--font-sans);color:var(--x5-ink)}
+  .body{position:absolute;left:44px;right:44px;top:44px;bottom:80px;display:flex;flex-direction:column}
+  .crumb{font-size:13px;font-weight:600;color:var(--x5-ink);margin-bottom:14px}
+  .crumb span{color:var(--x5-ink-quiet);font-weight:500}
+  h2{font-size:36px;line-height:1.1;letter-spacing:-.005em;font-weight:500;margin:0 0 28px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1}
+  .col{padding:24px;border-radius:14px;border:1px solid var(--x5-divider);display:flex;flex-direction:column;gap:14px}
+  .col.future{background:#EBF2D0;border-color:transparent}
+  .label{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;align-self:flex-start}
+  .label.gray{background:#EFEFF0;color:var(--x5-ink)}
+  .label.green{background:#0F5A05;color:#fff}
+  .col h3{font-size:24px;font-weight:500;line-height:1.15;margin:0}
+  .pt{display:flex;gap:10px;font-size:14px;line-height:1.45}
+  .pt .b{flex-shrink:0;width:6px;height:6px;border-radius:99px;background:var(--x5-logo-mono-ink);margin-top:8px}
+  .col.future .pt .b{background:#0F5A05}
+  .footer{position:absolute;left:44px;right:44px;bottom:24px;height:40px;display:flex;align-items:center;justify-content:space-between}
+  .footer img{height:24px}
+  .footer .pg{font-size:11px;color:var(--x5-ink-quiet);font-variant-numeric:tabular-nums}
+</style></head>
+<body>
+  <section class="slide" data-screen-label="04 Two-column">
+    <div class="body">
+      <h2>Технологии агентского ИИ создают возможность дизрапта клиентского опыта в e-com</h2>
+      <div class="cols">
+        <div class="col">
+          <span class="label gray">Клиентский опыт сейчас</span>
+          <h3>Покупатель выбирает любой канал и сам собирает корзину</h3>
+          <div class="pt"><span class="b"></span><span>Приложения-селлеры борются за внимание покупателя</span></div>
+          <div class="pt"><span class="b"></span><span>Покупатель согласовывает доставку в приложении селлера</span></div>
+          <div class="pt"><span class="b"></span><span>Весь UX — внутри приложения селлера</span></div>
+        </div>
+        <div class="col future">
+          <span class="label green">Клиентский опыт с AI-агентом</span>
+          <h3>Один агент закрывает контекст, выбор, оплату и доставку</h3>
+          <div class="pt"><span class="b"></span><span>Покупатель формулирует задачу, не товар</span></div>
+          <div class="pt"><span class="b"></span><span>Агент агрегирует shoppable-трафик и сопоставляет варианты</span></div>
+          <div class="pt"><span class="b"></span><span>Сделка проходит без переключения между приложениями</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">05</span>
+    </div>
+  </section>
+</body></html>

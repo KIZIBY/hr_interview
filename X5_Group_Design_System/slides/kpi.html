@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><title>X5 — KPI (5_light / 12_light)</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;background:#E9EEF3}
+  .slide{position:relative;width:1280px;height:720px;box-sizing:border-box;background:#fff;overflow:hidden;font-family:var(--font-sans);color:var(--x5-ink)}
+  .body{position:absolute;left:44px;right:44px;top:44px;bottom:80px;display:flex;flex-direction:column}
+  .crumb{font-size:13px;font-weight:600;color:var(--x5-ink);margin-bottom:14px}
+  .crumb span{color:var(--x5-ink-quiet);font-weight:500}
+  h2{font-size:36px;line-height:1.1;letter-spacing:-.005em;font-weight:500;margin:0 0 28px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;flex:1}
+  .kpi{padding:24px;border-radius:16px;background:#fff;border:1px solid var(--x5-divider);display:flex;flex-direction:column;gap:6px}
+  .kpi.lead{background:#EBF2D0;border-color:transparent}
+  .kpi-eye{font-size:13px;font-weight:600;color:var(--x5-ink)}
+  /* Number stack: number + unit on its own line — never split a value across a wrap */
+  .num{font-size:84px;font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--x5-ink);margin-top:auto;white-space:nowrap}
+  .kpi.lead .num{color:#0F5A05}
+  .unit{font-size:16px;font-weight:500;color:var(--x5-ink-muted);line-height:1.2;margin-top:6px}
+  .desc{font-size:13px;line-height:1.45;color:var(--x5-ink-muted);margin-top:10px;border-top:1px solid var(--x5-divider);padding-top:10px}
+  .delta{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#1E8737;margin-top:10px;border-top:1px solid #C3EB91;padding-top:10px}
+  .footer{position:absolute;left:44px;right:44px;bottom:24px;height:40px;display:flex;align-items:center;justify-content:space-between}
+  .footer img{height:24px}
+  .footer .pg{font-size:11px;color:var(--x5-ink-quiet);font-variant-numeric:tabular-nums}
+</style></head>
+<body>
+  <section class="slide" data-screen-label="06 KPI dashboard">
+    <div class="body">
+      <h2>Ключевые показатели платформы к 2027 году</h2>
+      <div class="kpis">
+        <div class="kpi lead">
+          <div class="kpi-eye">Партнёров на платформе</div>
+          <div class="num">2 000</div>
+          <div class="unit">партнёров</div>
+          <div class="delta">↑ +180% год к году</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-eye">SKU в каталоге</div>
+          <div class="num">3,5</div>
+          <div class="unit">млн SKU, включая non-food</div>
+          <div class="desc">Включая смежные категории и сервисные позиции.</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-eye">GMV B2B-агента</div>
+          <div class="num">48</div>
+          <div class="unit">млрд ₽</div>
+          <div class="desc">Базовый сценарий, P50.</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-eye">Маржа платформы</div>
+          <div class="num">7,4%</div>
+          <div class="unit">take-rate</div>
+          <div class="desc">С учётом инфраструктуры.</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../assets/logos/x5-logo-dark.svg" alt="X5">
+      <span class="pg">15</span>
+    </div>
+  </section>
+</body></html>

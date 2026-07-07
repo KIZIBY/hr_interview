@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><title>X5 — Text colors (Strategy)</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:#fff;font-family:var(--font-sans);color:var(--x5-ink)}
+  .row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--x5-divider)}
+  .row:last-child{border:0}
+  .dot{width:32px;height:32px;border-radius:8px;border:1px solid var(--x5-divider)}
+  .name{font-weight:500;font-size:14px}
+  .desc{font-size:12px;color:var(--x5-ink-quiet);margin-top:2px}
+  .hex{font-size:11px;color:var(--x5-ink-quiet);font-variant-numeric:tabular-nums}
+</style></head>
+<body>
+  <div class="row"><div class="dot" style="background:#303145"></div>
+    <div><div class="name">Ink — primary text</div><div class="desc">All H1 / H2 / body on light backgrounds. Strategy override of brandbook's grass-green text rule.</div></div>
+    <div class="hex">#303145</div></div>
+  <div class="row"><div class="dot" style="background:#404154"></div>
+    <div><div class="name">Ink soft</div><div class="desc">Subtle variant seen in deck for secondary headings.</div></div>
+    <div class="hex">#404154</div></div>
+  <div class="row"><div class="dot" style="background:#4F5061"></div>
+    <div><div class="name">Ink muted</div><div class="desc">Descriptions, secondary copy, supporting paragraphs.</div></div>
+    <div class="hex">#4F5061</div></div>
+  <div class="row"><div class="dot" style="background:#888E9C"></div>
+    <div><div class="name">Ink quiet</div><div class="desc">Captions, table headers, eyebrow labels.</div></div>
+    <div class="hex">#888E9C</div></div>
+  <div class="row"><div class="dot" style="background:#fff"></div>
+    <div><div class="name">On dark — White</div><div class="desc">Required colour for any text over dark fills (badges, dividers, dark-green ground).</div></div>
+    <div class="hex">#FFFFFF</div></div>
+</body></html>

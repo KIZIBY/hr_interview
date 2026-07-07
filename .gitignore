@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+
+# Agent-team framework — генерируемые артефакты (руками не править, в git не коммитятся)
+docs/pipeline-dashboard.html
+docs/fleet-dashboard.html
+tests/agent-evals/last-run.json
+
+# локальные секреты/токены (никогда не в репо)
+*.token
