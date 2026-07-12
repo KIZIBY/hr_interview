@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Техническое интервью — X5 Tech</title>
+  <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css">
+  <style>
+    /* ================================================================
+       Reset
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--x5-surface);
+      color: var(--x5-ink);
+      font-family: var(--font-sans);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ================================================================
+       Utility
+       ================================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ================================================================
+       File-protocol blocking notice
+       ================================================================ */
+    .file-notice {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--x5-surface);
+      display: none; /* JS sets display:flex */
+      align-items: center;
+      justify-content: center;
+      padding: var(--slide-margin);
+    }
+
+    .file-notice__inner { max-width: 540px; }
+
+    .file-notice__title {
+      font-size: var(--fs-h4);
+      font-weight: var(--fw-medium);
+      margin: 0 0 var(--space-4);
+    }
+
+    .file-notice__inner p {
+      font-size: var(--fs-body);
+      color: var(--x5-ink-muted);
+      margin: 0 0 var(--space-3);
+    }
+
+    .file-notice__inner pre {
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      padding: var(--space-4);
+      margin: var(--space-2) 0 var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--fs-body-sm);
+      overflow-x: auto;
+    }
+
+    .file-notice__inner code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: var(--x5-surface-soft);
+      padding: 1px 5px;
+      border-radius: var(--radius-xs);
+    }
+
+    /* ================================================================
+       Page header
+       ================================================================ */
+    .page-header {
+      flex-shrink: 0;
+      padding: var(--space-4) var(--slide-margin);
+      border-bottom: 1px solid var(--x5-divider);
+    }
+
+    .page-header__title {
+      font-size: var(--fs-body);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink-muted);
+    }
+
+    /* ================================================================
+       Main
+       ================================================================ */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* ================================================================
+       State sections — all hidden by default; JS sets display
+       ================================================================ */
+    .state-section {
+      display: none;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ================================================================
+       Waiting state
+       ================================================================ */
+    #state-waiting {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--slide-margin);
+      gap: var(--space-3);
+    }
+
+    .waiting-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink);
+      margin: 0;
+      line-height: var(--lh-tight);
+    }
+
+    .waiting-desc {
+      font-size: var(--fs-body-lg);
+      color: var(--x5-ink-muted);
+      margin: 0;
+      max-width: 340px;
+    }
+
+    /* ================================================================
+       Loading skeleton state
+       ================================================================ */
+    #state-loading {
+      flex-direction: column;
+    }
+
+    .skeleton-layout {
+      display: grid;
+      grid-template-columns: 45fr 55fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .skeleton-col {
+      padding: var(--space-8) var(--slide-margin);
+    }
+
+    .skeleton-col:first-child {
+      border-right: 1px solid var(--x5-divider);
+    }
+
+    .skeleton-col:last-child {
+      background: var(--x5-surface-alt);
+    }
+
+    @keyframes skPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .skel {
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      animation: skPulse 1.2s ease-in-out infinite;
+    }
+
+    .skel--title  { height: 30px; max-width: 280px; margin-bottom: var(--space-6); }
+    .skel--text   { height: 18px; margin-bottom: var(--space-3); }
+    .skel--short  { max-width: 65%; }
+    .skel--exam   { height: 90px; margin-top: var(--space-5); border-radius: var(--radius-sm); }
+    .skel--editor { height: calc(100% - var(--space-6)); border-radius: var(--radius-card); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skel { animation: none; }
+    }
+
+    /* ================================================================
+       Content state — two columns
+       ================================================================ */
+    #state-content {
+      grid-template-columns: 45fr 55fr;
+    }
+
+    #state-content.format-discussion {
+      grid-template-columns: 1fr;
+    }
+
+    /* ----------------------------------------------------------------
+       Left column — condition
+       ---------------------------------------------------------------- */
+    .task-condition {
+      overflow-y: auto;
+      padding: var(--space-8) var(--slide-margin);
+      border-right: 1px solid var(--x5-divider);
+    }
+
+    #state-content.format-discussion .task-condition {
+      border-right: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-left: var(--slide-margin);
+      padding-right: var(--slide-margin);
+    }
+
+    .task-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink);
+      line-height: var(--lh-tight);
+      margin: 0 0 var(--space-6);
+    }
+
+    /* tabindex="-1" focus — suppress visible ring (programmatic focus only) */
+    .task-title:focus { outline: none; }
+
+    /* Markdown prompt */
+    .task-prompt {
+      margin-bottom: var(--space-6);
+    }
+
+    .task-prompt p {
+      font-size: var(--fs-body-lg);
+      line-height: var(--lh-body);
+      color: var(--x5-ink);
+      margin: 0 0 var(--space-4);
+    }
+
+    .task-prompt ul,
+    .task-prompt ol {
+      font-size: var(--fs-body-lg);
+      line-height: var(--lh-body);
+      padding-left: var(--space-6);
+      margin: 0 0 var(--space-4);
+    }
+
+    .task-prompt li { margin-bottom: var(--space-2); }
+
+    .task-prompt code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--x5-surface-soft);
+      padding: 1px 5px;
+      border-radius: var(--radius-xs);
+    }
+
+    .task-prompt pre {
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      padding: var(--space-4);
+      overflow-x: auto;
+      margin: 0 0 var(--space-4);
+    }
+
+    .task-prompt pre code {
+      background: none;
+      padding: 0;
+      font-size: var(--fs-body-sm);
+      line-height: 1.6;
+    }
+
+    /* Examples */
+    .task-examples {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .example-block {
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      padding: var(--space-4);
+      font-family: var(--font-mono);
+    }
+
+    .example-header {
+      font-family: var(--font-sans);
+      font-size: var(--fs-caption);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-3);
+    }
+
+    .example-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .example-row:last-of-type { margin-bottom: 0; }
+
+    .example-label {
+      font-family: var(--font-sans);
+      font-size: var(--fs-body-sm);
+      color: var(--x5-ink-muted);
+      flex-shrink: 0;
+      min-width: 52px;
+    }
+
+    .example-value {
+      font-family: var(--font-mono);
+      font-size: var(--fs-body-sm);
+      color: var(--x5-ink);
+      word-break: break-all;
+    }
+
+    .example-explanation {
+      font-family: var(--font-sans);
+      font-size: var(--fs-body-sm);
+      color: var(--x5-ink-muted);
+      margin-top: var(--space-2);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--x5-divider);
+      line-height: var(--lh-body);
+    }
+
+    /* ----------------------------------------------------------------
+       Right column — editor
+       ---------------------------------------------------------------- */
+    .task-editor-section {
+      background: var(--x5-surface-alt);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-6);
+      gap: var(--space-3);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .code-editor {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      resize: none;
+      font-family: var(--font-mono);
+      font-size: var(--fs-body);
+      line-height: 1.6;
+      color: var(--x5-ink);
+      background: var(--x5-surface-alt);
+      border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-card);
+      padding: var(--space-4) var(--space-5);
+      tab-size: 4;
+      -moz-tab-size: 4;
+    }
+
+    .code-editor:focus {
+      outline: 2px solid var(--x5-ink);
+      outline-offset: 2px;
+      border-color: var(--x5-ink);
+    }
+
+    .editor-footer {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .editor-language {
+      font-family: var(--font-mono);
+      font-size: var(--fs-caption);
+      color: var(--x5-ink-quiet);
+    }
+
+    .no-exec-hint {
+      font-size: var(--fs-caption);
+      color: var(--x5-ink-muted);
+    }
+
+    .sync-warning {
+      font-size: var(--fs-caption);
+      color: var(--x5-warn);
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+    }
+
+    /* ================================================================
+       Finished state
+       ================================================================ */
+    #state-finished {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--slide-margin);
+      gap: var(--space-3);
+    }
+
+    .finished-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink);
+      margin: 0;
+    }
+
+    .finished-desc {
+      font-size: var(--fs-body-lg);
+      color: var(--x5-ink-muted);
+      margin: 0;
+    }
+
+    /* ================================================================
+       Error state
+       ================================================================ */
+    #state-error {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--slide-margin);
+      gap: var(--space-4);
+    }
+
+    .error-title {
+      font-size: var(--fs-h4);
+      font-weight: var(--fw-medium);
+      color: var(--x5-ink);
+      margin: 0;
+    }
+
+    .error-desc {
+      font-size: var(--fs-body);
+      color: var(--x5-ink-muted);
+      margin: 0;
+    }
+
+    .error-hint {
+      font-size: var(--fs-body-sm);
+      color: var(--x5-ink-muted);
+      margin: 0;
+    }
+
+    .error-hint code {
+      font-family: var(--font-mono);
+      background: var(--x5-surface-soft);
+      padding: 1px 5px;
+      border-radius: var(--radius-xs);
+    }
+
+    .btn-retry {
+      display: inline-flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 var(--space-6);
+      background: var(--x5-ink);
+      color: var(--x5-white);
+      font-family: var(--font-sans);
+      font-size: var(--fs-body-sm);
+      font-weight: var(--fw-medium);
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: opacity var(--dur-fast) var(--ease-standard);
+    }
+
+    .btn-retry:hover { opacity: 0.85; }
+
+    .btn-retry:focus {
+      outline: 2px solid var(--x5-ink);
+      outline-offset: 2px;
+    }
+
+    /* ================================================================
+       Page footer — logo
+       ================================================================ */
+    .page-footer {
+      flex-shrink: 0;
+      padding: var(--space-5) var(--slide-margin);
+      border-top: 1px solid var(--x5-divider);
+    }
+
+    .x5-logo {
+      display: block;
+      height: 24px;
+    }
+
+    /* ================================================================
+       Fade-in animation
+       ================================================================ */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn var(--dur-base) var(--ease-standard) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { animation: none; opacity: 1; }
+    }
+
+    /* ================================================================
+       Mobile — single column (< 640px)
+       ================================================================ */
+    @media (max-width: 639px) {
+      .page-header { padding: var(--space-3) var(--space-5); }
+
+      .skeleton-layout { grid-template-columns: 1fr; }
+      .skeleton-col:last-child { display: none; }
+
+      #state-content:not(.format-discussion) {
+        grid-template-columns: 1fr;
+      }
+
+      .task-condition {
+        border-right: none;
+        border-bottom: 1px solid var(--x5-divider);
+        overflow-y: visible;
+        padding: var(--space-6) var(--space-5);
+      }
+
+      .task-editor-section {
+        padding: var(--space-5);
+        min-height: 60vh;
+      }
+
+      .page-footer { padding: var(--space-4) var(--space-5); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Blocking notice: file:// protocol -->
+  <div id="file-notice" class="file-notice" role="alert">
+    <div class="file-notice__inner">
+      <h1 class="file-notice__title">Страница открыта как файл</h1>
+      <p>Для синхронизации вкладок страницы нужно раздавать по http — не через file://.</p>
+      <p>Запустите локальный сервер из корня проекта:</p>
+      <pre><code>python3 -m http.server 8000</code></pre>
+      <p>Затем откройте:</p>
+      <pre><code>http://localhost:8000/candidate.html</code></pre>
+    </div>
+  </div>
+
+  <!-- aria-live announcements (sr-only) -->
+  <div id="announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Page header -->
+  <header class="page-header">
+    <span class="page-header__title">Техническое интервью — X5 Tech</span>
+  </header>
+
+  <!-- Main -->
+  <main id="main-content">
+
+    <!-- Waiting -->
+    <section id="state-waiting" class="state-section" aria-label="Ожидание задачи">
+      <h1 class="waiting-title">Ожидание задачи</h1>
+      <p class="waiting-desc">Интервьюер выберет задание — оно появится здесь</p>
+    </section>
+
+    <!-- Loading skeleton -->
+    <section id="state-loading" class="state-section" aria-label="Загрузка задачи" aria-busy="true">
+      <div class="skeleton-layout" aria-hidden="true">
+        <div class="skeleton-col">
+          <div class="skel skel--title"></div>
+          <div class="skel skel--text"></div>
+          <div class="skel skel--text skel--short"></div>
+          <div class="skel skel--text"></div>
+          <div class="skel skel--exam"></div>
+        </div>
+        <div class="skeleton-col">
+          <div class="skel skel--editor"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task content -->
+    <section id="state-content" class="state-section" aria-label="Задача">
+
+      <section class="task-condition" aria-label="Условие задачи">
+        <h2 id="task-title" class="task-title" tabindex="-1"></h2>
+        <div id="task-prompt" class="task-prompt"></div>
+        <div id="task-examples" class="task-examples"></div>
+      </section>
+
+      <section id="editor-section" class="task-editor-section" aria-label="Редактор">
+        <textarea
+          id="code-editor"
+          class="code-editor"
+          aria-label="Редактор кода"
+          spellcheck="false"
+          autocapitalize="off"
+          autocorrect="off"
+          autocomplete="off"
+        ></textarea>
+        <div class="editor-footer">
+          <span id="editor-language" class="editor-language"></span>
+          <span class="no-exec-hint">код здесь не запускается — важен ход рассуждений</span>
+        </div>
+        <div id="sync-warning" class="sync-warning" hidden>
+          код слишком длинный — синхронизация приостановлена
+        </div>
+      </section>
+
+    </section>
+
+    <!-- Finished -->
+    <section id="state-finished" class="state-section" aria-label="Интервью завершено">
+      <h1 class="finished-title">Интервью завершено</h1>
+      <p class="finished-desc">Спасибо</p>
+    </section>
+
+    <!-- Error -->
+    <section id="state-error" class="state-section" aria-label="Ошибка загрузки">
+      <h1 class="error-title">Не удалось загрузить задание</h1>
+      <p class="error-desc">Обновите страницу или убедитесь, что сервер запущен.</p>
+      <p class="error-hint">
+        Страница должна быть открыта по http —
+        <code>python3 -m http.server 8000</code>
+      </p>
+      <button id="retry-btn" class="btn-retry" type="button">Повторить</button>
+    </section>
+
+  </main>
+
+  <!-- Footer: X5 logo bottom-left -->
+  <footer class="page-footer">
+    <img
+      src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg"
+      alt="X5 Group"
+      class="x5-logo"
+    >
+  </footer>
+
+  <script src="sync.js"></script>
+  <script src="candidate.js"></script>
+</body>
+</html>

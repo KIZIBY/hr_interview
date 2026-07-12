@@ -1,0 +1,565 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "ALG-01",
+      "category": "algorithms",
+      "difficulty": "easy",
+      "title": "Longest common prefix",
+      "format": "code",
+      "prompt": "Дан массив строк. Напишите функцию, которая находит самый длинный общий префикс среди всех строк массива.\n\nЕсли общего префикса нет, верните пустую строку `\"\"`.",
+      "examples": [
+        {
+          "input": "strs = [\"flower\", \"flow\", \"flight\"]",
+          "output": "\"fl\"",
+          "explanation": "Общий префикс всех трёх строк — \"fl\"."
+        },
+        {
+          "input": "strs = [\"dog\", \"racecar\", \"car\"]",
+          "output": "\"\"",
+          "explanation": "Общего префикса нет."
+        }
+      ],
+      "starterCode": "def longestCommonPrefix(strs: list[str]) -> str:\n    # Ваш код здесь\n    pass",
+      "language": "python",
+      "referenceSolutions": [
+        {
+          "label": "Через zip и set",
+          "code": "def longestCommonPrefix(strs):\n    if not strs:\n        return \"\"\n    for i, letter_group in enumerate(zip(*strs)):\n        if len(set(letter_group)) > 1:\n            return strs[0][:i]\n    return min(strs)",
+          "complexity": "O(n·m) время, O(1) дополнительная память — n строк, m максимальная длина",
+          "notes": "zip(*strs) транспонирует матрицу строк: итерируемся по позициям символов. Если в позиции i все символы одинаковы — продолжаем; как только set > 1 — возвращаем prefix до i. min(strs) закрывает случай, когда одна строка является префиксом всех остальных — минимальная лексикографически совпадает с кратчайшей при совпадающем префиксе."
+        }
+      ],
+      "followUps": [
+        "Что произойдёт, если массив содержит пустую строку?",
+        "Как изменится код, если нужен самый длинный общий суффикс?",
+        "Можно ли решить задачу через бинарный поиск по длине префикса — и зачем это?"
+      ],
+      "greenSignals": [
+        "🟢 Объясняет подход до кода: сравниваем символы по позиции, а не строки целиком",
+        "🟢 Оценивает сложность O(n·m) и поясняет, где n и m",
+        "🟢 Обрабатывает граничный случай пустого массива",
+        "🟢 Читает и объясняет чужое решение через zip(*strs) — знает распаковку итерируемых"
+      ],
+      "redSignals": [
+        "🔴 Не может объяснить, что делает zip(*strs)",
+        "🔴 Плывёт на оценке сложности",
+        "🔴 Не обрабатывает пустой массив или одну строку"
+      ],
+      "evaluationNotes": "Разогревочная задача. Смотрим на подход к рассуждению: кандидат должен объяснить идею до написания кода. Наивное решение через sorted тоже принимается, если кандидат понимает его сложность. Эталон через zip(*strs) требует понимания распаковки — хороший маркер знания Python.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "links": ["https://leetcode.com/problems/longest-common-prefix/"],
+      "status": "ready"
+    },
+    {
+      "id": "ALG-02",
+      "category": "algorithms",
+      "difficulty": "easy",
+      "title": "Group anagrams",
+      "format": "code",
+      "prompt": "Дан список строк. Верните список групп анаграмм.\n\nАнаграммы — слова, состоящие из одних и тех же букв в любом порядке.",
+      "examples": [
+        {
+          "input": "strs = [\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"]",
+          "output": "[[\"bat\"], [\"nat\", \"tan\"], [\"ate\", \"eat\", \"tea\"]]",
+          "explanation": "Порядок групп и порядок слов внутри групп не важен."
+        }
+      ],
+      "starterCode": "from typing import List\n\ndef groupAnagrams(strs: List[str]) -> List[List[str]]:\n    # Ваш код здесь\n    pass",
+      "language": "python",
+      "referenceSolutions": [
+        {
+          "label": "Через отсортированное слово как ключ",
+          "code": "from typing import List\n\ndef groupAnagrams(strs: List[str]) -> List[List[str]]:\n    groups = dict()\n    for word in strs:\n        word_sorted = ''.join(sorted(word))\n        if word_sorted in groups:\n            groups[word_sorted].append(word)\n        else:\n            groups[word_sorted] = [word]\n    return list(groups.values())",
+          "complexity": "O(n·k·log k) время, O(n·k) память — n слов, k максимальная длина слова",
+          "notes": "Ключ — отсортированное слово: все анаграммы дают одинаковый ключ. Альтернатива — частотный вектор 26 символов как ключ: O(n·k) время, дороже по коду. defaultdict(list) упрощает запись."
+        }
+      ],
+      "followUps": [
+        "Какой будет сложность, если ключом использовать частотный вектор букв вместо sorted?",
+        "Как изменится решение для Unicode-строк с диакритикой?",
+        "Как проверить корректность — что входит в тест-кейсы?"
+      ],
+      "greenSignals": [
+        "🟢 Сразу предлагает отсортированное слово как ключ хэш-таблицы",
+        "🟢 Понимает, что defaultdict или setdefault упрощает код",
+        "🟢 Оценивает O(n·k·log k) и объясняет, откуда log k"
+      ],
+      "redSignals": [
+        "🔴 Пытается сравнивать каждое слово с каждым — O(n²) без объяснения trade-off",
+        "🔴 Не понимает, как использовать словарь для группировки"
+      ],
+      "evaluationNotes": "Ключевой паттерн — хэш-таблица с составным ключом. Смотрим, додумается ли кандидат до sorted-ключа сам или нужна подсказка. Наивное O(n²)-решение — слабый сигнал; принимается только если кандидат сам замечает и предлагает улучшение.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "links": ["https://leetcode.com/problems/group-anagrams/"],
+      "status": "ready"
+    },
+    {
+      "id": "ALG-03",
+      "category": "algorithms",
+      "difficulty": "easy",
+      "title": "Single number — XOR или hashmap",
+      "format": "code",
+      "prompt": "Дан массив целых чисел. Все элементы, кроме одного, встречаются ровно дважды. Найдите единственное не повторяющееся число.\n\nПопробуйте решить задачу с линейной сложностью по времени и O(1) по памяти.",
+      "examples": [
+        {
+          "input": "nums = [2, 2, 1]",
+          "output": "1"
+        },
+        {
+          "input": "nums = [4, 1, 2, 1, 2]",
+          "output": "4"
+        },
+        {
+          "input": "nums = [1]",
+          "output": "1"
+        }
+      ],
+      "starterCode": "from typing import List\n\ndef singleNumber(nums: List[int]) -> int:\n    # Ваш код здесь\n    pass",
+      "language": "python",
+      "referenceSolutions": [
+        {
+          "label": "XOR — O(n) время, O(1) память",
+          "code": "from typing import List\n\ndef singleNumber(nums: List[int]) -> int:\n    r = nums[0]\n    for i in range(1, len(nums)):\n        r = r ^ nums[i]\n    return r",
+          "complexity": "O(n) время, O(1) память",
+          "notes": "XOR-трюк: a ^ a = 0, a ^ 0 = a, XOR коммутативен и ассоциативен. Все парные числа обнуляются, остаётся одиночное."
+        },
+        {
+          "label": "Hashmap — O(n) время, O(n) память",
+          "code": "from typing import List\nfrom collections import defaultdict\n\ndef singleNumber(nums: List[int]) -> int:\n    hash_table = defaultdict(int)\n    for num in nums:\n        hash_table[num] += 1\n    for num in hash_table:\n        if hash_table[num] == 1:\n            return num",
+          "complexity": "O(n) время, O(n) память",
+          "notes": "Более очевидное решение. Проигрывает XOR по памяти. Хороший повод спросить: зачем XOR, если hashmap работает?"
+        }
+      ],
+      "followUps": [
+        "Объясни, почему XOR работает — свойства a^a и a^0?",
+        "Как изменится задача, если каждый элемент встречается трижды, кроме одного?",
+        "Где XOR используется в реальной жизни — checksum, RAID?"
+      ],
+      "greenSignals": [
+        "🟢 Знает XOR-трюк и объясняет свойства: a^a=0, a^0=a, коммутативность",
+        "🟢 Предлагает оба решения и сам сравнивает trade-off по памяти",
+        "🟢 Может обобщить идею на «каждое число встречается 3 раза»"
+      ],
+      "redSignals": [
+        "🔴 Не знает XOR-решения и не понимает подсказки про битовые операции",
+        "🔴 Пытается сортировать массив — не O(1) память и не оптимально"
+      ],
+      "evaluationNotes": "Смотрим прежде всего на знание XOR-трюка — это маркер CS-фундамента, а не просто кода. Hashmap-решение принимается, но без XOR — слабый сигнал. Если кандидат сам упоминает trade-off памяти и обобщение на 3-кратные повторения — сильный сигнал.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "links": ["https://leetcode.com/problems/single-number/"],
+      "status": "ready"
+    },
+    {
+      "id": "ALG-04",
+      "category": "algorithms",
+      "difficulty": "easy",
+      "title": "Valid parentheses",
+      "format": "code",
+      "prompt": "Рассмотрим последовательность, состоящую из круглых `()`, квадратных `[]` и фигурных `{}` скобок. Определите, является ли данная скобочная последовательность правильной.\n\nПравила:\n- Пустая последовательность является правильной.\n- Если A — правильная, то (A), [A], {A} — правильные.\n- Если A и B — правильные, то AB — правильная.",
+      "examples": [
+        {
+          "input": "s = \"()\"",
+          "output": "true"
+        },
+        {
+          "input": "s = \"()[]{}\"",
+          "output": "true"
+        },
+        {
+          "input": "s = \"(]\"",
+          "output": "false"
+        },
+        {
+          "input": "s = \"([])\"",
+          "output": "true"
+        }
+      ],
+      "starterCode": "def isValid(s: str) -> bool:\n    # Ваш код здесь\n    pass",
+      "language": "python",
+      "referenceSolutions": [
+        {
+          "label": "Через стек",
+          "code": "def isValid(s: str) -> bool:\n    stack = []\n    for i in s:\n        if i in ['(', '[', '{']:\n            stack.append(i)\n        elif len(stack) > 0 and (\n            i == ')' and stack[-1] == '(' or\n            i == ']' and stack[-1] == '[' or\n            i == '}' and stack[-1] == '{'\n        ):\n            stack.pop()\n        else:\n            stack.append(i)\n    return len(stack) == 0",
+          "complexity": "O(n) время, O(n) память",
+          "notes": "Инвариант: при встрече закрывающей скобки вершина стека должна быть парной открывающей. Если нет — добавляем в стек (закрывающая без пары останется). В конце стек должен быть пустым."
+        }
+      ],
+      "followUps": [
+        "Что произойдёт, если строка содержит только закрывающие скобки `)))` — как код обрабатывает этот случай?",
+        "Как изменится решение, если нужно не только проверить корректность, но и вернуть позицию первой ошибки?",
+        "Можно ли решить задачу без стека — например, счётчиком? Почему это не работает для смешанных скобок?"
+      ],
+      "greenSignals": [
+        "🟢 Сразу называет структуру данных — стек",
+        "🟢 Объясняет инвариант: при закрывающей скобке вершина стека должна быть парной открывающей",
+        "🟢 Проверяет len(stack) == 0 в конце, а не только ловит несовпадение",
+        "🟢 Обрабатывает случай закрывающей скобки при пустом стеке"
+      ],
+      "redSignals": [
+        "🔴 Пытается решить счётчиком без учёта порядка скобок",
+        "🔴 Не думает про случай \"]\" при пустом стеке",
+        "🔴 Не может объяснить, зачем стек, а не просто счётчик"
+      ],
+      "evaluationNotes": "Классическая задача на стек. Главный сигнал — кандидат сам называет стек как структуру и объясняет инвариант. Если кандидат пишет через счётчик — мягко спросить: «что будет с `)(` и счётчиком?».",
+      "timeBudgetMin": 8,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "links": ["https://leetcode.com/problems/valid-parentheses/"],
+      "status": "ready"
+    },
+    {
+      "id": "ALG-06",
+      "category": "algorithms",
+      "difficulty": "easy-medium",
+      "title": "Jump game",
+      "format": "code",
+      "prompt": "Дан массив целых чисел `nums`. Вы начинаете с 0-го элемента. Каждый элемент показывает максимальный прыжок из текущей позиции.\n\nПроверьте, можно ли добраться до последнего элемента массива.",
+      "examples": [
+        {
+          "input": "nums = [2, 3, 1, 1, 4]",
+          "output": "true",
+          "explanation": "Прыжок 0→1 (длина 1), затем прыжок 1→4 (длина 3)."
+        },
+        {
+          "input": "nums = [3, 2, 1, 0, 4]",
+          "output": "false",
+          "explanation": "Из любого пути попадём в индекс 3, откуда прыжок равен 0 — застреваем."
+        }
+      ],
+      "starterCode": "from typing import List\n\ndef canJump(nums: List[int]) -> bool:\n    # Ваш код здесь\n    pass",
+      "language": "python",
+      "referenceSolutions": [
+        {
+          "label": "Жадный алгоритм — отслеживание максимального достижимого индекса",
+          "code": "from typing import List\n\ndef canJump(nums: List[int]) -> bool:\n    far = 0\n    for i, n in enumerate(nums):\n        if i > far:\n            return False\n        far = max(far, i + n)\n    return True",
+          "complexity": "O(n) время, O(1) память",
+          "notes": "far — максимальный индекс, достижимый из уже посещённых позиций. Если текущий индекс i > far — мы уже застряли. Иначе обновляем far. Жадный инвариант: если i ≤ far, значит до i добраться можно."
+        }
+      ],
+      "followUps": [
+        "Что изменится, если нужно найти минимальное количество прыжков до конца?",
+        "Объясни жадный инвариант: почему достаточно следить только за far?",
+        "Как решить задачу через BFS/DFS — и почему жадный лучше?"
+      ],
+      "greenSignals": [
+        "🟢 Предлагает жадный подход: отслеживать максимально достижимый индекс",
+        "🟢 Объясняет инвариант: если i > far — застряли",
+        "🟢 Оценивает O(n) и O(1) памяти",
+        "🟢 Сам понимает, что прыжок — максимальный, а не точный"
+      ],
+      "redSignals": [
+        "🔴 Пытается BFS/DFS без объяснения зачем — переусложнение",
+        "🔴 Не может объяснить жадный инвариант после написания кода",
+        "🔴 Путает «максимальный прыжок» с «фиксированным прыжком»"
+      ],
+      "evaluationNotes": "Ключевой навык — предложить жадное решение и обосновать его корректность. BFS-решение тоже принимается, но O(n²) худший случай — слабее. Если кандидат сам переходит к «Jump Game II» с минимальным числом прыжков — сильный сигнал.",
+      "timeBudgetMin": 10,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "links": ["https://leetcode.com/problems/jump-game/"],
+      "status": "ready"
+    },
+    {
+      "id": "PY-01",
+      "category": "python-swe",
+      "difficulty": "easy",
+      "title": "Python — теория: mutable/immutable, ООП и SOLID, async против threading и multiprocessing, GIL",
+      "format": "discussion",
+      "prompt": "Теоретические вопросы по Python. Обсуди с кандидатом следующие темы:\n\n**Mutable vs immutable:**\n- Что такое изменяемые и неизменяемые типы данных? Какие типы Python к каким относятся?\n\n**ООП и SOLID:**\n- Что такое классы и зачем нужен ООП? Какие главные принципы?\n- Как расшифровывается SOLID?\n\n**Async vs threading vs multiprocessing:**\n- В чём разница между асинхронностью и многопоточностью?\n- Чем это отличается от мультипроцессинга?\n\n**GIL:**\n- Что такое GIL? Зачем он нужен?",
+      "examples": [],
+      "starterCode": null,
+      "language": null,
+      "referenceSolutions": [],
+      "followUps": [
+        "Можешь привести пример, где мутабельность аргумента функции привела к неочевидному багу?",
+        "Какой принцип SOLID чаще всего нарушают — и почему?",
+        "Когда выбрать async, а когда multiprocessing — дай конкретный критерий выбора?",
+        "GIL защищает от гонок — но не от всех. Приведи пример гонки, которую GIL не предотвращает."
+      ],
+      "greenSignals": [
+        "🟢 Чётко различает mutable (list, dict, set) и immutable (int, str, tuple) с примером побочных эффектов",
+        "🟢 Понимает, что GIL не защищает от гонок на уровне составных операций",
+        "🟢 Объясняет, когда async эффективен (I/O-bound), а когда multiprocessing (CPU-bound)",
+        "🟢 Называет хотя бы 3 принципа SOLID с примерами из реального кода"
+      ],
+      "redSignals": [
+        "🔴 Путает асинхронность с параллелизмом — думает, что async = несколько потоков",
+        "🔴 Думает, что GIL полностью защищает от гонок в любой ситуации",
+        "🔴 Не может привести пример нарушения SOLID в реальном коде"
+      ],
+      "evaluationNotes": "Карточка для разговора, не экзамена. Эталонные ответы в банке задач не дописаны — смотрим на глубину рассуждения, а не на точные формулировки. SOLID: S — single responsibility, O — open/closed, L — Liskov substitution, I — interface segregation, D — dependency inversion. Async vs threading: async — один поток, кооперативная многозадачность, эффективен для I/O; threading — несколько потоков, GIL ограничивает CPU-параллелизм; multiprocessing — отдельные процессы, обходит GIL, накладные расходы на IPC. GIL: защищает внутренние структуры CPython от гонок, но не защищает от гонок в Python-коде на уровне нескольких операций. Эталон не дописан — оцениваем по рассуждению.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "status": "ready"
+    },
+    {
+      "id": "PY-02",
+      "category": "python-swe",
+      "difficulty": "easy",
+      "title": "Docker — теория: контейнеризация против виртуализации, image против container, volumes",
+      "format": "discussion",
+      "prompt": "Теоретические вопросы по Docker. Обсуди с кандидатом:\n\n- Зачем нужен Docker? Что такое контейнеризация? Чем отличается от виртуализации?\n- В чём разница между образом (image) и контейнером (container)?\n- Зачем нужны volume?",
+      "examples": [],
+      "starterCode": null,
+      "language": null,
+      "referenceSolutions": [],
+      "followUps": [
+        "Что происходит с данными внутри контейнера, если контейнер удалить без volume?",
+        "В чём разница между bind mount и named volume?",
+        "Почему запускать несколько сервисов в одном контейнере — антипаттерн?"
+      ],
+      "greenSignals": [
+        "🟢 Объясняет ключевое отличие: контейнер — изоляция через namespace/cgroups, VM — полная ОС",
+        "🟢 Понимает: image — иммутабельный слой, container — изменяемый runtime поверх image",
+        "🟢 Знает, что данные в контейнере эфемерны без volume; различает bind mount и named volume"
+      ],
+      "redSignals": [
+        "🔴 Не может объяснить, что происходит с данными при удалении контейнера без volume",
+        "🔴 Думает, что container и image — одно и то же",
+        "🔴 Не знает про слои образа и механику кэша при сборке"
+      ],
+      "evaluationNotes": "Карточка для разговора. Эталонные ответы в банке задач не дописаны — смотрим на глубину рассуждения. Контейнеризация vs виртуализация: контейнеры используют namespace (pid, net, mnt) и cgroups ядра хоста, VM эмулирует железо и запускает гостевую ОС. Image — набор неизменяемых слоёв (Union FS), container — записываемый слой поверх image. Volume — механизм persistent storage вне filesystem контейнера. Эталон не дописан — оцениваем по рассуждению.",
+      "timeBudgetMin": 6,
+      "scoringDimension": "production",
+      "weight": 3,
+      "status": "ready"
+    },
+    {
+      "id": "PY-03",
+      "category": "python-swe",
+      "difficulty": "easy-medium",
+      "title": "Ревью Dockerfile — найти проблемы",
+      "format": "code",
+      "prompt": "Перед тобой Dockerfile. Найди проблемы в нём и предложи исправления.\n\nЧто именно не так и почему это проблема в продакшне?",
+      "examples": [],
+      "starterCode": null,
+      "language": "dockerfile",
+      "buggyVersion": "FROM python:latest\n\nWORKDIR /app\n\nCOPY . .\n\nRUN pip install -r requirements.txt\n\nENV KAFKA_USR $KAFKA_USR\nENV KAFKA_PAS $KAFKA_PAS\n\nEXPOSE 3001\n\nCMD [\"uvicorn\", \"src.main:app\", \"--reload\"]",
+      "referenceSolutions": [
+        {
+          "label": "Эталонный Dockerfile",
+          "code": "FROM python:3.9.12\n\nWORKDIR /app\n\nCOPY requirements.txt .\n\nRUN pip install -r requirements.txt\n\nCOPY . .\n\nENV KAFKA_USR $KAFKA_USR\nENV KAFKA_PAS $KAFKA_PAS\n\nEXPOSE 3001\n\nCMD [\"uvicorn\", \"src.main:app\", \"--reload\"]",
+          "notes": "Два ключевых изменения: 1) python:latest → python:3.9.12 — pinned-версия; 2) COPY . . перенесён после pip install — requirements.txt меняется реже чем код, поэтому при изменении только кода слой с pip install берётся из кэша."
+        }
+      ],
+      "followUps": [
+        "Объясни механику слоёв Docker: почему порядок инструкций влияет на кэш?",
+        "Почему `--reload` в CMD — проблема для продакшна?",
+        "Как безопасно передавать секреты (KAFKA_USR/PAS) — и чем ENV в Dockerfile плохо?"
+      ],
+      "greenSignals": [
+        "🟢 Находит обе проблемы без подсказки: тег latest и порядок слоёв",
+        "🟢 Объясняет механику кэша Docker: слой пересобирается если изменился предыдущий",
+        "🟢 Предлагает pinned-версию с обоснованием (reproducibility, стабильность)",
+        "🟢 Замечает --reload как проблему для прода (hot-reload не для production)"
+      ],
+      "redSignals": [
+        "🔴 Находит только тег latest, не замечает проблему с кэшем слоёв",
+        "🔴 Не знает механики слоёв Dockerfile и почему порядок важен",
+        "🔴 Не может объяснить, почему COPY . . перед pip install плохо"
+      ],
+      "evaluationNotes": "Основные проблемы: 1) python:latest — нестабильная версия, при следующей сборке может прийти другой Python и сломать зависимости; 2) COPY . . перед pip install — при изменении любого файла кода слой с pip install инвалидируется и все зависимости скачиваются заново; правильный порядок: COPY requirements.txt → RUN pip install → COPY . . Дополнительно (bonus): --reload в prod, передача секретов через ENV (попадают в метаданные image), отсутствие .dockerignore.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "production",
+      "weight": 3,
+      "status": "ready"
+    },
+    {
+      "id": "DBG-02",
+      "category": "debugging",
+      "difficulty": "medium",
+      "title": "Багованный train-loop на torch",
+      "format": "code",
+      "prompt": "Перед тобой функция обучения нейронной сети на PyTorch. В ней несколько багов разного уровня критичности.\n\nНайди все проблемы, объясни что именно не так в каждом случае и предложи исправленную версию.",
+      "examples": [],
+      "starterCode": null,
+      "language": "python",
+      "buggyVersion": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader\nfrom tqdm import tqdm\n\ndef train(\n    train_dataset: torch.utils.data.Dataset,\n    test_dataset: torch.utils.data.Dataset,\n    dim_inner: int,\n    num_classes: int,\n    batch_size: int,\n    lr: float,\n):\n    model = nn.Sequential(\n        nn.Linear(features, dim_inner),\n        nn.ReLU(),\n        nn.BatchNorm1d(dim_inner),\n        nn.Linear(dim_inner, num_classes),\n        nn.Softmax()\n    ).cuda()\n\n    train_dataloader = DataLoader(train_dataset, batch_size=batch_size)\n    test_dataloader = DataLoader(test_dataset, batch_size=batch_size)\n\n    loss_fn = nn.CrossEntropyLoss(reduction='sum')\n    opt = optim.SGD(model.parameters(), lr=lr)\n\n    test_losses = []\n    train_losses = []\n    for epoch in tqdm(range(epochs)):\n        for x, y in train_dataloader:\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            train_losses.append(loss)\n            loss.backward()\n            opt.step()\n\n        for x, y in test_dataloader:\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            test_losses.append(loss)",
+      "referenceSolutions": [
+        {
+          "label": "Исправленная версия train-loop",
+          "code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader\nfrom tqdm import tqdm\n\ndef train(\n    train_dataset: torch.utils.data.Dataset,\n    test_dataset: torch.utils.data.Dataset,\n    n_features: int,\n    dim_inner: int,\n    num_classes: int,\n    batch_size: int,\n    lr: float,\n    epoch: int,\n):\n    model = nn.Sequential(\n        nn.Linear(n_features, dim_inner),\n        nn.ReLU(),\n        nn.BatchNorm1d(dim_inner),\n        nn.Linear(dim_inner, num_classes)\n        # nn.Softmax убрана: CrossEntropyLoss уже содержит LogSoftmax\n    ).to(device)\n\n    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)\n    test_dataloader = DataLoader(test_dataset, batch_size=batch_size)\n\n    loss_fn = nn.CrossEntropyLoss(reduction='sum')\n    opt = optim.SGD(model.parameters(), lr=lr)\n\n    test_losses = []\n    train_losses = []\n    for epoch in tqdm(range(epoch)):\n        model.train()\n        for x, y in train_dataloader:\n            x, y = x.to(device), y.to(device)\n            opt.zero_grad()\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            train_losses.append(loss.item())\n            loss.backward()\n            opt.step()\n\n        model.eval()\n        with torch.no_grad():\n            for x, y in test_dataloader:\n                x, y = x.to(device), y.to(device)\n                output = model(x)\n                loss = loss_fn(output, torch.argmax(y, dim=1))\n                test_losses.append(loss.item())",
+          "notes": "Все 8 багов исправлены. Ключевые: opt.zero_grad(), model.train()/eval(), torch.no_grad(), shuffle=True, Softmax убрана, loss.item(), epoch как параметр, .to(device) вместо .cuda()."
+        }
+      ],
+      "followUps": [
+        "Почему накопление градиентов без zero_grad() — критическая ошибка, а не просто неточность?",
+        "Что именно делает CrossEntropyLoss под капотом — почему Softmax сверху двойная нормализация?",
+        "Как влияет отсутствие model.eval() на BatchNorm во время инференса?"
+      ],
+      "greenSignals": [
+        "🟢 Находит opt.zero_grad() как критическую ошибку и объясняет накопление градиентов",
+        "🟢 Объясняет, почему nn.Softmax() + CrossEntropyLoss — двойная нормализация",
+        "🟢 Замечает отсутствие model.train()/model.eval() и объясняет влияние на BatchNorm",
+        "🟢 Указывает на утечку памяти: train_losses.append(loss) без .item() держит computation graph"
+      ],
+      "redSignals": [
+        "🔴 Не замечает opt.zero_grad() — не понимает, как работает autograd",
+        "🔴 Не знает, что CrossEntropyLoss содержит Softmax внутри",
+        "🔴 Не понимает разницы model.train() и model.eval()"
+      ],
+      "evaluationNotes": "Список багов от критичного к менее очевидному: 1) отсутствует opt.zero_grad() — градиенты накапливаются через итерации; 2) nn.Softmax() + CrossEntropyLoss — двойная нормализация, CrossEntropyLoss содержит LogSoftmax; 3) отсутствует shuffle=True в train DataLoader — одинаковый порядок каждую эпоху; 4) отсутствует model.train() перед train-циклом — BatchNorm работает в eval-режиме; 5) отсутствует model.eval() и torch.no_grad() в eval-цикле — лишние градиенты, неправильный BatchNorm; 6) train_losses.append(loss) вместо loss.item() — утечка computation graph, OOM при большом числе эпох; 7) epochs не определена как параметр функции — NameError при запуске; 8) .cuda() вместо .to(device) — хардкод устройства, падает без GPU. Сильный кандидат с ML-бэкграундом находит 5+; средний — 3–4. Задача для кандидатов с опытом PyTorch.",
+      "timeBudgetMin": 12,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "mlSpecific": true,
+      "status": "ready"
+    },
+    {
+      "id": "DBG-03",
+      "category": "debugging",
+      "difficulty": "advanced",
+      "title": "Багованный MultiHeadAttention",
+      "format": "code",
+      "prompt": "Перед тобой реализация Multi-Head Attention на NumPy. В коде несколько багов разного уровня сложности.\n\nНайди все проблемы, объясни что именно не так в каждом случае и предложи исправленную версию.",
+      "examples": [],
+      "starterCode": null,
+      "language": "python",
+      "buggyVersion": "import numpy as np\n\ndef scaled_dot_product_attention(query, key, value, mask=None):\n    # Bug: Using addition instead of matrix multiplication\n    matmul_qk = query + key.transpose(-2, -1)\n\n    # Bug: Using an incorrect formula for scaling\n    depth = key.shape[-1]  # should be query.shape[-1]\n    scaled_attention_logits = matmul_qk / (depth + 1)  # should use np.sqrt(depth)\n\n    if mask is not None:\n        scaled_attention_logits += (mask * 1e9)  # Incorrect sign, should be -1e9\n\n    # Bug: Softmax computation ignores axis and keepdims\n    attention_weights = np.exp(scaled_attention_logits) / np.sum(\n        np.exp(scaled_attention_logits)\n    )\n\n    output = np.matmul(attention_weights, value)\n    return output, attention_weights\n\n\nclass MultiHeadAttention:\n    def __init__(self, d_model, num_heads):\n        # Bug: Removed assertion for invalid configurations\n        # assert d_model % num_heads == 0\n        self.num_heads = num_heads\n        self.depth = d_model // num_heads\n\n        # Bug: Weight initialization produces wrong dimensions\n        self.wq = np.random.rand(d_model, self.depth)\n        self.wk = np.random.rand(d_model, self.depth)\n        self.wv = np.random.rand(d_model, self.depth)\n        self.wo = np.random.rand(d_model, d_model)\n\n    def split_heads(self, x, batch_size):\n        # Bug: Incorrect reshaping (axes swapped)\n        x = x.reshape(self.num_heads, batch_size, -1, self.depth)\n        return x.transpose(1, 0, 2, 3)\n\n    def __call__(self, query, key, value, mask=None):\n        batch_size = query.shape[1]  # Bug: should be shape[0]\n\n        # Bug: Incorrect linear transformations (matmul args swapped)\n        query = np.matmul(self.wq, query)\n        key = np.matmul(self.wk, key)\n        value = np.matmul(self.wv, value)\n\n        query = self.split_heads(query, batch_size)\n        key = self.split_heads(key, batch_size)\n        value = self.split_heads(value, batch_size)\n\n        attention_outputs, attention_weights = scaled_dot_product_attention(\n            query, key, value, mask\n        )\n\n        attention_outputs = attention_outputs.transpose(0, 2, 3, 1)  # Bug: Wrong axes\n        concat_attention = attention_outputs.reshape(batch_size, -1, self.num_heads)  # Bug: Wrong shape\n\n        output = np.matmul(concat_attention, self.wo)\n        return output, attention_weights",
+      "referenceSolutions": [
+        {
+          "label": "Корректная реализация MultiHeadAttention",
+          "code": "import numpy as np\n\ndef scaled_dot_product_attention(query, key, value, mask=None):\n    matmul_qk = np.matmul(query, key.transpose(-2, -1))\n    depth = query.shape[-1]\n    scaled_attention_logits = matmul_qk / np.sqrt(depth)\n\n    if mask is not None:\n        scaled_attention_logits += (mask * -1e9)\n\n    attention_weights = np.exp(\n        scaled_attention_logits - np.max(scaled_attention_logits, axis=-1, keepdims=True)\n    )\n    attention_weights /= np.sum(attention_weights, axis=-1, keepdims=True)\n\n    output = np.matmul(attention_weights, value)\n    return output, attention_weights\n\n\nclass MultiHeadAttention:\n    def __init__(self, d_model, num_heads):\n        assert d_model % num_heads == 0, \"d_model must be divisible by num_heads\"\n        self.num_heads = num_heads\n        self.depth = d_model // num_heads\n\n        self.wq = np.random.rand(d_model, d_model)\n        self.wk = np.random.rand(d_model, d_model)\n        self.wv = np.random.rand(d_model, d_model)\n        self.wo = np.random.rand(d_model, d_model)\n\n    def split_heads(self, x, batch_size):\n        x = x.reshape(batch_size, -1, self.num_heads, self.depth)\n        return x.transpose(0, 2, 1, 3)\n\n    def __call__(self, query, key, value, mask=None):\n        batch_size = query.shape[0]\n\n        query = np.matmul(query, self.wq)\n        key = np.matmul(key, self.wk)\n        value = np.matmul(value, self.wv)\n\n        query = self.split_heads(query, batch_size)\n        key = self.split_heads(key, batch_size)\n        value = self.split_heads(value, batch_size)\n\n        attention_outputs, attention_weights = scaled_dot_product_attention(\n            query, key, value, mask\n        )\n\n        attention_outputs = attention_outputs.transpose(0, 2, 1, 3)\n        concat_attention = attention_outputs.reshape(batch_size, -1, self.num_heads * self.depth)\n\n        output = np.matmul(concat_attention, self.wo)\n        return output, attention_weights",
+          "notes": "Все 12 багов исправлены. Ключевые: matmul вместо сложения, np.sqrt(depth), правильный sign маски (-1e9), softmax с axis=-1 и keepdims, размеры wq/wk/wv (d_model×d_model), корректный reshape в split_heads, shape[0] для batch_size, порядок аргументов matmul, transpose(0,2,1,3), reshape с num_heads*depth."
+        }
+      ],
+      "followUps": [
+        "Объясни формулу scaled dot-product attention: зачем делить на sqrt(depth)?",
+        "Почему softmax нужно делать по axis=-1, а не по всему тензору?",
+        "Что произойдёт, если wq имеет размер (d_model, depth) вместо (d_model, d_model) — как это сломает forward pass?"
+      ],
+      "greenSignals": [
+        "🟢 Находит сложение вместо matmul в attention — понимает механику dot-product attention",
+        "🟢 Замечает неверное масштабирование (depth+1 вместо sqrt(depth)) и объясняет зачем sqrt",
+        "🟢 Указывает на проблему softmax без axis=-1 — нормализация по всему тензору вместо строк",
+        "🟢 Находит неверные размеры весовых матриц wq/wk/wv и объясняет зачем d_model×d_model"
+      ],
+      "redSignals": [
+        "🔴 Не понимает формулу scaled dot-product attention",
+        "🔴 Не замечает проблему с порядком осей в transpose/reshape",
+        "🔴 Не может объяснить, что должен делать split_heads"
+      ],
+      "evaluationNotes": "Список всех 12 багов: 1) query + key.transpose вместо np.matmul — сложение вместо матричного умножения; 2) depth = key.shape[-1] вместо query.shape[-1]; 3) масштабирование / (depth+1) вместо / np.sqrt(depth); 4) mask * 1e9 вместо -1e9 — знак перевёрнут; 5) softmax без axis=-1, keepdims=True — нормализует весь тензор; 6) убрана assert d_model % num_heads == 0; 7) wq/wk/wv размер (d_model, depth) вместо (d_model, d_model); 8) split_heads: reshape(num_heads, batch_size, ...) вместо (batch_size, ..., num_heads, depth); 9) batch_size = query.shape[1] вместо shape[0]; 10) np.matmul(self.wq, query) вместо np.matmul(query, self.wq); 11) transpose(0,2,3,1) вместо (0,2,1,3); 12) reshape(..., num_heads) вместо num_heads*depth. Задача для кандидатов с ML/NLP-бэкграундом. Сильный находит 6+; средний — 3–4. Достаточно найти хотя бы 3, чтобы засчитать задачу.",
+      "timeBudgetMin": 15,
+      "scoringDimension": "cs",
+      "weight": 2,
+      "mlSpecific": true,
+      "status": "ready"
+    },
+    {
+      "id": "SD-01",
+      "category": "system-design",
+      "difficulty": "medium",
+      "title": "Офлайн-сканирование товаров — синк при появлении сети",
+      "format": "design",
+      "prompt": "Сотрудники сканируют товары офлайн (на складе нет интернета). Данные накапливаются на устройстве и синхронизируются при появлении сети.\n\nСпроектируй систему:\n- API — как устроен эндпоинт синхронизации?\n- Хранение данных — что хранится на устройстве, что на сервере?\n- Разрешение конфликтов — что если несколько устройств изменили один товар?\n- Идемпотентность — что произойдёт, если один и тот же батч придёт дважды?\n\nНарисуй схему, опиши ключевые компоненты и trade-offs.",
+      "examples": [],
+      "starterCode": null,
+      "language": "text",
+      "referenceSolutions": [],
+      "followUps": [
+        "Что с конкурентностью — несколько устройств пишут одну запись одновременно при появлении сети?",
+        "Как гарантировать идемпотентность повторной отправки батча?",
+        "Где узкое место при тысячах устройств синкающихся одновременно?",
+        "Что будет, если сеть пропадёт посередине синхронизации — partial sync?",
+        "Как хранить данные офлайн на устройстве — локальная БД, файлы, очередь?"
+      ],
+      "greenSignals": [
+        "🟢 Сразу думает про идемпотентность: уникальный batch_id / scan_id генерируется на клиенте",
+        "🟢 Предлагает конкретный механизм разрешения конфликтов с обоснованием trade-off (last-write-wins, logical timestamps, vector clocks)",
+        "🟢 Думает про partial sync: что делать, если батч принят частично",
+        "🟢 Называет проблему thundering herd при массовом появлении сети и предлагает решение (jitter, backoff)"
+      ],
+      "redSignals": [
+        "🔴 Не думает про конфликты при параллельной отправке с нескольких устройств",
+        "🔴 Нет мыслей об идемпотентности повторной отправки",
+        "🔴 Ответ «я бы спросил у модели» или «заюзал бы готовый sync-фреймворк» без объяснения принципов",
+        "🔴 Не понимает, что такое conflict resolution стратегии"
+      ],
+      "evaluationNotes": "Оцениваем не архитектурный перфекционизм, а инженерные trade-offs. Идеального решения нет — важно, что кандидат думает про идемпотентность (batch_id как PK или upsert by unique key), conflict resolution (last-write-wins простой но теряет данные; vector clocks точный но сложный) и reliability (retry, backoff, partial-ack). Хорошие ответы: SQLite на устройстве с WAL, очередь батчей, сервер возвращает accepted/rejected по каждому элементу, клиент применяет дельту. Красные флаги: «просто пишем данные и всё», «конфликтов не будет», «сервер всегда прав».",
+      "timeBudgetMin": 14,
+      "scoringDimension": "system-design",
+      "weight": 2,
+      "status": "ready"
+    },
+    {
+      "id": "AGT-01",
+      "category": "agents",
+      "difficulty": "medium",
+      "title": "Агент по регламентам с эскалацией человеку",
+      "format": "design",
+      "prompt": "Агент по запросу сотрудника находит ответ в регламентах компании. При неуверенности в ответе — эскалирует вопрос человеку.\n\nСпроектируй агента:\n- Из чего он состоит — компоненты, инструменты?\n- Что хранится в состоянии?\n- Где точка эскалации и как она определяется?\n- Как понять, что агент отвечает корректно?",
+      "examples": [],
+      "starterCode": null,
+      "language": "text",
+      "referenceSolutions": [],
+      "followUps": [
+        "Чем агент отличается от простой RAG-цепочки без цикла?",
+        "Как устроен цикл агента и когда он останавливается — защита от бесконечного цикла?",
+        "Как ограничить «радиус поражения» при ошибке агента?",
+        "Что с памятью — как агент восстанавливается после сбоя посередине диалога?",
+        "Когда мульти-агент оправдан, а когда это переусложнение?"
+      ],
+      "greenSignals": [
+        "🟢 Чётко определяет состояние агента: history, confidence_score, escalation_reason, tool_calls",
+        "🟢 Думает про точку эскалации как измеримое условие — порог уверенности, тип запроса — а не просто «когда не уверен»",
+        "🟢 Предлагает метрику корректности: golden dataset, human eval, precision на тестовом сете вопрос-ответ",
+        "🟢 Рассуждает про failure modes без наводящих: петля, галлюцинация, неверная эскалация, missing tool"
+      ],
+      "redSignals": [
+        "🔴 Агент как чёрный ящик: «отправляем запрос в LLM — получаем ответ»",
+        "🔴 Не думает про состояние между шагами и что будет при сбое",
+        "🔴 Эскалация не определена как измеримое условие — «когда агент почувствует»",
+        "🔴 Нет ответа на «как поймёшь, что отвечает корректно» — eval отсутствует"
+      ],
+      "evaluationNotes": "Слушаем рассуждение, а не идеальную архитектуру. Ключевые маркеры зрелости: 1) состояние чётко определено и агент может быть восстановлен после сбоя; 2) эскалация — измеримое условие (confidence < threshold, ambiguous query type), а не «агент решит сам»; 3) есть ответ на «как меряем качество» — хотя бы golden set и human eval; 4) candidate думает про guardrails и failure modes. Стек не важен — LangGraph, собственная state machine, всё что угодно; важен принцип. Хорошие ответы включают: tool: search_regulations(query), escalate_to_human(reason), state: {messages, retrieved_docs, confidence}, stop condition: answer found OR confidence < threshold OR max_steps reached.",
+      "timeBudgetMin": 14,
+      "scoringDimension": "agents",
+      "weight": 3,
+      "status": "ready"
+    },
+    {
+      "id": "AIP-01",
+      "category": "ai-practice",
+      "difficulty": "easy",
+      "title": "AI-augmented практика — карточка-чеклист сигналов",
+      "format": "discussion",
+      "prompt": "Карточка для разговора о практике использования AI-инструментов в ежедневной работе.\n\nВопросы для обсуждения:\n- Чем работаешь ежедневно? (Claude Code, Cursor, Codex, другие)\n- Подключал ли MCP / CLI-агентов к своему workflow?\n- Как валидируешь то, что нагенерила модель?\n- Где AI-инструментам не доверяешь и почему?\n- Как описываешь задачу агенту, чтобы получить нужный результат?",
+      "examples": [],
+      "starterCode": null,
+      "language": null,
+      "referenceSolutions": [],
+      "followUps": [
+        "Приведи пример, где AI-инструмент тебя подвёл — как обнаружил и что сделал?",
+        "Как встраиваешь AI в code review или тестирование?",
+        "Когда ты не доверяешь выводу модели и перепроверяешь руками?"
+      ],
+      "greenSignals": [
+        "🟢 Называет конкретные инструменты и объясняет, как встраивает их в реальный workflow",
+        "🟢 Сам валидирует вывод модели: запускает, пишет тесты, делает code review сгенерированного кода",
+        "🟢 Понимает границы: называет конкретные случаи, где AI-инструменту не доверяет и почему",
+        "🟢 Описывает практику промптинга: как формулирует задачу, итерирует, разбивает на подзадачи",
+        "🟢 Подключал MCP или CLI-агентов и может объяснить, зачем"
+      ],
+      "redSignals": [
+        "🔴 AI-инструменты = «ChatGPT в браузере для вопросов»",
+        "🔴 Не валидирует вывод модели: «копирую код и если запустилось — ок»",
+        "🔴 Не понимает, что делает сгенерированный код — не может объяснить при вопросе",
+        "🔴 Не использует AI-инструменты в daily workflow или использует только как поиск"
+      ],
+      "evaluationNotes": "Цель — отделить живую практику от «ChatGPT в браузере». Сильный кандидат: использует Claude Code / Cursor / Codex как copilot или агент, понимает что происходит под капотом, валидирует вывод, знает где AI ошибается. Слабый: только чат, не валидирует, не понимает сгенерированный код. Дополнительный сигнал: подключал MCP-серверы, настраивал CLI-агентов, участвовал в prompt engineering — это FDE-специфика.",
+      "timeBudgetMin": 8,
+      "scoringDimension": "ai-practice",
+      "weight": 2,
+      "status": "ready"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Техническое интервью — FDE, этап 2 · интервьюер</title>
+  <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: "X5 Sans", system-ui, sans-serif;
+      color: var(--x5-ink);
+      background: var(--x5-surface);
+      font-size: var(--fs-body);
+      line-height: 1.45;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    :focus-visible { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+
+    /* ---------- topbar ---------- */
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--x5-surface);
+      border-bottom: 1px solid var(--x5-divider);
+      padding: 16px 24px 12px;
+    }
+    .topbar__row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .topbar__title { font-weight: 500; font-size: var(--fs-h4); margin: 0; }
+    .topbar__spacer { flex: 1; }
+    .timer {
+      font-family: var(--font-mono);
+      font-size: var(--fs-h3); font-variant-numeric: tabular-nums;
+      color: var(--x5-ink);
+    }
+    .timer--overtime { color: var(--x5-danger); }
+    .timer__total { color: var(--x5-ink-quiet); font-size: var(--fs-body); }
+    .phase-label { color: var(--x5-ink-muted); font-size: var(--fs-caption); }
+
+    /* timebox segments */
+    .timebox { display: flex; gap: 3px; margin-top: 10px; list-style: none; padding: 0; }
+    .timebox__seg {
+      background: var(--x5-surface-soft);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px; min-width: 0;
+      transition: background var(--dur-base) var(--ease-standard);
+    }
+    .timebox__seg[data-state="past"] { background: var(--x5-surface-grey); }
+    .timebox__seg[aria-current="step"] { background: var(--x5-citrus-soft); }
+    .timebox__range { font-size: var(--fs-caption); color: var(--x5-ink-muted); font-weight: 500; }
+    .timebox__label {
+      font-size: var(--fs-caption); color: var(--x5-ink-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* ---------- badges / buttons ---------- */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      border-radius: var(--radius-pill); padding: 3px 10px;
+      font-size: var(--fs-caption); font-weight: 500;
+      background: var(--x5-surface); border: 1px solid var(--x5-divider); color: var(--x5-ink-muted);
+    }
+    .badge--on { background: var(--x5-success); color: var(--x5-white); border-color: transparent; }
+    .badge--weight { background: var(--x5-surface-soft); color: var(--x5-ink-muted); border-color: transparent; }
+    .badge--ml { background: var(--x5-violet); color: var(--x5-white); border-color: transparent; }
+
+    .btn {
+      font: inherit; font-weight: 500; cursor: pointer;
+      border-radius: var(--radius-pill); padding: 8px 16px;
+      border: 1px solid var(--x5-divider); background: var(--x5-surface); color: var(--x5-ink);
+      transition: background var(--dur-fast) var(--ease-standard);
+    }
+    .btn:hover { background: var(--x5-surface-soft); }
+    .btn--primary { background: var(--x5-ink); color: var(--x5-white); border-color: transparent; }
+    .btn--primary:hover { opacity: .9; background: var(--x5-ink); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ---------- layout ---------- */
+    .layout {
+      display: grid; grid-template-columns: 320px 1fr; gap: 20px;
+      padding: 20px 24px 96px; align-items: start;
+    }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--x5-surface);
+      border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-card);
+      padding: 16px;
+    }
+    .panel + .panel { margin-top: 16px; }
+
+    /* bank */
+    .bank { position: sticky; top: 132px; }
+    @media (max-width: 900px) { .bank { position: static; } }
+    .bank__filters { display: flex; gap: 8px; margin-bottom: 12px; }
+    .bank__filters select {
+      font: inherit; flex: 1; padding: 6px 8px;
+      border: 1px solid var(--x5-divider-strong); border-radius: var(--radius-sm);
+      background: var(--x5-surface); color: var(--x5-ink);
+    }
+    .task-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .task-item {
+      border: 1px solid var(--x5-divider); border-radius: var(--radius-sm);
+      padding: 10px 12px; cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-standard);
+    }
+    .task-item:hover { background: var(--x5-surface-soft); }
+    .task-item[aria-selected="true"] { background: var(--x5-surface-alt); border-color: var(--x5-divider-strong); }
+    .task-item__top { display: flex; align-items: center; gap: 8px; }
+    .task-item__id { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--x5-ink-quiet); }
+    .task-item__sent { margin-left: auto; color: var(--x5-success); font-size: var(--fs-caption); }
+    .task-item__title { margin-top: 3px; }
+    .task-item__meta { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip {
+      font-size: var(--fs-caption); color: var(--x5-ink-muted);
+      background: var(--x5-surface-soft); border-radius: var(--radius-sm); padding: 1px 7px;
+    }
+
+    /* stage / task details */
+    .meta-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+    h2.stage__title { font-size: var(--fs-h4); font-weight: 500; margin: 0 0 4px; }
+    .section-h { font-size: var(--fs-caption); text-transform: none; color: var(--x5-ink-quiet);
+      font-weight: 500; letter-spacing: .02em; margin: 18px 0 8px; }
+    .prompt p { margin: 0 0 8px; }
+    .prompt ul { margin: 0 0 8px; padding-left: 20px; }
+    code { font-family: var(--font-mono); font-size: .92em;
+      background: var(--x5-surface-soft); padding: 1px 5px; border-radius: 4px; }
+    pre.code {
+      font-family: var(--font-mono); font-size: var(--fs-caption);
+      background: var(--x5-surface-alt); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 12px; overflow: auto; margin: 0 0 8px;
+    }
+    pre.code code { background: none; padding: 0; }
+    table.examples { border-collapse: collapse; width: 100%; margin: 0 0 8px; font-size: var(--fs-caption); }
+    table.examples th, table.examples td {
+      border: 1px solid var(--x5-divider); padding: 6px 8px; text-align: left; vertical-align: top;
+    }
+    table.examples th { color: var(--x5-ink-muted); font-weight: 500; background: var(--x5-surface-soft); }
+    .ref { margin-bottom: 12px; }
+    .ref__h { font-weight: 500; margin-bottom: 4px; }
+    .muted { color: var(--x5-ink-muted); }
+    .signals { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 640px) { .signals { grid-template-columns: 1fr; } }
+    .signals ul { margin: 0; padding-left: 18px; }
+    .signals li { margin-bottom: 4px; }
+    .sig-green::marker { content: "🟢  "; }
+    .sig-red::marker { content: "🔴  "; }
+    .mirror {
+      font-family: var(--font-mono); font-size: var(--fs-caption);
+      background: var(--x5-surface-alt); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 12px; min-height: 80px;
+      white-space: pre-wrap; word-break: break-word; margin: 0;
+    }
+    .mirror:empty::before { content: "— кандидат ещё не писал код —"; color: var(--x5-ink-quiet); }
+
+    /* scoring */
+    table.score { border-collapse: collapse; width: 100%; }
+    table.score th, table.score td { border-bottom: 1px solid var(--x5-divider); padding: 10px 8px; text-align: left; }
+    table.score th { color: var(--x5-ink-muted); font-weight: 500; font-size: var(--fs-caption); }
+    .scale { display: flex; gap: 6px; }
+    .scale label { cursor: pointer; }
+    .scale input { position: absolute; opacity: 0; width: 0; }
+    .scale span {
+      display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center;
+      border: 1px solid var(--x5-divider-strong); border-radius: var(--radius-sm); color: var(--x5-ink-muted);
+    }
+    .scale input:checked + span { background: var(--x5-ink); color: var(--x5-white); border-color: transparent; }
+    .scale input:focus-visible + span { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+    .verdict {
+      margin-top: 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .verdict__badge {
+      font-size: var(--fs-h4); font-weight: 500; border-radius: var(--radius-pill); padding: 6px 18px;
+      background: var(--x5-surface-soft); color: var(--x5-ink-muted);
+    }
+    .verdict__badge[data-v="GO"] { background: var(--x5-success); color: var(--x5-white); }
+    .verdict__badge[data-v="NO-GO"] { background: var(--x5-danger); color: var(--x5-white); }
+    .verdict__avg { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+    .notice {
+      background: var(--x5-surface-soft); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 14px 16px; color: var(--x5-ink-muted);
+    }
+    .notice code { background: var(--x5-surface); }
+
+    /* logo bottom-left */
+    .brand-logo {
+      position: fixed; left: var(--slide-margin, 24px); bottom: 16px; height: 22px; opacity: .9;
+      pointer-events: none; z-index: 5;
+    }
+
+    [hidden] { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__row">
+      <h1 class="topbar__title">Техническое интервью — FDE, этап 2</h1>
+      <span id="conn-badge" class="badge">кандидат не подключён</span>
+      <span class="topbar__spacer"></span>
+      <button id="btn-scoring" class="btn" type="button">Оценка</button>
+      <button id="btn-reset" class="btn" type="button">Сброс</button>
+    </div>
+    <div class="topbar__row" style="margin-top:10px;">
+      <span class="timer" id="timer" role="timer" aria-live="off">00:00</span>
+      <span class="timer__total">/ 60:00</span>
+      <button id="btn-timer" class="btn btn--primary" type="button">Старт</button>
+      <span class="phase-label" id="phase-label">подготовка</span>
+    </div>
+    <ol class="timebox" id="timebox" aria-label="Таймбоксинг этапа"></ol>
+    <span class="sr-only" id="seg-live" aria-live="polite"></span>
+  </header>
+
+  <div class="layout">
+    <aside class="bank panel" aria-label="Банк задач">
+      <div class="bank__filters">
+        <select id="filter-cat" aria-label="Фильтр по категории"></select>
+        <select id="filter-diff" aria-label="Фильтр по сложности"></select>
+      </div>
+      <ul class="task-list" id="task-list"></ul>
+    </aside>
+
+    <main class="stage">
+      <!-- Task view -->
+      <section id="view-task" aria-label="Детали задачи">
+        <div class="panel" id="task-empty">
+          <p class="muted">Выберите задачу в банке слева и нажмите «Показать кандидату».</p>
+        </div>
+        <div class="panel" id="task-details" hidden></div>
+        <div class="panel" id="mirror-panel" hidden>
+          <div class="section-h">Код кандидата — в реальном времени</div>
+          <pre class="mirror" id="candidate-mirror" aria-live="polite"></pre>
+        </div>
+      </section>
+
+      <!-- Scoring view -->
+      <section id="view-score" aria-label="Оценочный лист" hidden>
+        <div class="panel">
+          <h2 class="stage__title">Оценочный лист</h2>
+          <p class="muted">Шкала: 1 — нет · 2 — слабо · 3 — норма для Middle+ · 4 — сильно.</p>
+          <table class="score">
+            <thead><tr><th>Критерий</th><th>Вес</th><th>Оценка</th></tr></thead>
+            <tbody id="score-body"></tbody>
+          </table>
+          <div class="verdict">
+            <span class="verdict__badge" id="verdict-badge" data-v="">оцените все критерии</span>
+            <span class="verdict__avg" id="verdict-avg"></span>
+            <span class="topbar__spacer"></span>
+            <button id="btn-finish" class="btn btn--primary" type="button" disabled>Зафиксировать</button>
+            <button id="btn-reopen" class="btn" type="button" hidden>Изменить</button>
+          </div>
+          <p class="muted" id="verdict-rule" style="margin-top:10px; font-size:var(--fs-caption);">
+            GO — средневзвешенное ≥ 3.0 и нет «1» в строках «Проектирование агентов», «Прод-зрелость», «CS-фундамент».
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <img class="brand-logo" src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
+
+  <script src="sync.js"></script>
+  <script src="interviewer.js"></script>
+</body>
+</html>
