@@ -9,6 +9,8 @@
   var bus = HRISync.create({ source: 'interviewer' });
 
   // ---------- constants ----------
+  /* SYNC-CONTRACT: guide.html (таблица «Таймбокс сегментов») дублирует SEGMENTS статически —
+     при изменении обнови guide.html; гайд сверяет и пишет console.warn при дрейфе. */
   var SEGMENTS = [
     { from: 0, to: 5, label: 'разогрев' },
     { from: 5, to: 18, label: 'фундамент' },
@@ -19,6 +21,8 @@
   ];
   var TOTAL_SEC = 60 * 60;
 
+  /* SYNC-CONTRACT: guide.html (таблица «Критерии оценки» и стоп-строки) дублирует CRITERIA статически —
+     при изменении обнови guide.html; гайд сверяет и пишет console.warn при дрейфе. */
   var CRITERIA = [
     { key: 'cs', label: 'CS-фундамент', weight: 2, stop: true },
     { key: 'systemDesign', label: 'System design', weight: 2, stop: false },
@@ -296,6 +300,8 @@
       '<span class="chip">' + esc(DIM_LABEL[t.scoringDimension] || t.scoringDimension) + ' ×' + t.weight + '</span>' +
       '<span class="chip">' + t.timeBudgetMin + ' мин</span>' +
       (t.mlSpecific ? '<span class="badge badge--ml">ML-специфична</span>' : '') +
+      // контракт якорей памятки: guide.html#task-{id} (см. CLAUDE.md, спека 001)
+      '<a class="guide-link" href="guide.html#task-' + esc(t.id) + '" target="_blank" rel="noopener">памятка по задаче</a>' +
     '</div>';
     html += '<h2 class="stage__title">' + esc(t.title) + '</h2>';
     html += '<div class="prompt">' + mdLite(t.prompt) + '</div>';

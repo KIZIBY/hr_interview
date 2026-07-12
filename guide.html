@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Гайд интервьюера — технический этап №2 · FDE</title>
+  <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css" />
+  <style>
+    /* Дайлы taste-skill: VARIANCE 3 / MOTION 2 / DENSITY 5 — внутренний справочный документ.
+       Визуальный язык — X5 Group DS (токены из colors_and_type.css); при конфликте побеждает X5. */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; }
+    body {
+      font-family: "X5 Sans", system-ui, sans-serif;
+      color: var(--x5-ink);
+      background: var(--x5-surface);
+      font-size: var(--fs-body);
+      line-height: 1.5;
+    }
+    :root { --topbar-h: 64px; }
+    :focus-visible { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 30;
+      background: var(--x5-ink); color: var(--x5-white);
+      padding: 8px 16px; border-radius: 0 0 var(--radius-sm) 0;
+    }
+    .skip-link:focus { left: 0; }
+
+    /* ---------- topbar ---------- */
+    .topbar {
+      position: sticky; top: 0; z-index: 10; height: var(--topbar-h);
+      display: flex; align-items: center; gap: 16px;
+      background: var(--x5-surface);
+      border-bottom: 1px solid var(--x5-divider);
+      padding: 0 24px;
+    }
+    .topbar h1 { font-weight: 500; font-size: var(--fs-h4); margin: 0; }
+    .topbar__meta { color: var(--x5-ink-quiet); font-size: var(--fs-caption); margin-left: auto; }
+
+    /* ---------- баннер конфиденциальности ---------- */
+    .guard-banner {
+      background: var(--x5-citrus-soft);
+      border-bottom: 1px solid var(--x5-divider);
+      padding: 12px 24px;
+      font-size: var(--fs-caption);
+    }
+    .guard-banner strong { font-weight: 500; }
+
+    /* ---------- layout ---------- */
+    .layout {
+      display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 32px;
+      max-width: 1160px; margin: 0 auto;
+      padding: 24px 24px 120px;
+    }
+    .layout > * { min-width: 0; } /* grid-item не сжимается ниже min-content без этого (урок issue #9) */
+    @media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+    /* ---------- TOC ---------- */
+    .toc {
+      position: sticky; top: calc(var(--topbar-h) + 16px);
+      align-self: start;
+      font-size: var(--fs-caption);
+      max-height: calc(100vh - var(--topbar-h) - 32px);
+      overflow-y: auto;
+    }
+    @media (max-width: 900px) { .toc { position: static; max-height: none; } }
+    .toc ol { list-style: none; margin: 0; padding: 0; }
+    .toc > ol > li { margin-bottom: 2px; }
+    .toc a {
+      display: block; padding: 5px 10px;
+      color: var(--x5-ink-muted); text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: background var(--dur-fast) var(--ease-standard);
+    }
+    .toc a:hover { background: var(--x5-surface-soft); color: var(--x5-ink); }
+    .toc__tasks { margin-top: 2px; padding-left: 10px !important; border-left: 1px solid var(--x5-divider); margin-left: 10px; }
+    .toc__tasks a { padding: 3px 10px; font-family: var(--font-mono); }
+
+    /* ---------- типографика документа ---------- */
+    main h2 {
+      font-size: var(--fs-h3); font-weight: 500;
+      margin: 48px 0 12px; scroll-margin-top: calc(var(--topbar-h) + 16px);
+    }
+    main section:first-of-type h2 { margin-top: 8px; }
+    main h3 { font-size: var(--fs-h4); font-weight: 500; margin: 28px 0 8px; scroll-margin-top: calc(var(--topbar-h) + 16px); }
+    main h4 {
+      font-size: var(--fs-caption); font-weight: 500; color: var(--x5-ink-quiet);
+      letter-spacing: .02em; margin: 18px 0 6px;
+    }
+    main p { margin: 0 0 10px; max-width: 72ch; }
+    main ul, main ol { margin: 0 0 10px; padding-left: 22px; }
+    main li { margin-bottom: 4px; }
+    .muted { color: var(--x5-ink-muted); }
+    .quiet { color: var(--x5-ink-quiet); font-size: var(--fs-caption); }
+    code {
+      font-family: var(--font-mono); font-size: .92em;
+      background: var(--x5-surface-soft); padding: 1px 5px; border-radius: 4px;
+    }
+    pre {
+      font-family: var(--font-mono); font-size: var(--fs-caption);
+      background: var(--x5-surface-alt); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 12px;
+      overflow-x: auto; white-space: pre; max-width: 100%;
+      margin: 0 0 10px;
+    }
+    pre code { background: none; padding: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 0 0 12px; font-size: var(--fs-caption); }
+    th, td { border: 1px solid var(--x5-divider); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { color: var(--x5-ink-muted); font-weight: 500; background: var(--x5-surface-soft); }
+
+    /* ---------- вспомогательные блоки ---------- */
+    .callout {
+      background: var(--x5-surface-soft); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 12px 14px; margin: 0 0 12px;
+      max-width: 72ch;
+    }
+    .callout--rule { background: var(--x5-surface-alt); }
+    .script-line {
+      border-left: 2px solid var(--x5-divider-strong);
+      padding: 2px 0 2px 14px; margin: 0 0 10px; max-width: 68ch;
+    }
+    .marker-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 8px; margin-bottom: 6px; max-width: 72ch; }
+    .marker-row b { font-weight: 500; font-size: var(--fs-caption); color: var(--x5-ink-muted); white-space: nowrap; }
+    .marker-row p { margin: 0; }
+    @media (max-width: 640px) { .marker-row { grid-template-columns: 1fr; gap: 2px; } }
+
+    /* сигналы — CSS-маркеры токенами бренда, без эмодзи (аудит F-1) */
+    ul.sig { list-style: none; padding-left: 0; }
+    ul.sig li { position: relative; padding-left: 18px; margin-bottom: 5px; }
+    ul.sig li::before {
+      content: ""; position: absolute; left: 0; top: .5em;
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    ul.sig--green li::before { background: var(--x5-success); }
+    ul.sig--red li::before { background: var(--x5-danger); }
+    .signals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 80ch; }
+    @media (max-width: 640px) { .signals-grid { grid-template-columns: 1fr; } }
+
+    /* ---------- карточки задач ---------- */
+    #tasks-ref[aria-busy="true"] .cards::after {
+      content: "загружаю банк задач…"; display: block;
+      color: var(--x5-ink-quiet); padding: 16px 0;
+    }
+    .task-card {
+      border: 1px solid var(--x5-divider); border-radius: var(--radius-card);
+      padding: 20px; margin: 0 0 16px;
+      scroll-margin-top: calc(var(--topbar-h) + 16px);
+    }
+    .task-card h3 { margin: 0 0 8px; }
+    .task-card h3 .tid { font-family: var(--font-mono); color: var(--x5-ink-quiet); font-size: var(--fs-caption); margin-right: 8px; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .chip {
+      font-size: var(--fs-caption); color: var(--x5-ink-muted);
+      background: var(--x5-surface-soft); border-radius: var(--radius-sm); padding: 1px 8px;
+    }
+    .chip--ml { background: var(--x5-violet); color: var(--x5-white); }
+    .note-ml, .note-rubric, .note-threshold {
+      border-radius: var(--radius-sm); padding: 10px 12px; margin: 0 0 12px;
+      font-size: var(--fs-caption); max-width: 72ch;
+    }
+    .note-ml { background: var(--x5-surface-alt); border: 1px solid var(--x5-divider-strong); }
+    .note-rubric { background: var(--x5-surface-soft); border: 1px solid var(--x5-divider); }
+    .note-threshold { background: var(--x5-citrus-soft); border: 1px solid var(--x5-divider); font-weight: 500; }
+    ul.bugcheck { list-style: none; padding-left: 0; max-width: 76ch; }
+    ul.bugcheck li { position: relative; padding-left: 24px; margin-bottom: 6px; }
+    ul.bugcheck li::before {
+      content: ""; position: absolute; left: 0; top: .28em;
+      width: 11px; height: 11px; border: 1.5px solid var(--x5-divider-strong); border-radius: 3px;
+    }
+    details { margin: 0 0 10px; }
+    details summary { cursor: pointer; color: var(--x5-ink-muted); font-size: var(--fs-caption); }
+    .ref-item { margin-bottom: 12px; }
+    .ref-item .ref-h { font-weight: 500; margin-bottom: 4px; }
+    .card-error {
+      background: var(--x5-surface-soft); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 14px 16px; color: var(--x5-ink-muted);
+    }
+
+    .brand-logo {
+      position: fixed; left: 24px; bottom: 16px; height: 22px; opacity: .9;
+      pointer-events: none; z-index: 5;
+    }
+
+    /* ---------- print ---------- */
+    @media print {
+      .topbar, .toc, .skip-link, .brand-logo { display: none !important; }
+      .guard-banner { border: 1px solid #999; }
+      .layout { display: block; padding: 0; }
+      .task-card { break-inside: avoid; page-break-inside: avoid; }
+      #scoring { page-break-before: always; font-size: 10pt; }
+      #scoring table { font-size: 9pt; }
+      a[href]::after { content: none; }
+      pre { white-space: pre-wrap; word-break: break-word; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+
+  <header class="topbar">
+    <h1>Гайд интервьюера — технический этап №2</h1>
+    <span class="topbar__meta">FDE Middle+ · процессная часть актуальна на 2026-07-12</span>
+  </header>
+
+  <div class="guard-banner" role="note">
+    <strong>Только для интервьюера — документ конфиденциальный, не передавать кандидатам.</strong>
+    Внутри эталонные решения и критерии оценки. Держите гайд в отдельном окне браузера, не в том, которое шарите;
+    закройте или сверните его перед демонстрацией экрана. Страницы платформы требуют http-сервера:
+    <code>python3 -m http.server 8000</code> в папке проекта.
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Оглавление">
+      <ol>
+        <li><a href="#howto">Как пользоваться</a></li>
+        <li><a href="#flow">Флоу этапа</a></li>
+        <li><a href="#zones">Пять зон проверки</a></li>
+        <li><a href="#signals">Сквозные сигналы</a></li>
+        <li>
+          <a href="#tasks-ref">Памятка по задачам</a>
+          <ol class="toc__tasks" id="toc-tasks"></ol>
+        </li>
+        <li><a href="#scoring">Оценка и вердикт</a></li>
+      </ol>
+    </nav>
+
+    <main id="main-content">
+      <section id="howto" aria-labelledby="howto-h">
+        <h2 id="howto-h">Как пользоваться</h2>
+        <ul>
+          <li>Гайд — ориентир, не скрипт для зачитывания. Следуй за кандидатом, не за порядком секций.</li>
+          <li>Прочитай гайд за 15 минут до начала интервью: флоу, зоны, маркеры.</li>
+          <li>Держи гайд в отдельном окне браузера — не в том, которое шаришь кандидату.</li>
+        </ul>
+      </section>
+
+      <section id="flow" aria-labelledby="flow-h">
+        <h2 id="flow-h">Флоу этапа</h2>
+        <p>Технический этап длится 60 минут: один инженер-интервьюер, разговор плюс немного живого кода
+        или мини-дизайн. Цель — понять, есть ли инженер под AI-инструментами, а не провести leetcode-гонку.</p>
+        <p>Главный риск этапа — нанять «вайбкодера»: человека, который поднял агента через Claude Code,
+        но не понимает, что у него под капотом. Поэтому проверяем не только «что построил», но и инженерный
+        фундамент под этим — структуры данных, алгоритмическое мышление, system design, умение читать
+        и чинить чужой код.</p>
+        <p>За 60 минут всё вглубь не влезет — приоритизируй.</p>
+
+        <h3 id="flow-timebox">Таймбокс сегментов</h3>
+        <!-- SYNC-CONTRACT: значения сегментов продублированы из interviewer.js SEGMENTS —
+             при изменении там обнови таблицу здесь (сторож: console.warn при дрейфе, см. скрипт ниже) -->
+        <table>
+          <thead><tr><th>Время</th><th>О чём говорим</th><th>Что делаю</th></tr></thead>
+          <tbody>
+            <tr><td>0–5</td><td>Разогрев, последний агентский проект кандидата</td><td>Создаю безопасную атмосферу, задаю открытый вопрос; фиксирую технологии, которые называет кандидат — они станут X для зондов в следующем сегменте</td></tr>
+            <tr><td>5–18</td><td>Фундамент + разбор проекта, с прокопкой «что под капотом»</td><td>Углубляюсь в проект кандидата; беру технологию, которую он назвал, и копаю: что под капотом, почему именно она, что будет без неё</td></tr>
+            <tr><td>18–34</td><td>Агентские системы: проектирование + эксплуатация (eval, observability)</td><td>Перехожу к вопросам зон «Проектирование агентов» и «Прод-зрелость»; слушаю, думает ли кандидат про состояние, failure modes, измеримость</td></tr>
+            <tr><td>34–48</td><td>Живой код или system design — выбрать под пробел в сигнале</td><td>Выбираю задачу под зону, где не хватает сигнала — не по порядку в списке (правило ниже)</td></tr>
+            <tr><td>48–55</td><td>Добор по самой слабой зоне</td><td>Мысленно оцениваю пять зон — где самый низкий балл, туда задачей или зондом (правило ниже)</td></tr>
+            <tr><td>55–60</td><td>Вопросы кандидата + next step</td><td>Отвечаю нейтрально на вопросы кандидата; сообщаю, что о следующем шаге сообщит рекрутер</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="flow-script">Скрипт первых 5 минут</h3>
+        <h4>Ход 1 — безопасная атмосфера</h4>
+        <p class="script-line">«Это разговор, не экзамен. Мне интересен ход твоих рассуждений, а не точные
+        формулировки. Если что-то не знаешь — говори вслух, что думаешь: это уже сигнал.»</p>
+        <p class="script-line">«Можем идти в любом порядке — подстроюсь под то, что тебе удобнее обсуждать сначала.»</p>
+        <h4>Ход 2 — открытый вопрос про проект</h4>
+        <p class="script-line">«Расскажи про последний агентский или AI-проект, который ты довёл до прода
+        или близко к нему. Что строил, за что отвечал, как деплоил?»</p>
+        <div class="callout">Фиксируй технологии, которые называет кандидат — это твои X для зондов
+        в сегменте 5–18. Например: кандидат сказал «использовал LangGraph» — X = LangGraph, первый зонд:
+        «что LangGraph делает под капотом?»</div>
+
+        <h3 id="flow-pick">Правило выбора задачи — сегмент 34–48</h3>
+        <p>Выбирай задачу под зону, где не хватает сигнала — не по порядку в списке и не «следующую по номеру».</p>
+        <p>Если к 34-й минуте CS-фундамент покрыт, а по system design кандидат ничего не показал — бери
+        задачу SD-01. Если наоборот — задачу из алгоритмического блока.</p>
+
+        <h3 id="flow-weak">Правило слабой зоны — сегмент 48–55</h3>
+        <p>Мысленно оцени пять зон — CS-фундамент, system design, проектирование агентов, прод-зрелость,
+        AI-augmented практика — и поставь каждой балл 1–4. Где самый низкий балл, туда направляй оставшееся
+        время: задачей из банка или дозондом по ответам кандидата.</p>
+
+        <h3 id="flow-closing">Дежурный текст 55–60 — вопросы кандидата</h3>
+        <h4>Про стек и технологии в команде</h4>
+        <p class="script-line">«Мы используем Python, FastAPI, PostgreSQL как базовый бэкенд-стек.
+        AI-инструменты — часть ежедневной работы: Claude Code, Cursor, MCP-серверы. Конкретный набор
+        складывается под задачу.»</p>
+        <h4>Про следующий шаг процесса</h4>
+        <p class="script-line">«О следующем шаге сообщит рекрутер — обычно в течение нескольких рабочих
+        дней. Они свяжутся с тобой напрямую.»</p>
+
+        <div class="callout callout--rule"><strong>Правило перехода между зонами.</strong> Получил сигнал
+        раньше таймбокса — переходи. Таймбокс истёк без сигнала — один уточняющий вопрос и переходи.</div>
+      </section>
+
+      <section id="zones" aria-labelledby="zones-h">
+        <h2 id="zones-h">Пять зон проверки</h2>
+
+        <h3 id="zone-cs">CS-фундамент</h3>
+        <p><span class="muted">Что проверяем.</span> Структуры данных, сложность (O), умение читать
+        и отлаживать код, а не только генерировать его.</p>
+        <h4>Примерные вопросы зоны</h4>
+        <ul>
+          <li>Маленькая задача или фрагмент чужого кода: найди баг, объясни, что делает, оцени сложность.</li>
+          <li>Какую структуру данных взял бы под задачу и почему?</li>
+          <li>Какая O() у решения и где оно деградирует?</li>
+          <li>Что делает <code>zip(*strs)</code> под капотом?</li>
+          <li>Объясни, почему XOR работает — свойства <code>a^a</code> и <code>a^0</code>?</li>
+        </ul>
+        <h4>Маркеры оценки</h4>
+        <div class="marker-row"><b>звучит как 1</b><p>не читает чужой код, не оценивает сложность, плывёт на структурах данных.</p></div>
+        <div class="marker-row"><b>звучит как 3</b><p>называет структуру данных и объясняет выбор; оценивает O() и поясняет, где n и m; обрабатывает граничные случаи.</p></div>
+        <div class="marker-row"><b>звучит как 4</b><p>сам называет trade-offs по памяти и времени без наводящих; обобщает решение на смежный случай; объясняет failure modes алгоритма.</p></div>
+
+        <h3 id="zone-sd">System design</h3>
+        <p><span class="muted">Что проверяем.</span> API, схемы данных, конкурентность, идемпотентность,
+        ретраи, очереди, кэш, узкие места.</p>
+        <h4>Примерные вопросы зоны</h4>
+        <ul>
+          <li>Спроектируй API и схему данных под небольшую задачу из роли (интеграция, ETL-пайплайн, бот).</li>
+          <li>Что с конкурентностью, идемпотентностью, ретраями, очередями, кэшем?</li>
+          <li>Где узкое место и как масштабировать?</li>
+          <li>Что произойдёт, если один и тот же батч придёт дважды?</li>
+          <li>Как разрешить конфликт, если несколько устройств изменили одну запись одновременно?</li>
+        </ul>
+        <h4>Маркеры оценки</h4>
+        <div class="marker-row"><b>звучит как 1</b><p>не думает про конфликты при параллельной отправке; нет мыслей об идемпотентности; ответ «просто пишем данные и всё».</p></div>
+        <div class="marker-row"><b>звучит как 3</b><p>предлагает конкретный механизм: уникальный batch_id на клиенте, upsert по unique key; называет conflict-resolution стратегию с обоснованием.</p></div>
+        <div class="marker-row"><b>звучит как 4</b><p>сам называет thundering herd при массовом появлении сети и предлагает решение (jitter, backoff); думает про partial sync без наводящих; объясняет trade-offs last-write-wins против vector clocks.</p></div>
+
+        <h3 id="zone-agents">Проектирование агентов</h3>
+        <p><span class="muted">Что проверяем.</span> Управляемость, состояние, инструменты, обработка сбоев.</p>
+        <h4>Примерные вопросы зоны</h4>
+        <ul>
+          <li>Чем агент отличается от простой цепочки?</li>
+          <li>Как устроен цикл и когда агент останавливается — защита от бесконечных циклов?</li>
+          <li>Как описываешь инструменты и ограничиваешь «радиус поражения» при ошибке?</li>
+          <li>Где human-in-the-loop? Что с памятью и восстановлением после сбоя?</li>
+          <li>Когда мульти-агент оправдан, а когда переусложнение?</li>
+        </ul>
+        <h4>Маркеры оценки</h4>
+        <div class="marker-row"><b>звучит как 1</b><p>агент как чёрный ящик — «отправляем запрос в LLM, получаем ответ»; не думает про состояние между шагами; эскалация — «когда агент почувствует».</p></div>
+        <div class="marker-row"><b>звучит как 3</b><p>чётко определяет состояние агента: history, confidence_score, escalation_reason, tool_calls; предлагает stop condition: answer found OR confidence &lt; threshold OR max_steps reached.</p></div>
+        <div class="marker-row"><b>звучит как 4</b><p>сам рассуждает про failure modes без наводящих — петля, галлюцинация, неверная эскалация, missing tool; думает про guardrails и «радиус поражения»; предлагает измеримое условие эскалации, а не «агент решит сам».</p></div>
+
+        <h3 id="zone-prod">Прод-зрелость</h3>
+        <p><span class="muted">Что проверяем.</span> Как меряет качество, отлаживает, держит стоимость и латентность.</p>
+        <h4>Примерные вопросы зоны</h4>
+        <ul>
+          <li>Как понимаешь, что агент работает хорошо — eval-датасет и метрики или «глазами»?</li>
+          <li>Как смотришь трейс прогона?</li>
+          <li>Как локализуешь галлюцинацию или сбой в бою?</li>
+          <li>Как держишь стоимость и латентность? Где guardrails?</li>
+        </ul>
+        <h4>Маркеры оценки</h4>
+        <div class="marker-row"><b>звучит как 1</b><p>демки есть, измерения качества и прода нет; «смотрю глазами, если работает — хорошо»; нет ответа на «как поймёшь, что отвечает корректно».</p></div>
+        <div class="marker-row"><b>звучит как 3</b><p>называет инструмент (Langfuse, LangSmith, MLflow или свой) и объясняет, что смотрит; предлагает метрику корректности — golden dataset или precision на тестовом сете.</p></div>
+        <div class="marker-row"><b>звучит как 4</b><p>сам думает про стоимость, латентность и guardrails без наводящих; описывает культуру измерения; объясняет, как отличает галлюцинацию от правильного ответа на нестандартный вопрос.</p></div>
+
+        <h3 id="zone-ai">AI-augmented практика</h3>
+        <p><span class="muted">Что проверяем.</span> Живая практика плюс понимание границ — не «ChatGPT в браузере».</p>
+        <h4>Примерные вопросы зоны</h4>
+        <ul>
+          <li>Чем работаешь ежедневно — Claude Code, Cursor, Codex или другое?</li>
+          <li>Подключал ли MCP / CLI-агентов к своему workflow?</li>
+          <li>Как валидируешь то, что нагенерила модель, где ей не доверяешь?</li>
+          <li>Как описываешь задачу агенту, чтобы получить нужный результат?</li>
+        </ul>
+        <h4>Маркеры оценки</h4>
+        <div class="marker-row"><b>звучит как 1</b><p>AI-инструменты — «ChatGPT в браузере для вопросов»; не валидирует вывод модели — «копирую код, если запустилось — ок»; не понимает, что делает сгенерированный код.</p></div>
+        <div class="marker-row"><b>звучит как 3</b><p>называет конкретные инструменты и объясняет, как встраивает их в реальный workflow; сам валидирует вывод — запускает, пишет тесты, делает code review сгенерированного кода.</p></div>
+        <div class="marker-row"><b>звучит как 4</b><p>понимает границы — называет конкретные случаи, где AI-инструменту не доверяет и почему; подключал MCP или CLI-агентов и может объяснить зачем; описывает практику промптинга: как формулирует задачу, итерирует, разбивает на подзадачи.</p></div>
+
+        <h3 id="zone-probes">Антивайб-зонды — универсальный паттерн</h3>
+        <p>Возьми технологию или абстракцию, которую кандидат назвал («использовал X»), и задай один
+        из трёх зондов. X — любая технология из речи кандидата: LangGraph, Redis, Docker, FastAPI, что угодно.</p>
+        <ul>
+          <li>«Что X делает под капотом?»</li>
+          <li>«Что будет, если убрать X?»</li>
+          <li>«Почему именно X, а не Y?»</li>
+        </ul>
+        <p class="muted">Реальный инженер объяснит. Тот, кто «поднял по гайду», — поплывёт.</p>
+
+        <h3 id="zone-bridges">Речевые мосты</h3>
+        <h4>Кандидат замолчал и не знает, с чего начать</h4>
+        <p class="script-line">«Можешь думать вслух — мне интересен ход рассуждений.»</p>
+        <h4>Кандидат ушёл не в ту сторону</h4>
+        <p class="script-line">«А если посмотреть со стороны надёжности / состояния?»</p>
+        <h4>Интервьюер не понял ответ</h4>
+        <p class="script-line">«Объясни, как объяснял бы коллеге, который с этим не работал.»</p>
+      </section>
+
+      <section id="signals" aria-labelledby="signals-h">
+        <h2 id="signals-h">Сквозные сигналы</h2>
+        <div class="signals-grid">
+          <div>
+            <h4>Берём</h4>
+            <ul class="sig sig--green">
+              <li>Сам принимает решения и доводит до прода.</li>
+              <li>Объясняет, что под капотом инструментов, которыми пользуется.</li>
+              <li>Читает и чинит чужой код, рассуждает про сложность и структуры данных.</li>
+              <li>Думает про надёжность, измеримость и стоимость без наводящих.</li>
+              <li>Свободно рассуждает про принципы агентов независимо от фреймворка.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Стоп-сигналы, в т.ч. «вайбкодер»</h4>
+            <ul class="sig sig--red">
+              <li>Поднял агента или сервис, но не может объяснить, что внутри и почему так.</li>
+              <li>Не читает чужой код, не оценивает сложность, плывёт на структурах данных.</li>
+              <li>AI и агент как чёрный ящик: сгенерил, запустил, не смотрю.</li>
+              <li>«Я пишу код, внедрение — не моё».</li>
+              <li>Демки есть, измерения качества и прода — нет.</li>
+              <li>Привязан к одному фреймворку и не понимает, что у него под капотом.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="tasks-ref" aria-labelledby="tasksref-h" aria-busy="true">
+        <h2 id="tasksref-h">Памятка по задачам</h2>
+        <p class="muted">Карточки рендерятся из <code>tasks.json</code> — того же банка, что видит пульт.
+        Новые задачи появляются здесь автоматически. Открывайте памятку отсюда, а не кликом по банку
+        в пульте: клик в пульте сразу показывает задачу кандидату.</p>
+        <div class="cards" id="cards"></div>
+      </section>
+
+      <section id="scoring" aria-labelledby="scoring-h">
+        <h2 id="scoring-h">Оценка и вердикт</h2>
+        <p>Шкала: 1 — нет · 2 — слабо · 3 — норма для Middle+ · 4 — сильно.</p>
+
+        <h3 id="scoring-criteria">Критерии оценки</h3>
+        <!-- SYNC-CONTRACT: критерии и веса продублированы из interviewer.js CRITERIA —
+             при изменении там обнови таблицу здесь (сторож: console.warn при дрейфе) -->
+        <table>
+          <thead><tr><th>Критерий</th><th>Вес</th><th>Что смотрим</th></tr></thead>
+          <tbody>
+            <tr><td>CS-фундамент (структуры данных, сложность, чтение/отладка кода) <span class="quiet">стоп-строка</span></td><td>×2</td><td>Читает и чинит чужой код, рассуждает про сложность, называет структуры данных с обоснованием</td></tr>
+            <tr><td>System design (API, данные, конкурентность, масштабирование)</td><td>×2</td><td>Думает про идемпотентность, конфликты, узкие места; называет trade-offs</td></tr>
+            <tr><td>Проектирование агентов (управляемость, состояние, сбои) <span class="quiet">стоп-строка</span></td><td>×3</td><td>Определяет состояние; думает про failure modes и guardrails; эскалация как измеримое условие</td></tr>
+            <tr><td>Прод-зрелость (eval, observability, стоимость, guardrails) <span class="quiet">стоп-строка</span></td><td>×3</td><td>Культура измерения: метрики, трейсы, стоимость; не «глазами»</td></tr>
+            <tr><td>AI-augmented практика (понимает, что делает)</td><td>×2</td><td>Живая практика, валидация вывода, понимание границ AI</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="scoring-verdict">Правило вердикта GO / NO-GO</h3>
+        <p>Средневзвешенно ≥ 3.0 без «1» в стоп-строках → GO.</p>
+        <p>«1» в любой из трёх стоп-строк → NO-GO: CS-фундамент, проектирование агентов, прод-зрелость.</p>
+        <p>«2» в остальных строках (system design, AI-augmented практика) не блокирует вердикт —
+        поясни одной строкой в комментарии, почему.</p>
+        <p class="quiet">Действующее правило считает пульт (interviewer.js). Если правило изменилось —
+        обнови критерии в обоих местах.</p>
+
+        <h3 id="scoring-memo">Памятка</h3>
+        <ul>
+          <li>Стек кандидата — не критерий. Принципы агентских систем важнее конкретного фреймворка.</li>
+          <li>Но фундамент — критерий. Код, сложность и system design нужны, чтобы отсечь тех, кто только оркестрирует AI без понимания.</li>
+          <li>Больше слушаем, чем рассказываем: ключевые вопросы — «а почему именно так?» и «что под капотом?».</li>
+          <li>Не знает наш стек, но грамотно рассуждает про аналоги и фундамент — это плюс.</li>
+          <li>Лёгкая алгоритмика уместна как инструмент проверки фундамента, но сама по себе не цель этапа.</li>
+          <li>Зафиксируй оценку в течение 10 минут после интервью.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <img class="brand-logo" src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* esc/mdLite: копия из interviewer.js — при изменении синхронизировать */
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function inlineMd(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+    function mdLite(src) {
+      var lines = String(src || '').split('\n'), html = '', list = null;
+      function flush() { if (list) { html += '<ul>' + list.map(function (li) { return '<li>' + li + '</li>'; }).join('') + '</ul>'; list = null; } }
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].replace(/\s+$/, '');
+        if (/^\s*[-•*]\s+/.test(line)) { if (!list) list = []; list.push(inlineMd(line.replace(/^\s*[-•*]\s+/, ''))); continue; }
+        flush();
+        if (line.trim() === '') continue;
+        html += '<p>' + inlineMd(line) + '</p>';
+      }
+      flush();
+      return html;
+    }
+
+    /* Данные greenSignals/redSignals в tasks.json содержат эмодзи-префиксы (зелёный/красный круг,
+       U+1F7E2/U+1F534) — по правилам X5 эмодзи запрещены; семантику несёт CSS-маркер, префикс срезаем. */
+    function stripSignalEmoji(s) {
+      return String(s == null ? '' : s).replace(/[\u{1F7E2}\u{1F534}]️?\s*/gu, '');
+    }
+
+    var CAT_LABEL = {
+      algorithms: 'алгоритмы', 'python-swe': 'Python / SWE',
+      debugging: 'отладка', 'system-design': 'system design',
+      agents: 'агенты', 'ai-practice': 'AI-практика'
+    };
+    var DIM_LABEL = {
+      cs: 'CS', 'system-design': 'System design', agents: 'Агенты',
+      production: 'Прод', 'ai-practice': 'AI-практика'
+    };
+
+    /* Разбор evaluationNotes debug-задач: нумерованный список багов «1) …» + хвост с порогом (FR-7).
+       Разделитель пункта — «N)» после начала строки или пробела: «(depth+1)» внутри текста пункта
+       границей не считается (ревью stage-4, W-1). */
+    function parseBugNotes(notes) {
+      var startRe = /(?:^|\s)1\)\s/;
+      if (!startRe.test(notes)) return null;
+      var firstIdx = notes.search(startRe);
+      var intro = notes.slice(0, firstIdx).trim();
+      var rest = notes.slice(firstIdx);
+      var parts = rest.split(/(?:^|\s)\d{1,2}\)\s+/).filter(Boolean);
+      if (!parts.length) return null;
+      var last = parts[parts.length - 1];
+      var tail = '';
+      var m = last.match(/\.\s+(?=[А-ЯA-Z])/);
+      if (m) {
+        var cut = last.indexOf(m[0]) + 1;
+        tail = last.slice(cut).trim();
+        parts[parts.length - 1] = last.slice(0, cut).trim();
+      }
+      return { intro: intro, items: parts, tail: tail };
+    }
+    /* Порог засчитывания и остальной хвост разделяются фильтрацией предложений,
+       без строкового replace (ревью stage-4, W-2). */
+    function thresholdSplit(text) {
+      var sentences = String(text || '').split(/(?<=\.)\s+/);
+      var hit = [], rest = [];
+      sentences.forEach(function (s) {
+        if (/(наход|достаточн)/i.test(s) && /\d/.test(s)) hit.push(s); else rest.push(s);
+      });
+      return { threshold: hit.join(' ').trim(), rest: rest.join(' ').trim() };
+    }
+
+    function renderCard(t) {
+      var isDiscussion = t.format === 'discussion' || t.format === 'design';
+      var hasRef = t.referenceSolutions && t.referenceSolutions.length;
+      var html = '';
+
+      html += '<h3 id="task-h-' + esc(t.id) + '"><span class="tid">' + esc(t.id) + '</span>' + esc(t.title) + '</h3>';
+      html += '<div class="chips">' +
+        '<span class="chip">' + esc(CAT_LABEL[t.category] || t.category) + '</span>' +
+        '<span class="chip">' + esc(t.difficulty) + '</span>' +
+        '<span class="chip">' + esc(DIM_LABEL[t.scoringDimension] || t.scoringDimension) + ' ×' + t.weight + '</span>' +
+        '<span class="chip">' + t.timeBudgetMin + ' мин</span>' +
+        '<span class="chip">' + esc(t.format) + '</span>' +
+        (t.mlSpecific ? '<span class="chip chip--ml">ML</span>' : '') +
+        '</div>';
+
+      if (t.mlSpecific) {
+        html += '<div class="note-ml">Требует ML-контекста — если у вас нет ML-опыта, возьмите соинтервьюера или другую задачу.</div>';
+      }
+      if (isDiscussion) {
+        html += '<div class="note-rubric">Это рубрика для оценки хода рассуждения, не чеклист дословных совпадений — другие термины и технологии с тем же смыслом засчитываются.</div>';
+      }
+
+      html += '<h4>Условие</h4>' + mdLite(t.prompt);
+
+      if (t.examples && t.examples.length) {
+        html += '<h4>Примеры</h4><table><thead><tr><th>Вход</th><th>Выход</th><th>Пояснение</th></tr></thead><tbody>';
+        t.examples.forEach(function (ex) {
+          html += '<tr><td><code>' + esc(ex.input) + '</code></td><td><code>' + esc(ex.output) + '</code></td><td>' + esc(ex.explanation || '') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+      }
+
+      if (t.buggyVersion != null) {
+        html += '<details><summary>Код в редакторе кандидата — с дефектами</summary><pre><code>' + esc(t.buggyVersion) + '</code></pre></details>';
+      }
+
+      if (hasRef) {
+        html += '<h4>Эталонные решения</h4>';
+        t.referenceSolutions.forEach(function (r) {
+          html += '<div class="ref-item"><div class="ref-h">' + esc(r.label) +
+            (r.complexity ? ' · <span class="muted">' + esc(r.complexity) + '</span>' : '') + '</div>';
+          if (r.code) html += '<pre><code>' + esc(r.code) + '</code></pre>';
+          if (r.notes) html += '<p class="muted">' + esc(r.notes) + '</p>';
+          html += '</div>';
+        });
+      }
+
+      if (t.evaluationNotes) {
+        var bugs = t.buggyVersion != null ? parseBugNotes(t.evaluationNotes) : null;
+        if (bugs) {
+          var th = thresholdSplit(bugs.tail || '');
+          if (th.threshold) html += '<div class="note-threshold">Порог засчитывания: ' + esc(th.threshold) + '</div>';
+          html += '<h4>Чеклист багов' + (bugs.intro ? ' — ' + esc(bugs.intro.replace(/:$/, '')) : '') + '</h4>';
+          html += '<ul class="bugcheck">' + bugs.items.map(function (b) { return '<li>' + inlineMd(b) + '</li>'; }).join('') + '</ul>';
+          if (th.rest) html += '<p class="muted">' + inlineMd(th.rest) + '</p>';
+        } else {
+          html += '<h4>' + (isDiscussion ? 'Рубрика оценки' : 'Заметки по оценке — принятые варианты') + '</h4>' + mdLite(t.evaluationNotes);
+        }
+      }
+
+      if ((t.greenSignals && t.greenSignals.length) || (t.redSignals && t.redSignals.length)) {
+        html += '<h4>Сигналы</h4><div class="signals-grid">';
+        html += '<div><div class="quiet">Берём</div><ul class="sig sig--green">' +
+          (t.greenSignals || []).map(function (s) { return '<li>' + esc(stripSignalEmoji(s)) + '</li>'; }).join('') + '</ul></div>';
+        html += '<div><div class="quiet">Стоп</div><ul class="sig sig--red">' +
+          (t.redSignals || []).map(function (s) { return '<li>' + esc(stripSignalEmoji(s)) + '</li>'; }).join('') + '</ul></div>';
+        html += '</div>';
+      }
+
+      if (t.followUps && t.followUps.length) {
+        html += '<h4>Follow-up вопросы</h4><ul>' +
+          t.followUps.map(function (f) { return '<li>' + inlineMd(f) + '</li>'; }).join('') + '</ul>';
+      }
+      return html;
+    }
+
+    var section = document.getElementById('tasks-ref');
+    var cardsEl = document.getElementById('cards');
+    var tocTasks = document.getElementById('toc-tasks');
+
+    fetch('tasks.json')
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (data) {
+        var tasks = data.tasks || [];
+        cardsEl.innerHTML = tasks.map(function (t) {
+          return '<article class="task-card" id="task-' + esc(t.id) + '" aria-labelledby="task-h-' + esc(t.id) + '">' + renderCard(t) + '</article>';
+        }).join('');
+        tocTasks.innerHTML = tasks.map(function (t) {
+          return '<li><a href="#task-' + esc(t.id) + '">' + esc(t.id) + '</a></li>';
+        }).join('');
+        section.removeAttribute('aria-busy');
+        if (location.hash) {
+          var target = document.getElementById(location.hash.slice(1));
+          if (target) target.scrollIntoView();
+        }
+      })
+      .catch(function (err) {
+        console.error('guide: tasks.json load failed:', err);
+        cardsEl.innerHTML = '<div class="card-error">Не удалось загрузить <code>tasks.json</code> — памятка по задачам недоступна. ' +
+          'Откройте гайд по http, а не как файл: в папке проекта запустите <code>python3 -m http.server 8000</code> ' +
+          'и зайдите на <code>http://localhost:8000/guide.html</code>. Остальные разделы гайда работают.</div>';
+        section.removeAttribute('aria-busy');
+      });
+
+    /* SYNC-guard (аудит R-3): сверяем дублированные константы с interviewer.js.
+       Не блокирует работу — только console.warn при возможном дрейфе. */
+    fetch('interviewer.js')
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (src) {
+        if (!src) return;
+        var segs = (src.match(/\{ from: \d+, to: \d+, label:/g) || []).length;
+        var okCriteria =
+          src.indexOf("key: 'cs', label: 'CS-фундамент', weight: 2, stop: true") >= 0 &&
+          src.indexOf("key: 'agents', label: 'Проектирование агентов', weight: 3, stop: true") >= 0 &&
+          src.indexOf("key: 'production', label: 'Прод-зрелость', weight: 3, stop: true") >= 0 &&
+          src.indexOf("key: 'systemDesign', label: 'System design', weight: 2, stop: false") >= 0 &&
+          src.indexOf("key: 'aiPractice', label: 'AI-augmented практика', weight: 2, stop: false") >= 0;
+        var okSegments = segs === 6 &&
+          src.indexOf('{ from: 0, to: 5,') >= 0 && src.indexOf('{ from: 55, to: 60,') >= 0;
+        if (!okSegments) console.warn('guide.html: SEGMENTS в interviewer.js изменились — таблица «Таймбокс сегментов» в гайде может быть устаревшей (SYNC-CONTRACT).');
+        if (!okCriteria) console.warn('guide.html: CRITERIA в interviewer.js изменились — таблица «Критерии оценки» и стоп-строки в гайде могут быть устаревшими (SYNC-CONTRACT).');
+      })
+      .catch(function () { /* file:// или сеть — гвард молчит */ });
+  })();
+  </script>
+</body>
+</html>

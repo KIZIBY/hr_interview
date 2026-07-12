@@ -76,6 +76,8 @@
       transition: background var(--dur-fast) var(--ease-standard);
     }
     .btn:hover { background: var(--x5-surface-soft); }
+    a.btn { text-decoration: none; display: inline-flex; align-items: center; }
+    .guide-link { font-size: var(--fs-caption); color: var(--x5-ink-muted); }
     .btn--primary { background: var(--x5-ink); color: var(--x5-white); border-color: transparent; }
     .btn--primary:hover { opacity: .9; background: var(--x5-ink); }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -232,6 +234,7 @@
       <h1 class="topbar__title">Техническое интервью — FDE, этап 2</h1>
       <span id="conn-badge" class="badge">кандидат не подключён</span>
       <span class="topbar__spacer"></span>
+      <a class="btn" href="guide.html" target="_blank" rel="noopener">Гайд</a>
       <button id="btn-scoring" class="btn" type="button">Оценка</button>
       <button id="btn-reset" class="btn" type="button">Сброс</button>
     </div>
