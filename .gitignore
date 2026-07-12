@@ -8,3 +8,6 @@ tests/agent-evals/last-run.json
 
 # локальные секреты/токены (никогда не в репо)
 *.token
+
+# персональные локальные настройки Claude Code (не общие для команды)
+.claude/settings.local.json
