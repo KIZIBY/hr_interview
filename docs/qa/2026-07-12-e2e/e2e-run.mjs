@@ -156,8 +156,11 @@ await step('E2 XSS: <script> из кода кандидата не исполн�
   if (bad) throw new Error('в зеркале живой <script>');
 });
 await step('E3 [из статики Ренаты] метка «обновлено HH:MM:SS» у зеркала', async () => {
-  const txt = await iv.locator('#mirror-panel').textContent();
-  if (!/обновлено/.test(txt)) throw new Error('метки свежести нет — подтверждён дефект');
+  // Kulibin 2026-07-12 (issue #8): проверяем не только слово, но и формат HH:MM:SS —
+  // метка ставится из env.ts конверта на каждый апдейт кода (interviewer.js CANDIDATE_CODE_UPDATE).
+  const txt = await iv.locator('#mirror-freshness').textContent();
+  if (!/^обновлено \d{2}:\d{2}:\d{2}$/.test(txt.trim())) throw new Error('метка свежести: «' + txt + '»');
+  return txt.trim();
 });
 await iv.screenshot({ path: SHOTS + '/03-interviewer-mirror.png' });
 
@@ -198,10 +201,14 @@ await step('G2 [из статики Ренаты] зеркало после см
 
 // ---------- H. Бейдж подключения: односторонность ----------
 await step('H1 [из статики Ренаты] закрытие вкладки кандидата сбрасывает бейдж', async () => {
+  // Kulibin 2026-07-12 (issue #6): при закрытии вкладки кандидат шлёт DISCONNECT
+  // (pagehide/beforeunload) — бейдж гаснет сразу, не дожидаясь сторожевого таймаута (~8с).
+  // 1.5с окна хватает для быстрого пути; сам таймаут-путь проверяется отдельным скриптом
+  // watchdog-timeout.mjs (heartbeat молчит → бейдж гаснет по watchdog).
   await cd.close();
   await sleep(1500);
   const t = (await iv.locator('#conn-badge').textContent()).trim();
-  if (t === 'кандидат подключён') throw new Error('бейдж залип в «подключён» — подтверждён дефект');
+  if (t !== 'кандидат не подключён') throw new Error('бейдж не сбросился: «' + t + '»');
 });
 const cd2 = await ctx.newPage(); wirePage(cd2, 'candidate');
 await step('H2 новая вкладка кандидата восстанавливает текущую задачу', async () => {
@@ -333,7 +340,16 @@ await step('J9 оценки переживают reload интервьюера',
   if (badge !== 'GO') throw new Error('вердикт: ' + badge);
 });
 await step('J10 клавиатура: стрелка вправо двигает оценку по шкале', async () => {
-  await iv.locator('input[name="score-cs"]:checked').evaluate(i => i.focus());
+  // Kulibin 2026-07-12: чистое воспроизведение фокуса. Прежний шаг делал
+  // evaluate(i => i.focus()) на zero-area радио (.scale input {width:0}) сразу после
+  // reload+клик по кнопке — в headless Chromium фокус не покидал кнопку (activeElement=BUTTON),
+  // и ArrowRight уходил в никуда. Это артефакт тест-скрипта (QA-док 2026-07-12: «при чистом
+  // воспроизведении стрелки работают»), а не дефект продукта. J9 оставляет вид на задаче —
+  // открываем оценку, устанавливаем известную оценку и фокусируем радио как реальный
+  // пользователь (клик по его label), затем ArrowRight.
+  if (await iv.locator('#view-score').evaluate(n => n.hidden)) await iv.locator('#btn-scoring').click();
+  await setScore('cs', 3);
+  await iv.locator('.scale label:has(input[name="score-cs"][value="3"])').click();
   await iv.keyboard.press('ArrowRight');
   const checked = await iv.locator('input[name="score-cs"]:checked').inputValue();
   if (checked !== '4') throw new Error('после ArrowRight: ' + checked);
