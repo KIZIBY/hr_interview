@@ -151,13 +151,24 @@
     .signals li { margin-bottom: 4px; }
     .sig-green::marker { content: "🟢  "; }
     .sig-red::marker { content: "🔴  "; }
+    .mirror-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .mirror-head .section-h { margin: 18px 0 8px; }
+    .mirror-freshness {
+      font-family: var(--font-mono); font-size: var(--fs-caption);
+      color: var(--x5-ink-muted); font-variant-numeric: tabular-nums;
+    }
     .mirror {
       font-family: var(--font-mono); font-size: var(--fs-caption);
       background: var(--x5-surface-alt); border: 1px solid var(--x5-divider);
       border-radius: var(--radius-sm); padding: 12px; min-height: 80px;
       white-space: pre-wrap; word-break: break-word; margin: 0;
     }
-    .mirror:empty::before { content: "— кандидат ещё не писал код —"; color: var(--x5-ink-quiet); }
+    /* Плейсхолдер зеркала: до первого кода по задаче — «ждём код по задаче <ID>»
+       (задаётся из JS через data-placeholder); вне задачи — базовый текст. */
+    .mirror:empty::before { content: attr(data-placeholder); color: var(--x5-ink-quiet); }
 
     /* scoring */
     table.score { border-collapse: collapse; width: 100%; }
@@ -235,7 +246,10 @@
         </div>
         <div class="panel" id="task-details" hidden></div>
         <div class="panel" id="mirror-panel" hidden>
-          <div class="section-h">Код кандидата — в реальном времени</div>
+          <div class="mirror-head">
+            <div class="section-h">Код кандидата — в реальном времени</div>
+            <span class="mirror-freshness" id="mirror-freshness" aria-live="polite" hidden></span>
+          </div>
           <pre class="mirror" id="candidate-mirror" aria-live="polite"></pre>
         </div>
       </section>

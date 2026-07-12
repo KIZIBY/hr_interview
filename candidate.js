@@ -26,6 +26,11 @@
      ============================================================ */
   const MAX_CODE_LEN = 50000;
   const DRAFTS_KEY   = 'x5-hri-candidate-drafts-v1';
+  // Интервал живости (issue #6). Кандидат шлёт HEARTBEAT каждые HEARTBEAT_MS;
+  // у интервьюера сторожевой таймер ~2.5× интервала (см. interviewer.js), поэтому
+  // одна потерянная посылка бейдж не гасит. window.HRI_HEARTBEAT_MS позволяет ускорить
+  // интервал в тестах, не меняя контракт.
+  const HEARTBEAT_MS = (typeof window !== 'undefined' && window.HRI_HEARTBEAT_MS) || 3000;
 
   /* ============================================================
      Candidate-visible field allowlist
@@ -253,9 +258,13 @@
   }
 
   /* ============================================================
-     Post code update — debounced, ≤1 per 300ms
+     Publish code — immediate, single source of truth for the
+     CANDIDATE_CODE_UPDATE message (used both by the debounced
+     input handler and by task switch / SYNC_REQUEST).
+     Пустая строка кода публикуется осознанно (issue #7): зеркалу нужен
+     консистентный сигнал «по этой задаче пусто», а не залипшее прошлое.
      ============================================================ */
-  const postCodeUpdate = debounce(function () {
+  function publishCode() {
     if (!st.task) return;
     const code = el.codeEditor.value;
     if (code.length > MAX_CODE_LEN) {
@@ -268,7 +277,12 @@
       el.syncWarning.hidden = true;
     }
     bus.post(T.CANDIDATE_CODE_UPDATE, { taskId: st.task.id, code: code });
-  }, 300);
+  }
+
+  /* ============================================================
+     Post code update — debounced, ≤1 per 300ms
+     ============================================================ */
+  const postCodeUpdate = debounce(publishCode, 300);
 
   /* ============================================================
      Editor: input handler
@@ -362,6 +376,14 @@
       st.syncPaused = false;
     }
 
+    // Опубликовать текущий черновик по новой задаче, чтобы зеркало интервьюера
+    // наполнилось без ручного ввода (issue #7). Для discussion-задач редактора нет —
+    // зеркало не нужно; для форматов с редактором шлём даже пустую строку, чтобы у зеркала
+    // был консистентный сигнал (пусто по этой задаче), а не залипший код прошлой.
+    if (task.format !== 'discussion') {
+      publishCode();
+    }
+
     // Show content, trigger fade-in
     showState('content');
 
@@ -414,14 +436,11 @@
     }
   });
 
-  // SYNC_REQUEST: respond with current code if available
+  // SYNC_REQUEST: respond with current code for the active task, even if empty —
+  // после F5 интервьюера зеркалу нужен консистентный сигнал по текущей задаче,
+  // а не молчание при пустом редакторе (issue #7, ось F5 интервьюера).
   bus.on(T.SYNC_REQUEST, function () {
-    if (st.task && el.codeEditor.value) {
-      bus.post(T.CANDIDATE_CODE_UPDATE, {
-        taskId: st.task.id,
-        code: el.codeEditor.value,
-      });
-    }
+    if (st.task) publishCode();
   });
 
   // RESET: clear everything, return to waiting
@@ -493,6 +512,29 @@
   }
 
   /* ============================================================
+     Liveness heartbeat (issue #6)
+     Кандидат периодически шлёт HEARTBEAT; интервьюер по таймауту гасит бейдж.
+     ============================================================ */
+  let heartbeatTimer = null;
+
+  function startHeartbeat() {
+    // Сразу при старте — чтобы бейдж поднялся без задержки на первый интервал.
+    bus.post(T.HEARTBEAT, {});
+    if (heartbeatTimer) return;
+    heartbeatTimer = setInterval(function () { bus.post(T.HEARTBEAT, {}); }, HEARTBEAT_MS);
+  }
+
+  function announceDisconnect() {
+    // Явный сигнал ухода — гасит бейдж у интервьюера быстрее сторожевого таймаута.
+    // pagehide/beforeunload не гарантируют доставку (жёсткое закрытие вкладки),
+    // поэтому это ускорение, а watchdog у интервьюера — гарантия.
+    bus.post(T.DISCONNECT, {});
+  }
+  // pagehide покрывает и закрытие вкладки, и bfcache-навигацию; beforeunload — фолбэк.
+  window.addEventListener('pagehide', announceDisconnect);
+  window.addEventListener('beforeunload', announceDisconnect);
+
+  /* ============================================================
      Init
      ============================================================ */
   function init() {
@@ -513,6 +555,9 @@
 
     // Signal readiness — interviewer responds with SESSION_STATE
     bus.post(T.SYNC_REQUEST, {});
+
+    // Начать слать heartbeat (первый — синхронно внутри startHeartbeat).
+    startHeartbeat();
 
     // Load task bank
     fetchTasks();

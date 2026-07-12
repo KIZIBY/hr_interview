@@ -51,6 +51,12 @@
   var candidateConnected = false;
   var lastSegIdx = -1;
   var tick = null;
+  // Сторожевой таймер живости кандидата (issue #6). Любое сообщение кандидата
+  // (в т.ч. HEARTBEAT ~раз в 3с) сбрасывает таймер; молчание дольше таймаута → бейдж гаснет.
+  // 8с ≈ 2.5 пропущенных heartbeat — одна потеря посылки бейдж не роняет.
+  // window.HRI_LIVENESS_MS позволяет ускорить таймаут в тестах, не трогая контракт.
+  var LIVENESS_MS = (typeof window !== 'undefined' && window.HRI_LIVENESS_MS) || 8000;
+  var livenessTimer = null;
 
   // ---------- dom ----------
   var $ = function (id) { return document.getElementById(id); };
@@ -61,7 +67,7 @@
     filterCat: $('filter-cat'), filterDiff: $('filter-diff'), list: $('task-list'),
     viewTask: $('view-task'), viewScore: $('view-score'),
     taskEmpty: $('task-empty'), taskDetails: $('task-details'),
-    mirrorPanel: $('mirror-panel'), mirror: $('candidate-mirror'),
+    mirrorPanel: $('mirror-panel'), mirror: $('candidate-mirror'), mirrorFresh: $('mirror-freshness'),
     scoreBody: $('score-body'), verdictBadge: $('verdict-badge'), verdictAvg: $('verdict-avg'),
     btnFinish: $('btn-finish'), btnReopen: $('btn-reopen')
   };
@@ -176,12 +182,45 @@
   }
   function renderPhase() { el.phase.textContent = PHASE_LABEL[state.phase] || state.phase; }
 
-  // ---------- connection ----------
+  // ---------- connection (liveness watchdog, issue #6) ----------
   function setConnected(on) {
     if (candidateConnected === on) return;
     candidateConnected = on;
     el.conn.textContent = on ? 'кандидат подключён' : 'кандидат не подключён';
     el.conn.classList.toggle('badge--on', on);
+  }
+  // Любое сообщение кандидата = признак живости: поднять бейдж и перезарядить сторожевой таймер.
+  function pingLiveness() {
+    setConnected(true);
+    if (livenessTimer) clearTimeout(livenessTimer);
+    livenessTimer = setTimeout(function () { livenessTimer = null; setConnected(false); }, LIVENESS_MS);
+  }
+  // Явный уход кандидата (DISCONNECT) — гасим сразу, не ждём таймаута.
+  function dropLiveness() {
+    if (livenessTimer) { clearTimeout(livenessTimer); livenessTimer = null; }
+    setConnected(false);
+  }
+
+  // ---------- mirror freshness + placeholder (issue #7, #8) ----------
+  // Плейсхолдер пустого зеркала: пока по текущей задаче код не пришёл — «ждём код по задаче <ID>»;
+  // вне задачи — базовый текст. Показывается через .mirror:empty::before (content: attr(data-placeholder)).
+  function setMirrorPlaceholder() {
+    el.mirror.setAttribute('data-placeholder',
+      state.currentTaskId ? ('ждём код по задаче ' + state.currentTaskId) : '— кандидат ещё не писал код —');
+  }
+  function fmtClock(ts) {
+    var d = new Date(ts);
+    return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+  // Метка «обновлено HH:MM:SS» появляется только после первого реального кода;
+  // до кода и после сброса — скрыта (не показываем ложное время).
+  function setMirrorFreshness(ts) {
+    el.mirrorFresh.textContent = 'обновлено ' + fmtClock(ts);
+    el.mirrorFresh.hidden = false;
+  }
+  function clearMirrorFreshness() {
+    el.mirrorFresh.textContent = '';
+    el.mirrorFresh.hidden = true;
   }
 
   // ---------- bank ----------
@@ -234,7 +273,13 @@
     showTaskView();
     renderDetails(task);
     renderBank();
+    // Сбрасываем зеркало под новую задачу: пустой текст → сработает плейсхолдер
+    // «ждём код по задаче <ID>», метка свежести гаснет до прихода нового кода.
+    // Реальное наполнение придёт от кандидата: renderTask публикует CANDIDATE_CODE_UPDATE
+    // с черновиком по новой задаче (issue #7), тогда зеркало и метка обновятся.
     el.mirror.textContent = '';
+    setMirrorPlaceholder();
+    clearMirrorFreshness();
     bus.post(T.SELECT_TASK, { taskId: id });
     renderPhase(); persist();
   }
@@ -400,6 +445,8 @@
     // reset UI
     el.taskDetails.hidden = true; el.mirrorPanel.hidden = true; el.taskEmpty.hidden = false;
     el.mirror.textContent = '';
+    setMirrorPlaceholder();      // currentTaskId уже null → базовый плейсхолдер
+    clearMirrorFreshness();      // после сброса метки свежести нет (issue #8)
     buildScoreTable(); showTaskView();
     setInputsDisabled(false); el.btnReopen.hidden = true;
     renderTimer(); renderPhase(); renderVerdict(); renderBank();
@@ -420,14 +467,28 @@
   }
 
   // ---------- sync in ----------
-  bus.onAny(function (env) { if (env.source === 'candidate') setConnected(true); });
+  // Любое сообщение кандидата (в т.ч. HEARTBEAT) перезаряжает сторожевой таймер живости.
+  // ВАЖНО: DISCONNECT исключён — в dispatch типизированные обработчики идут ПЕРЕД onAny,
+  // поэтому onAny(pingLiveness) иначе перезарядил бы бейдж сразу после dropLiveness (issue #6).
+  bus.onAny(function (env) { if (env.source === 'candidate' && env.type !== T.DISCONNECT) pingLiveness(); });
+  bus.on(T.DISCONNECT, function () { dropLiveness(); });
   bus.on(T.SYNC_REQUEST, function () { postSession(); });
-  bus.on(T.CANDIDATE_CODE_UPDATE, function (p) {
+  bus.on(T.CANDIDATE_CODE_UPDATE, function (p, env) {
     if (!p) return;
-    if (p.taskId && state.currentTaskId && p.taskId !== state.currentTaskId) {
+    var mismatch = p.taskId && state.currentTaskId && p.taskId !== state.currentTaskId;
+    if (mismatch) {
+      // Рассинхрон задач — показываем чужой контекст явно (механика сохранена).
       el.mirror.textContent = '— кандидат на задаче ' + p.taskId + ' —\n\n' + (p.code || '');
     } else {
       el.mirror.textContent = p.code || '';
+    }
+    // Метка свежести (issue #8): время из конверта, не локальное. Показываем только когда
+    // есть реальный контент — пустой апдейт по текущей задаче (task-switch reset) метку не
+    // ставит, иначе «обновлено HH:MM:SS» противоречило бы плейсхолдеру «ждём код по задаче X».
+    if (mismatch || (p.code && p.code.length)) {
+      setMirrorFreshness(env && env.ts ? env.ts : Date.now());
+    } else {
+      clearMirrorFreshness();
     }
   });
 
@@ -451,6 +512,9 @@
       if (state.frozen) { setInputsDisabled(true); el.btnReopen.hidden = false; }
       if (state.currentTaskId && tasksById[state.currentTaskId] && state.phase !== 'scoring') {
         renderDetails(tasksById[state.currentTaskId]);
+        // Зеркало пустое до ответа кандидата на SYNC_REQUEST — показать плейсхолдер
+        // «ждём код по задаче <ID>», а не молчаливую пустоту (issue #7, ось F5 интервьюера).
+        setMirrorPlaceholder();
       }
       if (state.phase === 'scoring') { el.viewTask.hidden = true; el.viewScore.hidden = false; el.btnScoring.textContent = 'К задаче'; }
       if (state.timer.status === 'running') startTick();

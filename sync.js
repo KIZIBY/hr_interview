@@ -17,13 +17,23 @@
   var SNAPSHOT_KEY = CHANNEL + ':snapshot';
   var PROTOCOL_VERSION = 1;
 
+  // Контракт типов — APPEND-ONLY (PROTOCOL_VERSION не меняем при добавлении типов):
+  // старые вкладки просто не подписаны на новый тип и молча его игнорируют (dispatch по env.type),
+  // поэтому расширение обратно-совместимо и версию поднимать не требуется (PRD §6).
   var TYPES = {
     SELECT_TASK: 'SELECT_TASK',                     // { taskId }
     CANDIDATE_CODE_UPDATE: 'CANDIDATE_CODE_UPDATE',  // { taskId, code }
     TIMER_STATE: 'TIMER_STATE',                     // TimerState
     SESSION_STATE: 'SESSION_STATE',                 // { phase, currentTaskId, timer }
     SYNC_REQUEST: 'SYNC_REQUEST',                   // {}
-    RESET: 'RESET'                                  // {}
+    RESET: 'RESET',                                 // {}
+    // Наблюдаемость живости кандидата (issue #6). Кандидат шлёт HEARTBEAT периодически
+    // (и сразу при старте); интервьюер держит сторожевой таймер и гасит бейдж по таймауту.
+    HEARTBEAT: 'HEARTBEAT',                         // {}
+    // Явный сигнал ухода кандидата (beforeunload/pagehide) — гасит бейдж быстрее таймаута.
+    // Доставка не гарантирована (вкладку могут убить жёстко), поэтому это ускорение,
+    // а не замена сторожевому таймеру у интервьюера.
+    DISCONNECT: 'DISCONNECT'                        // {}
   };
 
   function now() { return Date.now(); }
