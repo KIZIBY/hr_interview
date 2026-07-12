@@ -85,7 +85,13 @@
       display: grid; grid-template-columns: 320px 1fr; gap: 20px;
       padding: 20px 24px 96px; align-items: start;
     }
+    /* min-width:0 у ячеек грида: иначе grid-item по умолчанию min-width:auto и не
+       сжимается ниже min-content своего содержимого (длинные заголовки задач,
+       таблицы примеров/оценки) → распирает колонку на узких экранах (issue #9). */
+    .layout > .bank, .layout > .stage { min-width: 0; }
     @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    /* На узких экранах ужимаем горизонтальные поля, чтобы не тратить ~48px на padding. */
+    @media (max-width: 640px) { .layout { padding: 16px 12px 96px; } }
 
     .panel {
       background: var(--x5-surface);
@@ -100,9 +106,10 @@
     @media (max-width: 900px) { .bank { position: static; } }
     .bank__filters { display: flex; gap: 8px; margin-bottom: 12px; }
     .bank__filters select {
-      font: inherit; flex: 1; padding: 6px 8px;
+      font: inherit; flex: 1 1 0; min-width: 0; padding: 6px 8px;
       border: 1px solid var(--x5-divider-strong); border-radius: var(--radius-sm);
       background: var(--x5-surface); color: var(--x5-ink);
+      text-overflow: ellipsis;
     }
     .task-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
     .task-item {
@@ -171,9 +178,18 @@
     .mirror:empty::before { content: attr(data-placeholder); color: var(--x5-ink-quiet); }
 
     /* scoring */
-    table.score { border-collapse: collapse; width: 100%; }
-    table.score th, table.score td { border-bottom: 1px solid var(--x5-divider); padding: 10px 8px; text-align: left; }
+    table.score { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    table.score th, table.score td { border-bottom: 1px solid var(--x5-divider); padding: 10px 8px; text-align: left; vertical-align: top; }
     table.score th { color: var(--x5-ink-muted); font-weight: 500; font-size: var(--fs-caption); }
+    /* Первый столбец (критерий) переносится, остальные — по содержимому: table-layout:fixed
+       + word-break не даёт длинному ярлыку критерия распирать таблицу на 375px (issue #9). */
+    table.score td:first-child, table.score th:first-child { word-break: break-word; }
+    table.score td:nth-child(2), table.score th:nth-child(2) { width: 2.5em; white-space: nowrap; }
+    /* На узких экранах ужимаем поля ячеек и зазор шкалы — шкала остаётся кликабельной без скролла. */
+    @media (max-width: 640px) {
+      table.score th, table.score td { padding: 8px 4px; }
+      .scale { gap: 4px; }
+    }
     .scale { display: flex; gap: 6px; }
     .scale label { cursor: pointer; }
     .scale input { position: absolute; opacity: 0; width: 0; }
