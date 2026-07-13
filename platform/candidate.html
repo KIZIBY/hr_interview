@@ -550,7 +550,7 @@
       <h1 class="file-notice__title">Страница открыта как файл</h1>
       <p>Для синхронизации вкладок страницы нужно раздавать по http — не через file://.</p>
       <p>Запустите локальный сервер из корня проекта:</p>
-      <pre><code>python3 -m http.server 8000</code></pre>
+      <pre><code>python3 scripts/serve.py</code></pre>
       <p>Затем откройте:</p>
       <pre><code>http://localhost:8000/platform/candidate.html</code></pre>
     </div>
@@ -631,7 +631,7 @@
       <p class="error-desc">Обновите страницу или убедитесь, что сервер запущен.</p>
       <p class="error-hint">
         Страница должна быть открыта по http —
-        <code>python3 -m http.server 8000</code>
+        <code>python3 scripts/serve.py</code>
       </p>
       <button id="retry-btn" class="btn-retry" type="button">Повторить</button>
     </section>

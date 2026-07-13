@@ -22,7 +22,7 @@
 ```bash
 git clone https://github.com/KIZIBY/hr_interview.git
 cd hr_interview
-python3 -m http.server 8000
+python3 scripts/serve.py
 ```
 
 Откройте <http://localhost:8000> — увидите навигацию по всем страницам.

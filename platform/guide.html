@@ -216,7 +216,7 @@
     <strong>Только для интервьюера — документ конфиденциальный, не передавать кандидатам.</strong>
     Внутри эталонные решения и критерии оценки. Держите гайд в отдельном окне браузера, не в том, которое шарите;
     закройте или сверните его перед демонстрацией экрана. Страницы платформы требуют http-сервера:
-    <code>python3 -m http.server 8000</code> в папке проекта.
+    <code>python3 scripts/serve.py</code> в папке проекта.
   </div>
 
   <div class="layout">
@@ -649,7 +649,7 @@
       .catch(function (err) {
         console.error('guide: tasks.json load failed:', err);
         cardsEl.innerHTML = '<div class="card-error">Не удалось загрузить <code>tasks.json</code> — памятка по задачам недоступна. ' +
-          'Откройте гайд по http, а не как файл: в папке проекта запустите <code>python3 -m http.server 8000</code> ' +
+          'Откройте гайд по http, а не как файл: в папке проекта запустите <code>python3 scripts/serve.py</code> ' +
           'и зайдите на <code>http://localhost:8000/platform/guide.html</code>. Остальные разделы гайда работают.</div>';
         section.removeAttribute('aria-busy');
       });

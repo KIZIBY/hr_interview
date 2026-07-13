@@ -71,7 +71,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **`platform/`** — продукт: `interviewer.html/js` (пульт), `candidate.html/js`, `guide.html`, `sync.js`, `tasks.json`. Страницы ссылаются на дизайн-систему через `../X5_Group_Design_System/` — переносить только вместе.
 - **`handbooks/`** — самодостаточные хендбуки этапов 02 и 03 (визуальная серия задана хендбуком этапа 03, не X5 — осознанное исключение по решению владельца; хендбук 02 содержит встроенный снапшот tasks.json, пересобирать при изменении банка).
 - **`sources/`** — исходные .docx и заметки; **`index.html`** — навигационный хаб; **`README.md`** — вход для людей.
-- Превью: `python3 -m http.server 8000` из корня → `http://localhost:8000`. QA-скрипты (`docs/qa/2026-07-12-e2e/*.mjs`) используют BASE `http://localhost:8000/platform`.
+- Превью: `python3 scripts/serve.py` из корня → `http://localhost:8000`. QA-скрипты (`docs/qa/2026-07-12-e2e/*.mjs`) используют BASE `http://localhost:8000/platform`.
 
 ## Контракты платформы интервью
 

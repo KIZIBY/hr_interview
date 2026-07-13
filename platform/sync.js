@@ -7,7 +7,7 @@
  * Монотонный seq в конверте гарантирует изменение значения (иначе 'storage' не сработает).
  *
  * ВАЖНО: между вкладками, открытыми как file:// (opaque origin), синк НЕ работает —
- * страницы нужно раздавать по одному origin по http(s) (python3 -m http.server).
+ * страницы нужно раздавать по одному origin по http(s) (python3 scripts/serve.py).
  */
 (function (global) {
   'use strict';
