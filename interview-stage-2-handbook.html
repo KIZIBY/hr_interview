@@ -665,6 +665,126 @@ details.deep .inner { padding-top: 16px; }
 .footer p { font-size: 13px; color: var(--text-soft); line-height: 1.6; max-width: 64ch; }
 .footer a { color: var(--text-muted); }
 
+/* Карточка задачи: модальное окно */
+.task-link { cursor: pointer; }
+.tmodal-backdrop {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(29, 31, 35, 0.5);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    display: none; overflow-y: auto;
+    padding: 48px 20px;
+}
+.tmodal-backdrop.open { display: block; }
+body.tmodal-lock { overflow: hidden; }
+.tmodal {
+    background: var(--paper);
+    border-radius: 24px;
+    max-width: 920px; margin: 0 auto;
+    padding: 52px 56px 44px;
+    position: relative;
+    box-shadow: 0 32px 90px rgba(7, 74, 4, 0.28);
+}
+.tmodal-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--bg-base);
+    color: var(--text-muted); font-size: 18px; line-height: 1;
+    cursor: pointer; transition: all .2s ease;
+}
+.tmodal-close:hover { border-color: var(--green-deep); color: var(--green-deep); }
+.tmodal .t-meta {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 16px;
+}
+.tmodal .t-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border: 1px solid var(--line); border-radius: 4px;
+    padding: 3px 9px;
+}
+.tmodal .t-chip.veto-chip { color: var(--gold); border-color: var(--gold); }
+.tmodal .t-chip.ml-chip { color: var(--gold); border-color: var(--gold); font-weight: 600; }
+.tmodal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.2vw, 36px);
+    letter-spacing: -0.02em; line-height: 1.12;
+    margin-bottom: 8px; padding-right: 48px;
+}
+.tmodal .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--green-deep); font-weight: 600;
+    margin: 30px 0 10px; display: block;
+}
+.tmodal p { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 10px; max-width: none; }
+.tmodal p.mut { color: var(--text-muted); font-size: 14px; }
+.tmodal pre {
+    background: var(--code-bg); color: var(--code-text);
+    border-radius: 12px; padding: 20px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.55;
+    overflow-x: auto; margin: 8px 0 6px;
+    white-space: pre;
+}
+.tmodal code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.92em;
+    background: var(--bg-base); border-radius: 4px; padding: 1px 5px;
+}
+.tmodal pre code { background: none; padding: 0; }
+.tmodal .ex {
+    background: var(--bg-base); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 10px;
+    font-size: 13.5px; line-height: 1.55; color: var(--text);
+}
+.tmodal .ex .exl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-soft); margin-right: 8px;
+}
+.tmodal .ex .exv { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+.tmodal .ex .exp { color: var(--text-muted); margin-top: 6px; font-size: 13px; }
+.tmodal .warn-band {
+    background: var(--risk-soft); border-radius: 12px;
+    padding: 12px 18px; margin: 14px 0 4px;
+    font-size: 13.5px; line-height: 1.5; color: var(--text);
+}
+.tmodal .rubric-band {
+    background: var(--bg-base); border-left: 2px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 12px 18px; margin: 14px 0 4px;
+    font-size: 13.5px; line-height: 1.5; color: var(--text-muted);
+}
+.tmodal .thr-band {
+    background: var(--green-soft); border-radius: 12px;
+    padding: 12px 18px; margin: 8px 0;
+    font-size: 13.5px; font-weight: 600; color: var(--green-darker); line-height: 1.5;
+}
+.tmodal ul.bugcheck { list-style: none; margin: 6px 0 4px; }
+.tmodal ul.bugcheck li {
+    font-size: 14px; line-height: 1.55; color: var(--text);
+    padding: 8px 0 8px 32px; position: relative;
+    border-bottom: 1px dashed var(--line);
+}
+.tmodal ul.bugcheck li:last-child { border-bottom: none; }
+.tmodal ul.bugcheck li::before {
+    content: ""; position: absolute; left: 4px; top: 12px;
+    width: 12px; height: 12px;
+    border: 1.5px solid var(--text-soft); border-radius: 3px;
+}
+.tmodal .ref-h { font-size: 15px; font-weight: 600; color: var(--text); margin: 14px 0 4px; }
+.tmodal .ref-h .cx { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-soft); font-weight: 400; margin-left: 8px; }
+.tmodal .task-signals { margin-top: 10px; }
+.tmodal .s ul { list-style: none; margin-top: 6px; }
+.tmodal .s li { padding-left: 16px; position: relative; margin-bottom: 6px; }
+.tmodal .s.g li::before { content: "+"; position: absolute; left: 0; top: 0; color: var(--green-deep); font-weight: 700; }
+.tmodal .s.r li::before { content: "×"; position: absolute; left: 0; top: 0; color: var(--risk); font-weight: 700; }
+@media (max-width: 760px) {
+    .tmodal { padding: 40px 22px 32px; }
+    .tmodal-backdrop { padding: 20px 10px; }
+}
+@media print { .tmodal-backdrop { display: none !important; } }
+
 /* Reveal */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
 .reveal.on { opacity: 1; transform: none; }
@@ -726,7 +846,6 @@ details.deep .inner { padding-top: 16px; }
             <a href="#antivibe">Антивайб</a>
             <a href="#timing">Тайминг</a>
             <a href="#zones">Зоны</a>
-            <a href="#platform">Платформа</a>
             <a href="#bank">Задачи</a>
             <a href="#scorecard">Скоркарта</a>
             <a href="#flags">Флаги</a>
@@ -750,9 +869,9 @@ details.deep .inner { padding-top: 16px; }
                     Не leetcode-гонка.
                 </p>
                 <p class="hero-lede">
-                    Работаем в одиночку, на своей платформе: пульт интервьюера, страница кандидата
-                    и гайд с эталонами. Стек кандидата - не критерий: LangGraph, CrewAI, своя машина
-                    состояний - что угодно. <strong>Проверяем принципы, а не фреймворк.</strong>
+                    Работаем в одиночку. Всё нужное - в этом файле: метод, тайминг, зоны, банк
+                    задач с решениями и скоркарта. Стек кандидата - не критерий: LangGraph, CrewAI,
+                    своя машина состояний - что угодно. <strong>Проверяем принципы, а не фреймворк.</strong>
                 </p>
                 <div class="hero-meta">
                     <span><strong>Время:</strong> 60 минут</span>
@@ -781,7 +900,7 @@ details.deep .inner { padding-top: 16px; }
             <div class="kpi reveal">
                 <div class="num">60<span class="small">мин</span></div>
                 <div class="lab">Шесть сегментов по секундомеру. За час всё вглубь не влезет - приоритизируй под пробел в сигнале.</div>
-                <span class="kpi-foot">Таймер с таймбоксами ведёт пульт</span>
+                <span class="kpi-foot">Держи секундомер перед глазами</span>
             </div>
             <div class="kpi reveal">
                 <div class="num">5</div>
@@ -791,12 +910,12 @@ details.deep .inner { padding-top: 16px; }
             <div class="kpi reveal">
                 <div class="num">13</div>
                 <div class="lab">Задач в банке, от 6 до 15 минут. Выбирай под зону, где не хватает сигнала, а не по порядку.</div>
-                <span class="kpi-foot">Эталоны и чеклисты - в гайде задач</span>
+                <span class="kpi-foot">Решения и критерии - по клику из таблицы</span>
             </div>
             <div class="kpi reveal">
                 <div class="num">≥3.0</div>
                 <div class="lab">Средневзвешенный порог GO. Ниже - NO-GO, и «1» в стоп-строке - NO-GO автоматически.</div>
-                <span class="kpi-foot">Считает пульт, вручную не пересчитывай</span>
+                <span class="kpi-foot">Скоркарта в этом файле считает сама</span>
             </div>
         </div>
     </div>
@@ -877,7 +996,7 @@ details.deep .inner { padding-top: 16px; }
                    идентификатор пакета» вместо batch_id - это <strong>тот же ответ</strong>.
                    Эталоны в гайде - рубрика для оценки хода рассуждения, не список слов,
                    которые надо услышать.</p>
-                <div class="quote">«Другие термины и технологии с тем же смыслом засчитываются».<span class="src">Гайд задач, дисклеймер design-карточек</span></div>
+                <div class="quote">«Другие термины и технологии с тем же смыслом засчитываются».<span class="src">Дисклеймер design-карточек банка</span></div>
             </div>
         </div>
 
@@ -915,7 +1034,7 @@ details.deep .inner { padding-top: 16px; }
             <div class="rule-card reveal">
                 <div class="num">1</div>
                 <h4>Ориентир, не скрипт</h4>
-                <p>Хендбук и гайд - карта, не рельсы. <strong>Следуй за кандидатом</strong>, а не за порядком секций: интервью, которое читают по бумажке, кандидат чувствует за десять минут.</p>
+                <p>Хендбук - карта, не рельсы. <strong>Следуй за кандидатом</strong>, а не за порядком секций: интервью, которое читают по бумажке, кандидат чувствует за десять минут.</p>
             </div>
             <div class="rule-card reveal">
                 <div class="num">2</div>
@@ -940,7 +1059,7 @@ details.deep .inner { padding-top: 16px; }
             <div class="rule-card reveal">
                 <div class="num">6</div>
                 <h4>Оценка - в 10 минут</h4>
-                <p>Зафиксируй оценку в пульте <strong>в течение 10 минут после интервью</strong>. Память о сигналах деградирует с каждым часом - вечером ты будешь помнить впечатление, а не факты.</p>
+                <p>Зафиксируй оценку <strong>в течение 10 минут после интервью</strong>. Память о сигналах деградирует с каждым часом - вечером ты будешь помнить впечатление, а не факты.</p>
             </div>
         </div>
 
@@ -975,8 +1094,8 @@ details.deep .inner { padding-top: 16px; }
         <div class="section-eyebrow"><span class="num-badge">3</span> Тайминг</div>
         <h2 class="section-title">60 минут <span class="it">по секундомеру</span></h2>
         <p class="section-lede">
-            Ориентир, а не жёсткий скрипт - но таймер в пульте подсвечивает текущий сегмент
-            не просто так. Если через 25 минут вы всё ещё обсуждаете прошлый проект - сигнал
+            Ориентир, а не жёсткий скрипт - но секундомер держи перед глазами.
+            Если через 25 минут вы всё ещё обсуждаете прошлый проект - сигнал
             по трём зонам из пяти ты не соберёшь.
         </p>
 
@@ -1003,7 +1122,7 @@ details.deep .inner { padding-top: 16px; }
                 <span class="t">34:00 - 48:00</span>
                 <div class="dur">14<span class="small">мин</span></div>
                 <div class="name">Код или design</div>
-                <div class="desc">Задача из банка - под зону, где не хватает сигнала. Показал кандидату - пульт зеркалит его код тебе.</div>
+                <div class="desc">Задача из банка - под зону, где не хватает сигнала. Условие, решение и критерии - в карточке задачи ниже.</div>
             </div>
             <div class="tl-step">
                 <span class="t">48:00 - 55:00</span>
@@ -1137,74 +1256,14 @@ details.deep .inner { padding-top: 16px; }
     </div>
 </section>
 
-<section id="platform" style="background: var(--paper);">
+<section id="bank" style="background: var(--paper);">
     <div class="wrap">
-        <div class="section-eyebrow"><span class="num-badge">5</span> Инструменты</div>
-        <h2 class="section-title">Платформа: три страницы - <span class="it">один процесс</span></h2>
-        <p class="section-lede">
-            Весь этап идёт на нашей статической платформе: без бэкенда, на одной машине интервьюера.
-            Подними сервер командой <strong>python3 -m http.server 8000</strong> в папке проекта -
-            и открой три страницы. Синхронизация вкладок работает сама.
-        </p>
-
-        <div class="roles-grid">
-            <div class="role-card reveal">
-                <span class="file">interviewer.html</span>
-                <h3>Пульт</h3>
-                <p><strong>Твой главный экран.</strong> Банк 13 задач с фильтрами, таймер с подсветкой
-                   текущего сегмента, оценочный лист с автоподсчётом вердикта.</p>
-                <p>Код кандидата зеркалится в реальном времени с меткой «обновлено чч:мм:сс»;
-                   бейдж живости гаснет, если кандидат закрыл вкладку. Состояние переживает
-                   перезагрузку страницы.</p>
-            </div>
-            <div class="role-card reveal">
-                <span class="file">candidate.html</span>
-                <h3>Кандидат</h3>
-                <p><strong>Единственная вкладка, которую видит кандидат.</strong> Условие задачи,
-                   примеры и редактор кода - и ничего больше: эталоны, сигналы и заметки
-                   физически не рендерятся на этой странице.</p>
-                <p>Черновики хранятся отдельно по каждой задаче: переключение задач не теряет код.</p>
-            </div>
-            <div class="role-card reveal">
-                <span class="file">guide.html</span>
-                <h3>Гайд</h3>
-                <p><strong>Памятка решений всех задач:</strong> эталоны, принятые варианты, чеклисты
-                   багов с порогами засчитывания, рубрики design-задач, follow-up вопросы.</p>
-                <p>Открывается из пульта: кнопка «Гайд» в шапке и «памятка по задаче» у выбранной
-                   задачи. Единственное место, где можно листать решения, не показывая их кандидату.</p>
-            </div>
-        </div>
-
-        <div class="risk-callout-card reveal">
-            <div class="num-large">!</div>
-            <div>
-                <h4>Клик по задаче в банке - мгновенный показ кандидату.</h4>
-                <p>Режима предпросмотра в банке нет: выбрал задачу - кандидат её уже видит.
-                   Листай решения в гайде, а не кликами по банку. И гигиена экрана:
-                   кандидату шарится <strong>только вкладка candidate.html</strong>, пульт
-                   и гайд не демонстрируются никогда, гайд держи в отдельном окне браузера.</p>
-            </div>
-        </div>
-
-        <h3 class="serif" style="font-size:28px; margin-top:72px; letter-spacing:-0.02em;">Чеклист перед стартом</h3>
-        <ol class="ladder reveal">
-            <li><div><span class="q">Подними сервер: python3 -m http.server 8000 в папке проекта.</span><span class="why">Страницы требуют http - как file:// синхронизация вкладок не работает.</span></div></li>
-            <li><div><span class="q">Открой пульт и страницу кандидата двумя вкладками одного браузера.</span><span class="why">Бейдж в шапке пульта должен показать «кандидат подключён».</span></div></li>
-            <li><div><span class="q">Открой гайд в отдельном окне - не в том, которое будешь шарить.</span><span class="why">Случайный alt-tab на вкладку с эталонами - самый реальный вектор утечки.</span></div></li>
-            <li><div><span class="q">Нажми «Сброс», если до этого была другая сессия.</span><span class="why">Сброс чистит таймер, задачи, зеркало, черновики кандидата и оценки.</span></div></li>
-            <li><div><span class="q">Прочитай гайд за 15 минут до интервью: флоу, зоны, маркеры.</span><span class="why">Во время интервью гайд - экстренная подсказка, а не учебник.</span></div></li>
-        </ol>
-    </div>
-</section>
-
-<section id="bank">
-    <div class="wrap">
-        <div class="section-eyebrow"><span class="num-badge">6</span> Банк задач</div>
+        <div class="section-eyebrow"><span class="num-badge">5</span> Банк задач</div>
         <h2 class="section-title">13 задач <span class="it">под пять зон</span></h2>
         <p class="section-lede">
-            Выбирай под зону, где не хватает сигнала, - не по порядку. Эталонов здесь нет
-            сознательно: <strong>единственный источник решений - гайд</strong>, куда они
-            рендерятся из банка напрямую. Ссылка из каждой строки ведёт на карточку задачи.
+            Выбирай под зону, где не хватает сигнала, - не по порядку. Клик по названию открывает
+            карточку задачи: <strong>условие, примеры, эталонные решения и критерии оценки</strong> -
+            всё встроено в этот файл, сервер и интернет не нужны.
         </p>
 
         <div class="compare-table reveal">
@@ -1214,67 +1273,67 @@ details.deep .inner { padding-top: 16px; }
                 <div class="compare-cell">Формат и время</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">ALG-01</span><a href="guide.html#task-ALG-01" target="_blank" rel="noopener">Longest common prefix</a></div>
+                <div class="compare-cell k"><span class="mono-id">ALG-01</span><a href="#" class="task-link" data-task="ALG-01">Longest common prefix</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · разминка на чтение и сложность</div>
                 <div class="compare-cell">code · 8 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">ALG-02</span><a href="guide.html#task-ALG-02" target="_blank" rel="noopener">Group anagrams</a></div>
+                <div class="compare-cell k"><span class="mono-id">ALG-02</span><a href="#" class="task-link" data-task="ALG-02">Group anagrams</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · выбор структуры данных под задачу</div>
                 <div class="compare-cell">code · 8 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">ALG-03</span><a href="guide.html#task-ALG-03" target="_blank" rel="noopener">Single number: XOR или hashmap</a></div>
+                <div class="compare-cell k"><span class="mono-id">ALG-03</span><a href="#" class="task-link" data-task="ALG-03">Single number: XOR или hashmap</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · «почему работает?» - проверка понимания</div>
                 <div class="compare-cell">code · 8 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">ALG-04</span><a href="guide.html#task-ALG-04" target="_blank" rel="noopener">Valid parentheses</a></div>
+                <div class="compare-cell k"><span class="mono-id">ALG-04</span><a href="#" class="task-link" data-task="ALG-04">Valid parentheses</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · стек как естественный выбор</div>
                 <div class="compare-cell">code · 8 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">ALG-06</span><a href="guide.html#task-ALG-06" target="_blank" rel="noopener">Jump game</a></div>
+                <div class="compare-cell k"><span class="mono-id">ALG-06</span><a href="#" class="task-link" data-task="ALG-06">Jump game</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · жадный подход против перебора</div>
                 <div class="compare-cell">code · 10 мин · easy-medium</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">PY-01</span><a href="guide.html#task-PY-01" target="_blank" rel="noopener">Python-теория: mutable/immutable, SOLID, async, GIL</a></div>
+                <div class="compare-cell k"><span class="mono-id">PY-01</span><a href="#" class="task-link" data-task="PY-01">Python-теория: mutable/immutable, SOLID, async, GIL</a></div>
                 <div class="compare-cell">CS-фундамент ×2 · разговорная карточка, глубина рассуждения</div>
                 <div class="compare-cell">discussion · 8 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">PY-02</span><a href="guide.html#task-PY-02" target="_blank" rel="noopener">Docker-теория: контейнеры, image, volumes</a></div>
+                <div class="compare-cell k"><span class="mono-id">PY-02</span><a href="#" class="task-link" data-task="PY-02">Docker-теория: контейнеры, image, volumes</a></div>
                 <div class="compare-cell">Прод-зрелость ×3 · «что под капотом» инфраструктуры</div>
                 <div class="compare-cell">discussion · 6 мин · easy</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">PY-03</span><a href="guide.html#task-PY-03" target="_blank" rel="noopener">Ревью Dockerfile: найти проблемы</a></div>
+                <div class="compare-cell k"><span class="mono-id">PY-03</span><a href="#" class="task-link" data-task="PY-03">Ревью Dockerfile: найти проблемы</a></div>
                 <div class="compare-cell">Прод-зрелость ×3 · чтение и починка чужой инфраструктуры</div>
                 <div class="compare-cell">code · 8 мин · easy-medium</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">DBG-02</span><a href="guide.html#task-DBG-02" target="_blank" rel="noopener">Багованный train-loop на torch</a><span class="ml-tag">ML</span></div>
+                <div class="compare-cell k"><span class="mono-id">DBG-02</span><a href="#" class="task-link" data-task="DBG-02">Багованный train-loop на torch</a><span class="ml-tag">ML</span></div>
                 <div class="compare-cell">CS-фундамент ×2 · отладка: 8 багов, порог 3+ / сильный 5+</div>
                 <div class="compare-cell">code · 12 мин · medium</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">DBG-03</span><a href="guide.html#task-DBG-03" target="_blank" rel="noopener">Багованный MultiHeadAttention</a><span class="ml-tag">ML</span></div>
+                <div class="compare-cell k"><span class="mono-id">DBG-03</span><a href="#" class="task-link" data-task="DBG-03">Багованный MultiHeadAttention</a><span class="ml-tag">ML</span></div>
                 <div class="compare-cell">CS-фундамент ×2 · отладка: 12 багов, порог 3+ / сильный 6+</div>
                 <div class="compare-cell">code · 15 мин · advanced</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">SD-01</span><a href="guide.html#task-SD-01" target="_blank" rel="noopener">Офлайн-сканирование товаров: синк при появлении сети</a></div>
+                <div class="compare-cell k"><span class="mono-id">SD-01</span><a href="#" class="task-link" data-task="SD-01">Офлайн-сканирование товаров: синк при появлении сети</a></div>
                 <div class="compare-cell">System design ×2 · идемпотентность, конфликты, ретраи</div>
                 <div class="compare-cell">design · 14 мин · medium</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">AGT-01</span><a href="guide.html#task-AGT-01" target="_blank" rel="noopener">Агент по регламентам с эскалацией человеку</a></div>
+                <div class="compare-cell k"><span class="mono-id">AGT-01</span><a href="#" class="task-link" data-task="AGT-01">Агент по регламентам с эскалацией человеку</a></div>
                 <div class="compare-cell">Проектирование агентов ×3 · состояние, стоп-условия, эскалация</div>
                 <div class="compare-cell">design · 14 мин · medium</div>
             </div>
             <div class="compare-row">
-                <div class="compare-cell k"><span class="mono-id">AIP-01</span><a href="guide.html#task-AIP-01" target="_blank" rel="noopener">AI-augmented практика: карточка-чеклист сигналов</a></div>
+                <div class="compare-cell k"><span class="mono-id">AIP-01</span><a href="#" class="task-link" data-task="AIP-01">AI-augmented практика: карточка-чеклист сигналов</a></div>
                 <div class="compare-cell">AI-практика ×2 · живой workflow и валидация вывода</div>
                 <div class="compare-cell">discussion · 8 мин · easy</div>
             </div>
@@ -1286,22 +1345,22 @@ details.deep .inner { padding-top: 16px; }
                 <h4>А что мне с этого?</h4>
                 <p>Две ML-задачи - DBG-02 и DBG-03 - <strong>не бери без ML-опыта</strong>: без
                    контекста PyTorch ты не отличишь три правильно найденных бага от трёх случайных.
-                   Возьми соинтервьюера или другую задачу. И помни: для design-задач в гайде лежит
+                   Возьми соинтервьюера или другую задачу. И помни: в карточках design-задач лежит
                    рубрика, а не «правильный ответ» - других формулировок с тем же смыслом достаточно.</p>
             </div>
         </div>
     </div>
 </section>
 
-<section id="scorecard" style="background: var(--paper);">
+<section id="scorecard">
     <div class="wrap">
-        <div class="section-eyebrow"><span class="num-badge">7</span> Скоркарта</div>
+        <div class="section-eyebrow"><span class="num-badge">6</span> Скоркарта</div>
         <h2 class="section-title">Пять осей, веса - <span class="it">и стоп-строки</span></h2>
         <p class="section-lede">
             Шкала 1 - 4 без середины: 1 - нет, 2 - слабо, 3 - норма для Middle+, 4 - сильно.
             Вердикт: <strong>средневзвешенное ≥ 3.0 и без «1» в трёх стоп-строках → GO</strong>.
-            Рабочая версия - оценочный лист в пульте, он считает сам. Версия ниже - тренажёр
-            с той же логикой: потыкай до первого интервью.
+            Скоркарта ниже кликабельна и считает вердикт сама - потыкай до первого интервью
+            и держи под рукой во время.
         </p>
 
         <div class="axis veto reveal" data-axis="cs" data-w="2" data-veto="1">
@@ -1362,7 +1421,7 @@ details.deep .inner { padding-top: 16px; }
         <div class="verdict-box reveal">
             <div>
                 <div class="v-word" id="verdict">Заполни все пять осей</div>
-                <p class="v-note" id="verdict-note">Тренажёр считает по правилу пульта: средневзвешенное ≥ 3.0 и без «1» в стоп-строках. Боевую оценку фиксируй в пульте, не здесь.</p>
+                <p class="v-note" id="verdict-note">Правило этапа: средневзвешенное ≥ 3.0 и без «1» в стоп-строках. К каждому баллу - цитата из заметок, иначе балл не считается.</p>
             </div>
             <button class="reset" id="score-reset">Сбросить</button>
         </div>
@@ -1376,9 +1435,9 @@ details.deep .inner { padding-top: 16px; }
     </div>
 </section>
 
-<section id="flags">
+<section id="flags" style="background: var(--paper);">
     <div class="wrap">
-        <div class="section-eyebrow"><span class="num-badge">8</span> Банк сигналов</div>
+        <div class="section-eyebrow"><span class="num-badge">7</span> Банк сигналов</div>
         <h2 class="section-title">Флаги: красные <span class="it">и зелёные</span></h2>
         <p class="section-lede">
             Сквозные сигналы этапа - слушай их фоном во всех шести сегментах. Один флаг -
@@ -1409,9 +1468,9 @@ details.deep .inner { padding-top: 16px; }
     </div>
 </section>
 
-<section id="fixation" style="background: var(--paper);">
+<section id="fixation">
     <div class="wrap-narrow">
-        <div class="section-eyebrow"><span class="num-badge">9</span> После интервью</div>
+        <div class="section-eyebrow"><span class="num-badge">8</span> После интервью</div>
         <h2 class="section-title">Фиксация: оценка живёт <span class="it">десять минут</span></h2>
         <p class="section-lede">
             Интервью собирает сигнал - решение фиксируется сразу после. Память о конкретных
@@ -1420,10 +1479,10 @@ details.deep .inner { padding-top: 16px; }
         </p>
         <ol class="debrief-steps reveal">
             <li><div>
-                <h4>Сразу после: оценочный лист в пульте</h4>
-                <p>Кнопка «Оценка» - пять критериев по шкале 1 - 4. Вердикт GO / NO-GO пульт считает
-                   сам: средневзвешенное и стоп-строки зашиты в логику. <strong>В течение 10 минут
-                   после интервью</strong>, не «вечером спокойно сяду».</p>
+                <h4>Сразу после: заполни скоркарту</h4>
+                <p>Пять критериев по шкале 1 - 4, вердикт по правилу этапа: средневзвешенное ≥ 3.0
+                   без «1» в стоп-строках. <strong>В течение 10 минут после интервью</strong>,
+                   не «вечером спокойно сяду».</p>
             </div></li>
             <li><div>
                 <h4>К каждому баллу - цитата</h4>
@@ -1432,10 +1491,10 @@ details.deep .inner { padding-top: 16px; }
                    поймёт» - факт.</p>
             </div></li>
             <li><div>
-                <h4>Зафиксируй вердикт кнопкой</h4>
-                <p>«Зафиксировать» замораживает лист от случайных правок. Передумал после разговора
-                   с коллегой - «Изменить» существует, но это осознанное действие, а не дрейф
-                   оценки от настроения.</p>
+                <h4>Зафиксируй вердикт письменно</h4>
+                <p>GO или NO-GO плюс два-три предложения итога - и отправь туда, где живёт процесс
+                   найма. Передумать после разговора с коллегой можно, но это осознанное действие,
+                   а не дрейф оценки от настроения.</p>
             </div></li>
             <li><div>
                 <h4>Передай сигнал финалу</h4>
@@ -1461,30 +1520,34 @@ details.deep .inner { padding-top: 16px; }
             <summary>На чём собран хендбук</summary>
             <div class="inner">
                 <div class="sources-grid">
-                    <a href="guide.html" target="_blank" rel="noopener"><b>guide.html</b> · гайд задач: эталоны, рубрики, чеклисты багов, follow-ups</a>
-                    <a href="interviewer.html" target="_blank" rel="noopener"><b>interviewer.html</b> · пульт: банк, таймер, зеркало кода, оценочный лист</a>
-                    <a href="candidate.html" target="_blank" rel="noopener"><b>candidate.html</b> · страница кандидата: условие и редактор, без эталонов</a>
                     <a href="interview-stage-3-handbook.html" target="_blank" rel="noopener"><b>Этап 03</b> · хендбук финального интервью - следующий фильтр воронки</a>
                 </div>
                 <p class="body-p quiet" style="margin-top:20px; font-size:13px;">
                     Контент: сценарий технического этапа №2 (внутренний документ), описание вакансии
-                    FDE Middle+, банк задач tasks.json. Процессная часть актуальна на 2026-07-13;
-                    источник правды по задачам - tasks.json, по правилу вердикта - interviewer.js.
+                    FDE Middle+, внутренний банк задач. Карточки задач с решениями встроены в файл;
+                    актуально на 2026-07-13. Обновление банка - новой версией файла.
                 </p>
             </div>
         </details>
     </div>
 </section>
 
+<div class="tmodal-backdrop" id="tmodal-backdrop" role="dialog" aria-modal="true" aria-label="Карточка задачи">
+    <div class="tmodal">
+        <button class="tmodal-close" id="tmodal-close" aria-label="Закрыть карточку">×</button>
+        <div id="tmodal-content"></div>
+    </div>
+</div>
+
 <footer class="footer">
     <div class="wrap">
         <div class="footer-inner">
             <div>
                 <div class="f-title">Interview · FDE · Этап 02</div>
-                <p>Версия 1.0 - июль 2026. Хендбук технического интервью: инженерный фундамент
-                   под AI-инструментами, антивайб-метод, пять зон, банк задач и правило GO/NO-GO.
-                   Живёт поверх платформы интервью; задачи и эталоны обновляются в tasks.json
-                   и подхватываются гайдом автоматически.</p>
+                <p>Версия 1.1 - июль 2026. Хендбук технического интервью: инженерный фундамент
+                   под AI-инструментами, антивайб-метод, пять зон, банк задач с решениями
+                   и правило GO/NO-GO. Самодостаточный файл: карточки задач встроены,
+                   работает без сервера и интернета.</p>
             </div>
             <p>Серия: <strong>Этап 02 · Техническое</strong> ·
                <a href="interview-stage-3-handbook.html">Этап 03 · Финал</a></p>
@@ -1534,7 +1597,7 @@ details.deep .inner { padding-top: 16px; }
         } else if (avg >= 3) {
             verdictEl.textContent = 'GO · ' + avgStr;
             verdictEl.style.color = 'var(--green-deep)';
-            noteEl.textContent = 'Средневзвешенное ' + avgStr + ' при пороге 3.0, стоп-строки чистые. Зафиксируй в пульте в течение 10 минут и передай сигнал этапу 03.';
+            noteEl.textContent = 'Средневзвешенное ' + avgStr + ' при пороге 3.0, стоп-строки чистые. Зафиксируй оценку в течение 10 минут и передай сигнал этапу 03.';
         } else {
             verdictEl.textContent = 'NO-GO · ' + avgStr;
             verdictEl.style.color = 'var(--risk)';
@@ -1559,7 +1622,180 @@ details.deep .inner { padding-top: 16px; }
         document.querySelectorAll('.score-btns button.sel').forEach(function (b) { b.classList.remove('sel'); });
         verdictEl.textContent = 'Заполни все пять осей';
         verdictEl.style.color = 'var(--green-deep)';
-        noteEl.textContent = 'Тренажёр считает по правилу пульта: средневзвешенное ≥ 3.0 и без «1» в стоп-строках. Боевую оценку фиксируй в пульте, не здесь.';
+        noteEl.textContent = 'Правило этапа: средневзвешенное ≥ 3.0 и без «1» в стоп-строках. К каждому баллу - цитата из заметок, иначе балл не считается.';
+    });
+})();
+</script>
+
+<script id="tasks-data" type="application/json">[{"id":"ALG-01","title":"Longest common prefix","category":"algorithms","difficulty":"easy","format":"code","prompt":"Дан массив строк. Напишите функцию, которая находит самый длинный общий префикс среди всех строк массива.\n\nЕсли общего префикса нет, верните пустую строку `\"\"`.","examples":[{"input":"strs = [\"flower\", \"flow\", \"flight\"]","output":"\"fl\"","explanation":"Общий префикс всех трёх строк — \"fl\"."},{"input":"strs = [\"dog\", \"racecar\", \"car\"]","output":"\"\"","explanation":"Общего префикса нет."}],"buggyVersion":null,"referenceSolutions":[{"label":"Через zip и set","code":"def longestCommonPrefix(strs):\n    if not strs:\n        return \"\"\n    for i, letter_group in enumerate(zip(*strs)):\n        if len(set(letter_group)) > 1:\n            return strs[0][:i]\n    return min(strs)","complexity":"O(n·m) время, O(1) дополнительная память — n строк, m максимальная длина","notes":"zip(*strs) транспонирует матрицу строк: итерируемся по позициям символов. Если в позиции i все символы одинаковы — продолжаем; как только set > 1 — возвращаем prefix до i. min(strs) закрывает случай, когда одна строка является префиксом всех остальных — минимальная лексикографически совпадает с кратчайшей при совпадающем префиксе."}],"followUps":["Что произойдёт, если массив содержит пустую строку?","Как изменится код, если нужен самый длинный общий суффикс?","Можно ли решить задачу через бинарный поиск по длине префикса — и зачем это?"],"greenSignals":["🟢 Объясняет подход до кода: сравниваем символы по позиции, а не строки целиком","🟢 Оценивает сложность O(n·m) и поясняет, где n и m","🟢 Обрабатывает граничный случай пустого массива","🟢 Читает и объясняет чужое решение через zip(*strs) — знает распаковку итерируемых"],"redSignals":["🔴 Не может объяснить, что делает zip(*strs)","🔴 Плывёт на оценке сложности","🔴 Не обрабатывает пустой массив или одну строку"],"evaluationNotes":"Разогревочная задача. Смотрим на подход к рассуждению: кандидат должен объяснить идею до написания кода. Наивное решение через sorted тоже принимается, если кандидат понимает его сложность. Эталон через zip(*strs) требует понимания распаковки — хороший маркер знания Python.","timeBudgetMin":8,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"ALG-02","title":"Group anagrams","category":"algorithms","difficulty":"easy","format":"code","prompt":"Дан список строк. Верните список групп анаграмм.\n\nАнаграммы — слова, состоящие из одних и тех же букв в любом порядке.","examples":[{"input":"strs = [\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"]","output":"[[\"bat\"], [\"nat\", \"tan\"], [\"ate\", \"eat\", \"tea\"]]","explanation":"Порядок групп и порядок слов внутри групп не важен."}],"buggyVersion":null,"referenceSolutions":[{"label":"Через отсортированное слово как ключ","code":"from typing import List\n\ndef groupAnagrams(strs: List[str]) -> List[List[str]]:\n    groups = dict()\n    for word in strs:\n        word_sorted = ''.join(sorted(word))\n        if word_sorted in groups:\n            groups[word_sorted].append(word)\n        else:\n            groups[word_sorted] = [word]\n    return list(groups.values())","complexity":"O(n·k·log k) время, O(n·k) память — n слов, k максимальная длина слова","notes":"Ключ — отсортированное слово: все анаграммы дают одинаковый ключ. Альтернатива — частотный вектор 26 символов как ключ: O(n·k) время, дороже по коду. defaultdict(list) упрощает запись."}],"followUps":["Какой будет сложность, если ключом использовать частотный вектор букв вместо sorted?","Как изменится решение для Unicode-строк с диакритикой?","Как проверить корректность — что входит в тест-кейсы?"],"greenSignals":["🟢 Сразу предлагает отсортированное слово как ключ хэш-таблицы","🟢 Понимает, что defaultdict или setdefault упрощает код","🟢 Оценивает O(n·k·log k) и объясняет, откуда log k"],"redSignals":["🔴 Пытается сравнивать каждое слово с каждым — O(n²) без объяснения trade-off","🔴 Не понимает, как использовать словарь для группировки"],"evaluationNotes":"Ключевой паттерн — хэш-таблица с составным ключом. Смотрим, додумается ли кандидат до sorted-ключа сам или нужна подсказка. Наивное O(n²)-решение — слабый сигнал; принимается только если кандидат сам замечает и предлагает улучшение.","timeBudgetMin":8,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"ALG-03","title":"Single number — XOR или hashmap","category":"algorithms","difficulty":"easy","format":"code","prompt":"Дан массив целых чисел. Все элементы, кроме одного, встречаются ровно дважды. Найдите единственное не повторяющееся число.\n\nПопробуйте решить задачу с линейной сложностью по времени и O(1) по памяти.","examples":[{"input":"nums = [2, 2, 1]","output":"1"},{"input":"nums = [4, 1, 2, 1, 2]","output":"4"},{"input":"nums = [1]","output":"1"}],"buggyVersion":null,"referenceSolutions":[{"label":"XOR — O(n) время, O(1) память","code":"from typing import List\n\ndef singleNumber(nums: List[int]) -> int:\n    r = nums[0]\n    for i in range(1, len(nums)):\n        r = r ^ nums[i]\n    return r","complexity":"O(n) время, O(1) память","notes":"XOR-трюк: a ^ a = 0, a ^ 0 = a, XOR коммутативен и ассоциативен. Все парные числа обнуляются, остаётся одиночное."},{"label":"Hashmap — O(n) время, O(n) память","code":"from typing import List\nfrom collections import defaultdict\n\ndef singleNumber(nums: List[int]) -> int:\n    hash_table = defaultdict(int)\n    for num in nums:\n        hash_table[num] += 1\n    for num in hash_table:\n        if hash_table[num] == 1:\n            return num","complexity":"O(n) время, O(n) память","notes":"Более очевидное решение. Проигрывает XOR по памяти. Хороший повод спросить: зачем XOR, если hashmap работает?"}],"followUps":["Объясни, почему XOR работает — свойства a^a и a^0?","Как изменится задача, если каждый элемент встречается трижды, кроме одного?","Где XOR используется в реальной жизни — checksum, RAID?"],"greenSignals":["🟢 Знает XOR-трюк и объясняет свойства: a^a=0, a^0=a, коммутативность","🟢 Предлагает оба решения и сам сравнивает trade-off по памяти","🟢 Может обобщить идею на «каждое число встречается 3 раза»"],"redSignals":["🔴 Не знает XOR-решения и не понимает подсказки про битовые операции","🔴 Пытается сортировать массив — не O(1) память и не оптимально"],"evaluationNotes":"Смотрим прежде всего на знание XOR-трюка — это маркер CS-фундамента, а не просто кода. Hashmap-решение принимается, но без XOR — слабый сигнал. Если кандидат сам упоминает trade-off памяти и обобщение на 3-кратные повторения — сильный сигнал.","timeBudgetMin":8,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"ALG-04","title":"Valid parentheses","category":"algorithms","difficulty":"easy","format":"code","prompt":"Рассмотрим последовательность, состоящую из круглых `()`, квадратных `[]` и фигурных `{}` скобок. Определите, является ли данная скобочная последовательность правильной.\n\nПравила:\n- Пустая последовательность является правильной.\n- Если A — правильная, то (A), [A], {A} — правильные.\n- Если A и B — правильные, то AB — правильная.","examples":[{"input":"s = \"()\"","output":"true"},{"input":"s = \"()[]{}\"","output":"true"},{"input":"s = \"(]\"","output":"false"},{"input":"s = \"([])\"","output":"true"}],"buggyVersion":null,"referenceSolutions":[{"label":"Через стек","code":"def isValid(s: str) -> bool:\n    stack = []\n    for i in s:\n        if i in ['(', '[', '{']:\n            stack.append(i)\n        elif len(stack) > 0 and (\n            i == ')' and stack[-1] == '(' or\n            i == ']' and stack[-1] == '[' or\n            i == '}' and stack[-1] == '{'\n        ):\n            stack.pop()\n        else:\n            stack.append(i)\n    return len(stack) == 0","complexity":"O(n) время, O(n) память","notes":"Инвариант: при встрече закрывающей скобки вершина стека должна быть парной открывающей. Если нет — добавляем в стек (закрывающая без пары останется). В конце стек должен быть пустым."}],"followUps":["Что произойдёт, если строка содержит только закрывающие скобки `)))` — как код обрабатывает этот случай?","Как изменится решение, если нужно не только проверить корректность, но и вернуть позицию первой ошибки?","Можно ли решить задачу без стека — например, счётчиком? Почему это не работает для смешанных скобок?"],"greenSignals":["🟢 Сразу называет структуру данных — стек","🟢 Объясняет инвариант: при закрывающей скобке вершина стека должна быть парной открывающей","🟢 Проверяет len(stack) == 0 в конце, а не только ловит несовпадение","🟢 Обрабатывает случай закрывающей скобки при пустом стеке"],"redSignals":["🔴 Пытается решить счётчиком без учёта порядка скобок","🔴 Не думает про случай \"]\" при пустом стеке","🔴 Не может объяснить, зачем стек, а не просто счётчик"],"evaluationNotes":"Классическая задача на стек. Главный сигнал — кандидат сам называет стек как структуру и объясняет инвариант. Если кандидат пишет через счётчик — мягко спросить: «что будет с `)(` и счётчиком?».","timeBudgetMin":8,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"ALG-06","title":"Jump game","category":"algorithms","difficulty":"easy-medium","format":"code","prompt":"Дан массив целых чисел `nums`. Вы начинаете с 0-го элемента. Каждый элемент показывает максимальный прыжок из текущей позиции.\n\nПроверьте, можно ли добраться до последнего элемента массива.","examples":[{"input":"nums = [2, 3, 1, 1, 4]","output":"true","explanation":"Прыжок 0→1 (длина 1), затем прыжок 1→4 (длина 3)."},{"input":"nums = [3, 2, 1, 0, 4]","output":"false","explanation":"Из любого пути попадём в индекс 3, откуда прыжок равен 0 — застреваем."}],"buggyVersion":null,"referenceSolutions":[{"label":"Жадный алгоритм — отслеживание максимального достижимого индекса","code":"from typing import List\n\ndef canJump(nums: List[int]) -> bool:\n    far = 0\n    for i, n in enumerate(nums):\n        if i > far:\n            return False\n        far = max(far, i + n)\n    return True","complexity":"O(n) время, O(1) память","notes":"far — максимальный индекс, достижимый из уже посещённых позиций. Если текущий индекс i > far — мы уже застряли. Иначе обновляем far. Жадный инвариант: если i ≤ far, значит до i добраться можно."}],"followUps":["Что изменится, если нужно найти минимальное количество прыжков до конца?","Объясни жадный инвариант: почему достаточно следить только за far?","Как решить задачу через BFS/DFS — и почему жадный лучше?"],"greenSignals":["🟢 Предлагает жадный подход: отслеживать максимально достижимый индекс","🟢 Объясняет инвариант: если i > far — застряли","🟢 Оценивает O(n) и O(1) памяти","🟢 Сам понимает, что прыжок — максимальный, а не точный"],"redSignals":["🔴 Пытается BFS/DFS без объяснения зачем — переусложнение","🔴 Не может объяснить жадный инвариант после написания кода","🔴 Путает «максимальный прыжок» с «фиксированным прыжком»"],"evaluationNotes":"Ключевой навык — предложить жадное решение и обосновать его корректность. BFS-решение тоже принимается, но O(n²) худший случай — слабее. Если кандидат сам переходит к «Jump Game II» с минимальным числом прыжков — сильный сигнал.","timeBudgetMin":10,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"PY-01","title":"Python — теория: mutable/immutable, ООП и SOLID, async против threading и multiprocessing, GIL","category":"python-swe","difficulty":"easy","format":"discussion","prompt":"Теоретические вопросы по Python. Обсуди с кандидатом следующие темы:\n\n**Mutable vs immutable:**\n- Что такое изменяемые и неизменяемые типы данных? Какие типы Python к каким относятся?\n\n**ООП и SOLID:**\n- Что такое классы и зачем нужен ООП? Какие главные принципы?\n- Как расшифровывается SOLID?\n\n**Async vs threading vs multiprocessing:**\n- В чём разница между асинхронностью и многопоточностью?\n- Чем это отличается от мультипроцессинга?\n\n**GIL:**\n- Что такое GIL? Зачем он нужен?","examples":[],"buggyVersion":null,"referenceSolutions":[],"followUps":["Можешь привести пример, где мутабельность аргумента функции привела к неочевидному багу?","Какой принцип SOLID чаще всего нарушают — и почему?","Когда выбрать async, а когда multiprocessing — дай конкретный критерий выбора?","GIL защищает от гонок — но не от всех. Приведи пример гонки, которую GIL не предотвращает."],"greenSignals":["🟢 Чётко различает mutable (list, dict, set) и immutable (int, str, tuple) с примером побочных эффектов","🟢 Понимает, что GIL не защищает от гонок на уровне составных операций","🟢 Объясняет, когда async эффективен (I/O-bound), а когда multiprocessing (CPU-bound)","🟢 Называет хотя бы 3 принципа SOLID с примерами из реального кода"],"redSignals":["🔴 Путает асинхронность с параллелизмом — думает, что async = несколько потоков","🔴 Думает, что GIL полностью защищает от гонок в любой ситуации","🔴 Не может привести пример нарушения SOLID в реальном коде"],"evaluationNotes":"Карточка для разговора, не экзамена. Эталонные ответы в банке задач не дописаны — смотрим на глубину рассуждения, а не на точные формулировки. SOLID: S — single responsibility, O — open/closed, L — Liskov substitution, I — interface segregation, D — dependency inversion. Async vs threading: async — один поток, кооперативная многозадачность, эффективен для I/O; threading — несколько потоков, GIL ограничивает CPU-параллелизм; multiprocessing — отдельные процессы, обходит GIL, накладные расходы на IPC. GIL: защищает внутренние структуры CPython от гонок, но не защищает от гонок в Python-коде на уровне нескольких операций. Эталон не дописан — оцениваем по рассуждению.","timeBudgetMin":8,"scoringDimension":"cs","weight":2,"mlSpecific":false},{"id":"PY-02","title":"Docker — теория: контейнеризация против виртуализации, image против container, volumes","category":"python-swe","difficulty":"easy","format":"discussion","prompt":"Теоретические вопросы по Docker. Обсуди с кандидатом:\n\n- Зачем нужен Docker? Что такое контейнеризация? Чем отличается от виртуализации?\n- В чём разница между образом (image) и контейнером (container)?\n- Зачем нужны volume?","examples":[],"buggyVersion":null,"referenceSolutions":[],"followUps":["Что происходит с данными внутри контейнера, если контейнер удалить без volume?","В чём разница между bind mount и named volume?","Почему запускать несколько сервисов в одном контейнере — антипаттерн?"],"greenSignals":["🟢 Объясняет ключевое отличие: контейнер — изоляция через namespace/cgroups, VM — полная ОС","🟢 Понимает: image — иммутабельный слой, container — изменяемый runtime поверх image","🟢 Знает, что данные в контейнере эфемерны без volume; различает bind mount и named volume"],"redSignals":["🔴 Не может объяснить, что происходит с данными при удалении контейнера без volume","🔴 Думает, что container и image — одно и то же","🔴 Не знает про слои образа и механику кэша при сборке"],"evaluationNotes":"Карточка для разговора. Эталонные ответы в банке задач не дописаны — смотрим на глубину рассуждения. Контейнеризация vs виртуализация: контейнеры используют namespace (pid, net, mnt) и cgroups ядра хоста, VM эмулирует железо и запускает гостевую ОС. Image — набор неизменяемых слоёв (Union FS), container — записываемый слой поверх image. Volume — механизм persistent storage вне filesystem контейнера. Эталон не дописан — оцениваем по рассуждению.","timeBudgetMin":6,"scoringDimension":"production","weight":3,"mlSpecific":false},{"id":"PY-03","title":"Ревью Dockerfile — найти проблемы","category":"python-swe","difficulty":"easy-medium","format":"code","prompt":"Перед тобой Dockerfile. Найди проблемы в нём и предложи исправления.\n\nЧто именно не так и почему это проблема в продакшне?","examples":[],"buggyVersion":"FROM python:latest\n\nWORKDIR /app\n\nCOPY . .\n\nRUN pip install -r requirements.txt\n\nENV KAFKA_USR $KAFKA_USR\nENV KAFKA_PAS $KAFKA_PAS\n\nEXPOSE 3001\n\nCMD [\"uvicorn\", \"src.main:app\", \"--reload\"]","referenceSolutions":[{"label":"Эталонный Dockerfile","code":"FROM python:3.9.12\n\nWORKDIR /app\n\nCOPY requirements.txt .\n\nRUN pip install -r requirements.txt\n\nCOPY . .\n\nENV KAFKA_USR $KAFKA_USR\nENV KAFKA_PAS $KAFKA_PAS\n\nEXPOSE 3001\n\nCMD [\"uvicorn\", \"src.main:app\", \"--reload\"]","notes":"Два ключевых изменения: 1) python:latest → python:3.9.12 — pinned-версия; 2) COPY . . перенесён после pip install — requirements.txt меняется реже чем код, поэтому при изменении только кода слой с pip install берётся из кэша."}],"followUps":["Объясни механику слоёв Docker: почему порядок инструкций влияет на кэш?","Почему `--reload` в CMD — проблема для продакшна?","Как безопасно передавать секреты (KAFKA_USR/PAS) — и чем ENV в Dockerfile плохо?"],"greenSignals":["🟢 Находит обе проблемы без подсказки: тег latest и порядок слоёв","🟢 Объясняет механику кэша Docker: слой пересобирается если изменился предыдущий","🟢 Предлагает pinned-версию с обоснованием (reproducibility, стабильность)","🟢 Замечает --reload как проблему для прода (hot-reload не для production)"],"redSignals":["🔴 Находит только тег latest, не замечает проблему с кэшем слоёв","🔴 Не знает механики слоёв Dockerfile и почему порядок важен","🔴 Не может объяснить, почему COPY . . перед pip install плохо"],"evaluationNotes":"Основные проблемы: 1) python:latest — нестабильная версия, при следующей сборке может прийти другой Python и сломать зависимости; 2) COPY . . перед pip install — при изменении любого файла кода слой с pip install инвалидируется и все зависимости скачиваются заново; правильный порядок: COPY requirements.txt → RUN pip install → COPY . . Дополнительно (bonus): --reload в prod, передача секретов через ENV (попадают в метаданные image), отсутствие .dockerignore.","timeBudgetMin":8,"scoringDimension":"production","weight":3,"mlSpecific":false},{"id":"DBG-02","title":"Багованный train-loop на torch","category":"debugging","difficulty":"medium","format":"code","prompt":"Перед тобой функция обучения нейронной сети на PyTorch. В ней несколько багов разного уровня критичности.\n\nНайди все проблемы, объясни что именно не так в каждом случае и предложи исправленную версию.","examples":[],"buggyVersion":"import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader\nfrom tqdm import tqdm\n\ndef train(\n    train_dataset: torch.utils.data.Dataset,\n    test_dataset: torch.utils.data.Dataset,\n    dim_inner: int,\n    num_classes: int,\n    batch_size: int,\n    lr: float,\n):\n    model = nn.Sequential(\n        nn.Linear(features, dim_inner),\n        nn.ReLU(),\n        nn.BatchNorm1d(dim_inner),\n        nn.Linear(dim_inner, num_classes),\n        nn.Softmax()\n    ).cuda()\n\n    train_dataloader = DataLoader(train_dataset, batch_size=batch_size)\n    test_dataloader = DataLoader(test_dataset, batch_size=batch_size)\n\n    loss_fn = nn.CrossEntropyLoss(reduction='sum')\n    opt = optim.SGD(model.parameters(), lr=lr)\n\n    test_losses = []\n    train_losses = []\n    for epoch in tqdm(range(epochs)):\n        for x, y in train_dataloader:\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            train_losses.append(loss)\n            loss.backward()\n            opt.step()\n\n        for x, y in test_dataloader:\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            test_losses.append(loss)","referenceSolutions":[{"label":"Исправленная версия train-loop","code":"import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader\nfrom tqdm import tqdm\n\ndef train(\n    train_dataset: torch.utils.data.Dataset,\n    test_dataset: torch.utils.data.Dataset,\n    n_features: int,\n    dim_inner: int,\n    num_classes: int,\n    batch_size: int,\n    lr: float,\n    epoch: int,\n):\n    model = nn.Sequential(\n        nn.Linear(n_features, dim_inner),\n        nn.ReLU(),\n        nn.BatchNorm1d(dim_inner),\n        nn.Linear(dim_inner, num_classes)\n        # nn.Softmax убрана: CrossEntropyLoss уже содержит LogSoftmax\n    ).to(device)\n\n    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)\n    test_dataloader = DataLoader(test_dataset, batch_size=batch_size)\n\n    loss_fn = nn.CrossEntropyLoss(reduction='sum')\n    opt = optim.SGD(model.parameters(), lr=lr)\n\n    test_losses = []\n    train_losses = []\n    for epoch in tqdm(range(epoch)):\n        model.train()\n        for x, y in train_dataloader:\n            x, y = x.to(device), y.to(device)\n            opt.zero_grad()\n            output = model(x)\n            loss = loss_fn(output, torch.argmax(y, dim=1))\n            train_losses.append(loss.item())\n            loss.backward()\n            opt.step()\n\n        model.eval()\n        with torch.no_grad():\n            for x, y in test_dataloader:\n                x, y = x.to(device), y.to(device)\n                output = model(x)\n                loss = loss_fn(output, torch.argmax(y, dim=1))\n                test_losses.append(loss.item())","notes":"Все 8 багов исправлены. Ключевые: opt.zero_grad(), model.train()/eval(), torch.no_grad(), shuffle=True, Softmax убрана, loss.item(), epoch как параметр, .to(device) вместо .cuda()."}],"followUps":["Почему накопление градиентов без zero_grad() — критическая ошибка, а не просто неточность?","Что именно делает CrossEntropyLoss под капотом — почему Softmax сверху двойная нормализация?","Как влияет отсутствие model.eval() на BatchNorm во время инференса?"],"greenSignals":["🟢 Находит opt.zero_grad() как критическую ошибку и объясняет накопление градиентов","🟢 Объясняет, почему nn.Softmax() + CrossEntropyLoss — двойная нормализация","🟢 Замечает отсутствие model.train()/model.eval() и объясняет влияние на BatchNorm","🟢 Указывает на утечку памяти: train_losses.append(loss) без .item() держит computation graph"],"redSignals":["🔴 Не замечает opt.zero_grad() — не понимает, как работает autograd","🔴 Не знает, что CrossEntropyLoss содержит Softmax внутри","🔴 Не понимает разницы model.train() и model.eval()"],"evaluationNotes":"Список багов от критичного к менее очевидному: 1) отсутствует opt.zero_grad() — градиенты накапливаются через итерации; 2) nn.Softmax() + CrossEntropyLoss — двойная нормализация, CrossEntropyLoss содержит LogSoftmax; 3) отсутствует shuffle=True в train DataLoader — одинаковый порядок каждую эпоху; 4) отсутствует model.train() перед train-циклом — BatchNorm работает в eval-режиме; 5) отсутствует model.eval() и torch.no_grad() в eval-цикле — лишние градиенты, неправильный BatchNorm; 6) train_losses.append(loss) вместо loss.item() — утечка computation graph, OOM при большом числе эпох; 7) epochs не определена как параметр функции — NameError при запуске; 8) .cuda() вместо .to(device) — хардкод устройства, падает без GPU. Сильный кандидат с ML-бэкграундом находит 5+; средний — 3–4. Задача для кандидатов с опытом PyTorch.","timeBudgetMin":12,"scoringDimension":"cs","weight":2,"mlSpecific":true},{"id":"DBG-03","title":"Багованный MultiHeadAttention","category":"debugging","difficulty":"advanced","format":"code","prompt":"Перед тобой реализация Multi-Head Attention на NumPy. В коде несколько багов разного уровня сложности.\n\nНайди все проблемы, объясни что именно не так в каждом случае и предложи исправленную версию.","examples":[],"buggyVersion":"import numpy as np\n\ndef scaled_dot_product_attention(query, key, value, mask=None):\n    # Bug: Using addition instead of matrix multiplication\n    matmul_qk = query + key.transpose(-2, -1)\n\n    # Bug: Using an incorrect formula for scaling\n    depth = key.shape[-1]  # should be query.shape[-1]\n    scaled_attention_logits = matmul_qk / (depth + 1)  # should use np.sqrt(depth)\n\n    if mask is not None:\n        scaled_attention_logits += (mask * 1e9)  # Incorrect sign, should be -1e9\n\n    # Bug: Softmax computation ignores axis and keepdims\n    attention_weights = np.exp(scaled_attention_logits) / np.sum(\n        np.exp(scaled_attention_logits)\n    )\n\n    output = np.matmul(attention_weights, value)\n    return output, attention_weights\n\n\nclass MultiHeadAttention:\n    def __init__(self, d_model, num_heads):\n        # Bug: Removed assertion for invalid configurations\n        # assert d_model % num_heads == 0\n        self.num_heads = num_heads\n        self.depth = d_model // num_heads\n\n        # Bug: Weight initialization produces wrong dimensions\n        self.wq = np.random.rand(d_model, self.depth)\n        self.wk = np.random.rand(d_model, self.depth)\n        self.wv = np.random.rand(d_model, self.depth)\n        self.wo = np.random.rand(d_model, d_model)\n\n    def split_heads(self, x, batch_size):\n        # Bug: Incorrect reshaping (axes swapped)\n        x = x.reshape(self.num_heads, batch_size, -1, self.depth)\n        return x.transpose(1, 0, 2, 3)\n\n    def __call__(self, query, key, value, mask=None):\n        batch_size = query.shape[1]  # Bug: should be shape[0]\n\n        # Bug: Incorrect linear transformations (matmul args swapped)\n        query = np.matmul(self.wq, query)\n        key = np.matmul(self.wk, key)\n        value = np.matmul(self.wv, value)\n\n        query = self.split_heads(query, batch_size)\n        key = self.split_heads(key, batch_size)\n        value = self.split_heads(value, batch_size)\n\n        attention_outputs, attention_weights = scaled_dot_product_attention(\n            query, key, value, mask\n        )\n\n        attention_outputs = attention_outputs.transpose(0, 2, 3, 1)  # Bug: Wrong axes\n        concat_attention = attention_outputs.reshape(batch_size, -1, self.num_heads)  # Bug: Wrong shape\n\n        output = np.matmul(concat_attention, self.wo)\n        return output, attention_weights","referenceSolutions":[{"label":"Корректная реализация MultiHeadAttention","code":"import numpy as np\n\ndef scaled_dot_product_attention(query, key, value, mask=None):\n    matmul_qk = np.matmul(query, key.transpose(-2, -1))\n    depth = query.shape[-1]\n    scaled_attention_logits = matmul_qk / np.sqrt(depth)\n\n    if mask is not None:\n        scaled_attention_logits += (mask * -1e9)\n\n    attention_weights = np.exp(\n        scaled_attention_logits - np.max(scaled_attention_logits, axis=-1, keepdims=True)\n    )\n    attention_weights /= np.sum(attention_weights, axis=-1, keepdims=True)\n\n    output = np.matmul(attention_weights, value)\n    return output, attention_weights\n\n\nclass MultiHeadAttention:\n    def __init__(self, d_model, num_heads):\n        assert d_model % num_heads == 0, \"d_model must be divisible by num_heads\"\n        self.num_heads = num_heads\n        self.depth = d_model // num_heads\n\n        self.wq = np.random.rand(d_model, d_model)\n        self.wk = np.random.rand(d_model, d_model)\n        self.wv = np.random.rand(d_model, d_model)\n        self.wo = np.random.rand(d_model, d_model)\n\n    def split_heads(self, x, batch_size):\n        x = x.reshape(batch_size, -1, self.num_heads, self.depth)\n        return x.transpose(0, 2, 1, 3)\n\n    def __call__(self, query, key, value, mask=None):\n        batch_size = query.shape[0]\n\n        query = np.matmul(query, self.wq)\n        key = np.matmul(key, self.wk)\n        value = np.matmul(value, self.wv)\n\n        query = self.split_heads(query, batch_size)\n        key = self.split_heads(key, batch_size)\n        value = self.split_heads(value, batch_size)\n\n        attention_outputs, attention_weights = scaled_dot_product_attention(\n            query, key, value, mask\n        )\n\n        attention_outputs = attention_outputs.transpose(0, 2, 1, 3)\n        concat_attention = attention_outputs.reshape(batch_size, -1, self.num_heads * self.depth)\n\n        output = np.matmul(concat_attention, self.wo)\n        return output, attention_weights","notes":"Все 12 багов исправлены. Ключевые: matmul вместо сложения, np.sqrt(depth), правильный sign маски (-1e9), softmax с axis=-1 и keepdims, размеры wq/wk/wv (d_model×d_model), корректный reshape в split_heads, shape[0] для batch_size, порядок аргументов matmul, transpose(0,2,1,3), reshape с num_heads*depth."}],"followUps":["Объясни формулу scaled dot-product attention: зачем делить на sqrt(depth)?","Почему softmax нужно делать по axis=-1, а не по всему тензору?","Что произойдёт, если wq имеет размер (d_model, depth) вместо (d_model, d_model) — как это сломает forward pass?"],"greenSignals":["🟢 Находит сложение вместо matmul в attention — понимает механику dot-product attention","🟢 Замечает неверное масштабирование (depth+1 вместо sqrt(depth)) и объясняет зачем sqrt","🟢 Указывает на проблему softmax без axis=-1 — нормализация по всему тензору вместо строк","🟢 Находит неверные размеры весовых матриц wq/wk/wv и объясняет зачем d_model×d_model"],"redSignals":["🔴 Не понимает формулу scaled dot-product attention","🔴 Не замечает проблему с порядком осей в transpose/reshape","🔴 Не может объяснить, что должен делать split_heads"],"evaluationNotes":"Список всех 12 багов: 1) query + key.transpose вместо np.matmul — сложение вместо матричного умножения; 2) depth = key.shape[-1] вместо query.shape[-1]; 3) масштабирование / (depth+1) вместо / np.sqrt(depth); 4) mask * 1e9 вместо -1e9 — знак перевёрнут; 5) softmax без axis=-1, keepdims=True — нормализует весь тензор; 6) убрана assert d_model % num_heads == 0; 7) wq/wk/wv размер (d_model, depth) вместо (d_model, d_model); 8) split_heads: reshape(num_heads, batch_size, ...) вместо (batch_size, ..., num_heads, depth); 9) batch_size = query.shape[1] вместо shape[0]; 10) np.matmul(self.wq, query) вместо np.matmul(query, self.wq); 11) transpose(0,2,3,1) вместо (0,2,1,3); 12) reshape(..., num_heads) вместо num_heads*depth. Задача для кандидатов с ML/NLP-бэкграундом. Сильный находит 6+; средний — 3–4. Достаточно найти хотя бы 3, чтобы засчитать задачу.","timeBudgetMin":15,"scoringDimension":"cs","weight":2,"mlSpecific":true},{"id":"SD-01","title":"Офлайн-сканирование товаров — синк при появлении сети","category":"system-design","difficulty":"medium","format":"design","prompt":"Сотрудники сканируют товары офлайн (на складе нет интернета). Данные накапливаются на устройстве и синхронизируются при появлении сети.\n\nСпроектируй систему:\n- API — как устроен эндпоинт синхронизации?\n- Хранение данных — что хранится на устройстве, что на сервере?\n- Разрешение конфликтов — что если несколько устройств изменили один товар?\n- Идемпотентность — что произойдёт, если один и тот же батч придёт дважды?\n\nНарисуй схему, опиши ключевые компоненты и trade-offs.","examples":[],"buggyVersion":null,"referenceSolutions":[],"followUps":["Что с конкурентностью — несколько устройств пишут одну запись одновременно при появлении сети?","Как гарантировать идемпотентность повторной отправки батча?","Где узкое место при тысячах устройств синкающихся одновременно?","Что будет, если сеть пропадёт посередине синхронизации — partial sync?","Как хранить данные офлайн на устройстве — локальная БД, файлы, очередь?"],"greenSignals":["🟢 Сразу думает про идемпотентность: уникальный batch_id / scan_id генерируется на клиенте","🟢 Предлагает конкретный механизм разрешения конфликтов с обоснованием trade-off (last-write-wins, logical timestamps, vector clocks)","🟢 Думает про partial sync: что делать, если батч принят частично","🟢 Называет проблему thundering herd при массовом появлении сети и предлагает решение (jitter, backoff)"],"redSignals":["🔴 Не думает про конфликты при параллельной отправке с нескольких устройств","🔴 Нет мыслей об идемпотентности повторной отправки","🔴 Ответ «я бы спросил у модели» или «заюзал бы готовый sync-фреймворк» без объяснения принципов","🔴 Не понимает, что такое conflict resolution стратегии"],"evaluationNotes":"Оцениваем не архитектурный перфекционизм, а инженерные trade-offs. Идеального решения нет — важно, что кандидат думает про идемпотентность (batch_id как PK или upsert by unique key), conflict resolution (last-write-wins простой но теряет данные; vector clocks точный но сложный) и reliability (retry, backoff, partial-ack). Хорошие ответы: SQLite на устройстве с WAL, очередь батчей, сервер возвращает accepted/rejected по каждому элементу, клиент применяет дельту. Красные флаги: «просто пишем данные и всё», «конфликтов не будет», «сервер всегда прав».","timeBudgetMin":14,"scoringDimension":"system-design","weight":2,"mlSpecific":false},{"id":"AGT-01","title":"Агент по регламентам с эскалацией человеку","category":"agents","difficulty":"medium","format":"design","prompt":"Агент по запросу сотрудника находит ответ в регламентах компании. При неуверенности в ответе — эскалирует вопрос человеку.\n\nСпроектируй агента:\n- Из чего он состоит — компоненты, инструменты?\n- Что хранится в состоянии?\n- Где точка эскалации и как она определяется?\n- Как понять, что агент отвечает корректно?","examples":[],"buggyVersion":null,"referenceSolutions":[],"followUps":["Чем агент отличается от простой RAG-цепочки без цикла?","Как устроен цикл агента и когда он останавливается — защита от бесконечного цикла?","Как ограничить «радиус поражения» при ошибке агента?","Что с памятью — как агент восстанавливается после сбоя посередине диалога?","Когда мульти-агент оправдан, а когда это переусложнение?"],"greenSignals":["🟢 Чётко определяет состояние агента: history, confidence_score, escalation_reason, tool_calls","🟢 Думает про точку эскалации как измеримое условие — порог уверенности, тип запроса — а не просто «когда не уверен»","🟢 Предлагает метрику корректности: golden dataset, human eval, precision на тестовом сете вопрос-ответ","🟢 Рассуждает про failure modes без наводящих: петля, галлюцинация, неверная эскалация, missing tool"],"redSignals":["🔴 Агент как чёрный ящик: «отправляем запрос в LLM — получаем ответ»","🔴 Не думает про состояние между шагами и что будет при сбое","🔴 Эскалация не определена как измеримое условие — «когда агент почувствует»","🔴 Нет ответа на «как поймёшь, что отвечает корректно» — eval отсутствует"],"evaluationNotes":"Слушаем рассуждение, а не идеальную архитектуру. Ключевые маркеры зрелости: 1) состояние чётко определено и агент может быть восстановлен после сбоя; 2) эскалация — измеримое условие (confidence < threshold, ambiguous query type), а не «агент решит сам»; 3) есть ответ на «как меряем качество» — хотя бы golden set и human eval; 4) candidate думает про guardrails и failure modes. Стек не важен — LangGraph, собственная state machine, всё что угодно; важен принцип. Хорошие ответы включают: tool: search_regulations(query), escalate_to_human(reason), state: {messages, retrieved_docs, confidence}, stop condition: answer found OR confidence < threshold OR max_steps reached.","timeBudgetMin":14,"scoringDimension":"agents","weight":3,"mlSpecific":false},{"id":"AIP-01","title":"AI-augmented практика — карточка-чеклист сигналов","category":"ai-practice","difficulty":"easy","format":"discussion","prompt":"Карточка для разговора о практике использования AI-инструментов в ежедневной работе.\n\nВопросы для обсуждения:\n- Чем работаешь ежедневно? (Claude Code, Cursor, Codex, другие)\n- Подключал ли MCP / CLI-агентов к своему workflow?\n- Как валидируешь то, что нагенерила модель?\n- Где AI-инструментам не доверяешь и почему?\n- Как описываешь задачу агенту, чтобы получить нужный результат?","examples":[],"buggyVersion":null,"referenceSolutions":[],"followUps":["Приведи пример, где AI-инструмент тебя подвёл — как обнаружил и что сделал?","Как встраиваешь AI в code review или тестирование?","Когда ты не доверяешь выводу модели и перепроверяешь руками?"],"greenSignals":["🟢 Называет конкретные инструменты и объясняет, как встраивает их в реальный workflow","🟢 Сам валидирует вывод модели: запускает, пишет тесты, делает code review сгенерированного кода","🟢 Понимает границы: называет конкретные случаи, где AI-инструменту не доверяет и почему","🟢 Описывает практику промптинга: как формулирует задачу, итерирует, разбивает на подзадачи","🟢 Подключал MCP или CLI-агентов и может объяснить, зачем"],"redSignals":["🔴 AI-инструменты = «ChatGPT в браузере для вопросов»","🔴 Не валидирует вывод модели: «копирую код и если запустилось — ок»","🔴 Не понимает, что делает сгенерированный код — не может объяснить при вопросе","🔴 Не использует AI-инструменты в daily workflow или использует только как поиск"],"evaluationNotes":"Цель — отделить живую практику от «ChatGPT в браузере». Сильный кандидат: использует Claude Code / Cursor / Codex как copilot или агент, понимает что происходит под капотом, валидирует вывод, знает где AI ошибается. Слабый: только чат, не валидирует, не понимает сгенерированный код. Дополнительный сигнал: подключал MCP-серверы, настраивал CLI-агентов, участвовал в prompt engineering — это FDE-специфика.","timeBudgetMin":8,"scoringDimension":"ai-practice","weight":2,"mlSpecific":false}]</script>
+<script>
+(function () {
+    // Карточки задач: данные встроены в файл (снапшот банка задач), рендер по клику из таблицы.
+    var raw = document.getElementById('tasks-data').textContent;
+    var TASKS = {};
+    try { JSON.parse(raw).forEach(function (t) { TASKS[t.id] = t; }); } catch (e) { return; }
+
+    function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+    function inlineMd(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+    function mdLite(src) {
+        var lines = String(src || '').split('\n'), html = '', list = null;
+        function flush() { if (list) { html += '<ul class="probe-list">' + list.map(function (li) { return '<li>' + li + '</li>'; }).join('') + '</ul>'; list = null; } }
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].replace(/\s+$/, '');
+            if (/^\s*[-•*]\s+/.test(line)) { if (!list) list = []; list.push(inlineMd(line.replace(/^\s*[-•*]\s+/, ''))); continue; }
+            flush();
+            if (line.trim() === '') continue;
+            html += '<p>' + inlineMd(line) + '</p>';
+        }
+        flush();
+        return html;
+    }
+    function stripSignalEmoji(s) {
+        return String(s == null ? '' : s).replace(/[\u{1F7E2}\u{1F534}\u{FE0F}]\s*/gu, '');
+    }
+    function parseBugNotes(notes) {
+        var startRe = /(?:^|\s)1\)\s/;
+        if (!startRe.test(notes)) return null;
+        var firstIdx = notes.search(startRe);
+        var intro = notes.slice(0, firstIdx).trim();
+        var rest = notes.slice(firstIdx);
+        var parts = rest.split(/(?:^|\s)\d{1,2}\)\s+/).filter(Boolean);
+        if (!parts.length) return null;
+        var last = parts[parts.length - 1];
+        var tail = '';
+        var m = last.match(/\.\s+(?=[А-ЯA-Z])/);
+        if (m) {
+            var cut = last.indexOf(m[0]) + 1;
+            tail = last.slice(cut).trim();
+            parts[parts.length - 1] = last.slice(0, cut).trim();
+        }
+        return { intro: intro, items: parts, tail: tail };
+    }
+    function thresholdSplit(text) {
+        var sentences = String(text || '').split(/(?<=\.)\s+/);
+        var hit = [], rest = [];
+        sentences.forEach(function (s) {
+            if (/(наход|достаточн)/i.test(s) && /\d/.test(s)) hit.push(s); else rest.push(s);
+        });
+        return { threshold: hit.join(' ').trim(), rest: rest.join(' ').trim() };
+    }
+
+    var CAT = { algorithms: 'алгоритмы', 'python-swe': 'Python / SWE', debugging: 'отладка',
+        'system-design': 'system design', agents: 'агенты', 'ai-practice': 'AI-практика' };
+    var DIM = { cs: 'CS-фундамент', 'system-design': 'System design', agents: 'Проектирование агентов',
+        production: 'Прод-зрелость', 'ai-practice': 'AI-практика' };
+    var STOP = { cs: 1, agents: 1, production: 1 };
+
+    function render(t) {
+        var isDiscussion = t.format === 'discussion' || t.format === 'design';
+        var html = '';
+        html += '<div class="t-meta">' +
+            '<span class="t-chip">' + esc(t.id) + '</span>' +
+            '<span class="t-chip">' + esc(CAT[t.category] || t.category) + '</span>' +
+            '<span class="t-chip">' + esc(t.difficulty) + '</span>' +
+            '<span class="t-chip">' + esc(t.format) + ' · ' + t.timeBudgetMin + ' мин</span>' +
+            '<span class="t-chip' + (STOP[t.scoringDimension] ? ' veto-chip' : '') + '">' +
+                esc(DIM[t.scoringDimension] || t.scoringDimension) + ' ×' + t.weight +
+                (STOP[t.scoringDimension] ? ' · стоп-строка' : '') + '</span>' +
+            (t.mlSpecific ? '<span class="t-chip ml-chip">ML</span>' : '') +
+            '</div>';
+        html += '<h3>' + esc(t.title) + '</h3>';
+
+        if (t.mlSpecific) {
+            html += '<div class="warn-band"><strong>Требует ML-контекста.</strong> Без ML-опыта возьми соинтервьюера или другую задачу: без контекста не отличить верно найденные баги от случайных.</div>';
+        }
+        if (isDiscussion) {
+            html += '<div class="rubric-band">Это рубрика для оценки хода рассуждения, не чеклист дословных совпадений: другие термины и технологии с тем же смыслом засчитываются.</div>';
+        }
+
+        html += '<span class="lbl">Условие</span>' + mdLite(t.prompt);
+
+        if (t.examples && t.examples.length) {
+            html += '<span class="lbl">Примеры</span>';
+            t.examples.forEach(function (ex) {
+                html += '<div class="ex"><div><span class="exl">Вход</span><span class="exv">' + esc(ex.input) + '</span></div>' +
+                    '<div><span class="exl">Выход</span><span class="exv">' + esc(ex.output) + '</span></div>' +
+                    (ex.explanation ? '<div class="exp">' + esc(ex.explanation) + '</div>' : '') + '</div>';
+            });
+        }
+
+        if (t.buggyVersion != null) {
+            html += '<span class="lbl">Код с дефектами - его видит кандидат</span><pre><code>' + esc(t.buggyVersion) + '</code></pre>';
+        }
+
+        if (t.referenceSolutions && t.referenceSolutions.length) {
+            html += '<span class="lbl">Эталонные решения</span>';
+            t.referenceSolutions.forEach(function (r) {
+                html += '<div class="ref-h">' + esc(r.label) + (r.complexity ? '<span class="cx">' + esc(r.complexity) + '</span>' : '') + '</div>';
+                if (r.code) html += '<pre><code>' + esc(r.code) + '</code></pre>';
+                if (r.notes) html += '<p class="mut">' + esc(r.notes) + '</p>';
+            });
+        }
+
+        if (t.evaluationNotes) {
+            var bugs = t.buggyVersion != null ? parseBugNotes(t.evaluationNotes) : null;
+            if (bugs) {
+                var th = thresholdSplit(bugs.tail || '');
+                if (th.threshold) html += '<div class="thr-band">Порог засчитывания: ' + esc(th.threshold) + '</div>';
+                html += '<span class="lbl">Чеклист багов' + (bugs.intro ? ' · ' + esc(bugs.intro.replace(/:$/, '')) : '') + '</span>';
+                html += '<ul class="bugcheck">' + bugs.items.map(function (b) { return '<li>' + inlineMd(b) + '</li>'; }).join('') + '</ul>';
+                if (th.rest) html += '<p class="mut">' + inlineMd(th.rest) + '</p>';
+            } else {
+                html += '<span class="lbl">Критерии оценки и принятые варианты</span>' + mdLite(t.evaluationNotes);
+            }
+        }
+
+        if ((t.greenSignals && t.greenSignals.length) || (t.redSignals && t.redSignals.length)) {
+            html += '<span class="lbl">Сигналы</span><div class="task-signals">';
+            html += '<div class="s g"><b>Берём</b><ul>' +
+                (t.greenSignals || []).map(function (s) { return '<li>' + esc(stripSignalEmoji(s)) + '</li>'; }).join('') + '</ul></div>';
+            html += '<div class="s r"><b>Стоп</b><ul>' +
+                (t.redSignals || []).map(function (s) { return '<li>' + esc(stripSignalEmoji(s)) + '</li>'; }).join('') + '</ul></div>';
+            html += '</div>';
+        }
+
+        if (t.followUps && t.followUps.length) {
+            html += '<span class="lbl">Follow-up вопросы</span><ul class="probe-list">' +
+                t.followUps.map(function (f) { return '<li>' + inlineMd(f) + '</li>'; }).join('') + '</ul>';
+        }
+        return html;
+    }
+
+    var backdrop = document.getElementById('tmodal-backdrop');
+    var content = document.getElementById('tmodal-content');
+    var closeBtn = document.getElementById('tmodal-close');
+    var lastTrigger = null;
+
+    function openTask(id, trigger) {
+        var t = TASKS[id];
+        if (!t) return;
+        lastTrigger = trigger || null;
+        content.innerHTML = render(t);
+        backdrop.classList.add('open');
+        document.body.classList.add('tmodal-lock');
+        backdrop.scrollTop = 0;
+        closeBtn.focus();
+    }
+    function closeModal() {
+        backdrop.classList.remove('open');
+        document.body.classList.remove('tmodal-lock');
+        if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+    }
+
+    document.querySelectorAll('a.task-link').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            openTask(a.getAttribute('data-task'), a);
+        });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
     });
 })();
 </script>
