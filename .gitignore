@@ -11,3 +11,6 @@ tests/agent-evals/last-run.json
 
 # персональные локальные настройки Claude Code (не общие для команды)
 .claude/settings.local.json
+
+# дистрибутив платформы (собирается по запросу, не хранится в git)
+fde-interview-platform.zip
