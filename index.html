@@ -3,22 +3,93 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Тест-скилл - онбординг</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Интервью FDE — навигация по репозиторию</title>
+  <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: "X5 Sans", system-ui, sans-serif;
+      color: var(--x5-ink);
+      background: var(--x5-surface);
+      font-size: var(--fs-body);
+      line-height: 1.5;
+      padding: 48px 24px 120px;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    h1 { font-size: var(--fs-h3); font-weight: 500; margin: 0 0 8px; }
+    .lede { color: var(--x5-ink-muted); margin: 0 0 40px; max-width: 60ch; }
+    h2 {
+      font-size: var(--fs-caption); font-weight: 500; color: var(--x5-ink-quiet);
+      letter-spacing: .02em; margin: 32px 0 10px;
+    }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+    a.card {
+      display: block; text-decoration: none; color: inherit;
+      border: 1px solid var(--x5-divider); border-radius: var(--radius-card);
+      padding: 18px 20px;
+      transition: background var(--dur-fast) var(--ease-standard);
+    }
+    a.card:hover { background: var(--x5-surface-soft); }
+    a.card .t { font-weight: 500; margin-bottom: 4px; }
+    a.card .d { font-size: var(--fs-caption); color: var(--x5-ink-muted); }
+    a.card .f { font-family: var(--font-mono); font-size: 11px; color: var(--x5-ink-quiet); display: block; margin-bottom: 8px; }
+    .note {
+      margin-top: 40px; background: var(--x5-surface-soft); border: 1px solid var(--x5-divider);
+      border-radius: var(--radius-sm); padding: 12px 16px;
+      font-size: var(--fs-caption); color: var(--x5-ink-muted); max-width: 70ch;
+    }
+    .note code { font-family: var(--font-mono); background: var(--x5-surface); padding: 1px 5px; border-radius: 4px; }
+    .brand-logo { position: fixed; left: 24px; bottom: 16px; height: 22px; opacity: .9; pointer-events: none; }
+    :focus-visible { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+  </style>
 </head>
 <body>
-  <p>
-    И результат делай сразу в формате HTML-страницы, чтобы ты или другой собеседующий мог по ней идти.
-    Потом все задеплоим в стиле нашего корпоративного онбординга, который есть. Все туда положим: задачки,
-    ответы и так далее.
-  </p>
+  <div class="wrap">
+    <h1>Интервью FDE — материалы технического этапа</h1>
+    <p class="lede">Платформа для проведения технического интервью Forward Deployed Engineer (этап 2
+    из 3) и хендбуки интервьюера. Что это и как запускать — в <a href="README.md">README.md</a>.</p>
 
-  <p>
-    Чтобы человек открывал, листал лендинг и по нему собеседовал. Чтобы там были какие-то кусочки кода,
-    может быть какой-то запуск, чтобы был на стороне клиента.
-  </p>
+    <h2>Платформа интервью — две вкладки одного браузера</h2>
+    <div class="cards">
+      <a class="card" href="platform/interviewer.html">
+        <span class="f">platform/interviewer.html</span>
+        <span class="t">Пульт интервьюера</span>
+        <span class="d">Банк задач, таймер с таймбоксами, зеркало кода кандидата, оценочный лист GO/NO-GO</span>
+      </a>
+      <a class="card" href="platform/candidate.html">
+        <span class="f">platform/candidate.html</span>
+        <span class="t">Страница кандидата</span>
+        <span class="d">Условие задачи и редактор кода — единственная вкладка, которую видит кандидат</span>
+      </a>
+      <a class="card" href="platform/guide.html">
+        <span class="f">platform/guide.html</span>
+        <span class="t">Гайд интервьюера</span>
+        <span class="d">Флоу этапа, пять зон, памятка решений всех задач — только для интервьюера</span>
+      </a>
+    </div>
 
-  <p>
-    Делай сразу через тест-скилл и дизайн-систему, которая есть в онбординге.
-  </p>
+    <h2>Хендбуки — самодостаточные документы, можно пересылать файлом</h2>
+    <div class="cards">
+      <a class="card" href="handbooks/interview-stage-2-handbook.html">
+        <span class="f">handbooks/interview-stage-2-handbook.html</span>
+        <span class="t">Этап 02 — техническое</span>
+        <span class="d">Метод, тайминг, зоны, банк задач с решениями во всплывающих карточках, скоркарта</span>
+      </a>
+      <a class="card" href="handbooks/interview-stage-3-handbook.html">
+        <span class="f">handbooks/interview-stage-3-handbook.html</span>
+        <span class="t">Этап 03 — финал</span>
+        <span class="d">Зрелость, ownership, системное мышление — интервью с лидом команды</span>
+      </a>
+    </div>
+
+    <div class="note">
+      Страницы платформы требуют http-сервера (синхронизация вкладок не работает с file://):
+      в корне репозитория выполните <code>python3 -m http.server 8000</code> и откройте
+      <code>http://localhost:8000</code>. Хендбуки работают и без сервера, двойным кликом.
+    </div>
+  </div>
+  <img class="brand-logo" src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
 </body>
 </html>

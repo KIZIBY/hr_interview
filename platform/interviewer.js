@@ -534,7 +534,7 @@
   function showLoadError() {
     el.taskEmpty.innerHTML = '<div class="notice">Не удалось загрузить <code>tasks.json</code>. ' +
       'Откройте платформу по http, а не как файл: в папке проекта запустите ' +
-      '<code>python3 -m http.server 8000</code> и зайдите на <code>http://localhost:8000/interviewer.html</code>.</div>';
+      '<code>python3 -m http.server 8000</code> и зайдите на <code>http://localhost:8000/platform/interviewer.html</code>.</div>';
   }
 
   fetch('tasks.json')

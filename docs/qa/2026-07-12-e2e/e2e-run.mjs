@@ -5,11 +5,11 @@ import fs from 'fs';
 const req = createRequire('/Users/nikolaykoreshkov/.nvm/versions/node/v22.22.2/lib/node_modules/@playwright/cli/node_modules/x');
 const { chromium } = req('playwright');
 
-const BASE = 'http://localhost:8000';
+const BASE = 'http://localhost:8000/platform';
 const SHOTS = '/tmp/hri-qa';
 fs.mkdirSync(SHOTS, { recursive: true });
 
-const tasksData = JSON.parse(fs.readFileSync('/Users/nikolaykoreshkov/Documents/Claude/Projects/hr_interview/tasks.json', 'utf8')).tasks;
+const tasksData = JSON.parse(fs.readFileSync('/Users/nikolaykoreshkov/Documents/Claude/Projects/hr_interview/platform/tasks.json', 'utf8')).tasks;
 const byId = Object.fromEntries(tasksData.map(t => [t.id, t]));
 const firstCode = tasksData.find(t => t.format === 'code' && !t.buggyVersion);           // ALG-01 ожидаемо
 const secondCode = tasksData.find(t => t.format === 'code' && !t.buggyVersion && t.id !== firstCode.id);

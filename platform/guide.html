@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Гайд интервьюера — технический этап №2 · FDE</title>
-  <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css" />
+  <link rel="stylesheet" href="../X5_Group_Design_System/colors_and_type.css" />
   <style>
     /* Дайлы taste-skill: VARIANCE 3 / MOTION 2 / DENSITY 5 — внутренний справочный документ.
        Визуальный язык — X5 Group DS (токены из colors_and_type.css); при конфликте побеждает X5. */
@@ -475,7 +475,7 @@
     </main>
   </div>
 
-  <img class="brand-logo" src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
+  <img class="brand-logo" src="../X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
 
   <script>
   (function () {
@@ -650,7 +650,7 @@
         console.error('guide: tasks.json load failed:', err);
         cardsEl.innerHTML = '<div class="card-error">Не удалось загрузить <code>tasks.json</code> — памятка по задачам недоступна. ' +
           'Откройте гайд по http, а не как файл: в папке проекта запустите <code>python3 -m http.server 8000</code> ' +
-          'и зайдите на <code>http://localhost:8000/guide.html</code>. Остальные разделы гайда работают.</div>';
+          'и зайдите на <code>http://localhost:8000/platform/guide.html</code>. Остальные разделы гайда работают.</div>';
         section.removeAttribute('aria-busy');
       });
 

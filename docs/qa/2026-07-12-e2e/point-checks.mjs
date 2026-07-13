@@ -7,7 +7,7 @@ import { createRequire } from 'module';
 const req = createRequire('/Users/nikolaykoreshkov/.nvm/versions/node/v22.22.2/lib/node_modules/@playwright/cli/node_modules/x');
 const { chromium } = req('playwright');
 
-const BASE = 'http://localhost:8000';
+const BASE = 'http://localhost:8000/platform';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const results = [];
 async function check(name, fn) {

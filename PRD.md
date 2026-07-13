@@ -48,7 +48,7 @@
 
 ### Основной флоу — 60 минут
 
-1. Интервьюер запускает локальный сервер (`python -m http.server`), открывает `interviewer.html` и `candidate.html`, вторую вкладку выводит кандидату.
+1. Интервьюер запускает локальный сервер из корня репозитория (`python3 -m http.server 8000`), открывает `platform/interviewer.html` и `platform/candidate.html` (`http://localhost:8000/platform/...`), вторую вкладку выводит кандидату.
 2. Панель показывает «кандидат подключён». Интервьюер нажимает «Старт» — пошёл таймер, подсвечивается сегмент 0–5.
 3. **0–5** — разогрев, последний агентский проект кандидата. Задачи не выбраны, кандидат видит экран ожидания.
 4. **5–18** — фундамент + разбор проекта. Интервьюер открывает карточки теории (PY-01, PY-02) на своей панели — это разговорные карточки, кандидату их пушить не обязательно.
@@ -94,15 +94,18 @@ Deep-research по практикам технических собеседов�
 
 ```
 hr_interview/
-├── interviewer.html          — панель интервьюера (standalone-страница)
-├── candidate.html            — экран кандидата (standalone-страница)
-├── guide.html                — гайд интервьюера и памятка решений (standalone-страница)
-├── tasks.json                — банк задач v1 (единственный источник контента)
+├── index.html                    — навигационный хаб (открывается на localhost:8000)
+├── platform/                     — платформа интервью (этап 2)
+│   ├── interviewer.html          — панель интервьюера (standalone-страница)
+│   ├── candidate.html            — экран кандидата (standalone-страница)
+│   ├── guide.html                — гайд интервьюера и памятка решений (standalone-страница)
+│   ├── interviewer.js · candidate.js · sync.js — логика страниц и синхронизации
+│   └── tasks.json                — банк задач v1 (единственный источник контента)
 ├── PRD.md · DESIGN.md
-└── X5_Group_Design_System/   — токены, шрифты, логотипы (уже в репозитории)
+└── X5_Group_Design_System/       — токены, шрифты, логотипы (уже в репозитории)
 ```
 
-Обе страницы импортируют `X5_Group_Design_System/colors_and_type.css` первым и грузят `tasks.json` через `fetch` — это ещё одна причина раздачи по http (fetch с `file://` блокируется, см. раздел 9).
+Все три страницы лежат в `platform/` и импортируют `../X5_Group_Design_System/colors_and_type.css` первым; `tasks.json` они грузят через `fetch` относительно себя (`platform/tasks.json`) — это ещё одна причина раздачи по http (fetch с `file://` блокируется, см. раздел 9).
 
 ### Что показывает каждая страница
 
@@ -457,7 +460,7 @@ type TimeboxSegment = {
 
 - [ ] AC-1. WHEN interviewer.html loads, THE SYSTEM SHALL fetch `tasks.json` and render the task list grouped by category, in bank order.
 - [ ] AC-2. WHILE `tasks.json` is loading (>200 ms), THE SYSTEM SHALL show a skeleton list of 6 placeholder rows.
-- [ ] AC-3. IF the fetch fails, THEN THE SYSTEM SHALL show an error state with the exact reason hint «страница должна быть открыта по http — python -m http.server» and a retry button.
+- [ ] AC-3. IF the fetch fails, THEN THE SYSTEM SHALL show an error state with the exact reason hint «страница должна быть открыта по http — python3 -m http.server 8000, затем http://localhost:8000/platform/interviewer.html» and a retry button.
 - [ ] AC-4. WHEN the user changes the category or difficulty filter, THE SYSTEM SHALL filter the list client-side within 100 ms; IF no tasks match, THEN THE SYSTEM SHALL show an empty state «нет задач под фильтр».
 - [ ] AC-5. WHEN the user clicks a task row, THE SYSTEM SHALL open its details in the main area (US-03) WITHOUT pushing it to the candidate.
 - [ ] AC-6. WHEN the user clicks «Показать кандидату», THE SYSTEM SHALL broadcast `SELECT_TASK`, mark the row with badge «у кандидата», and add the id to `sentTaskIds`.
@@ -915,7 +918,7 @@ type CandidatePageState = {
 ## 9. Нефункциональные требования
 
 1. **Статика без бэкенда.** Два HTML-файла + JSON; никаких сборщиков, npm-зависимостей и серверного кода. Открываются из любой раздачи статики.
-2. **Ограничение file:// (внести в инструкцию запуска).** BroadcastChannel и `storage`-события не работают между вкладками, открытыми как `file://` — каждая такая вкладка имеет opaque origin, и вкладки не считаются одним origin. `fetch('tasks.json')` c `file://` также блокируется. Синхронизация требует раздачи обеих страниц с одного origin по http(s): локально — `python -m http.server` из корня репозитория (страницы на `http://localhost:8000/...`), в проде — деплой статикой в общий набор онбординг-страниц. IF the pages are opened via `file://`, THEN each page SHALL detect it (`location.protocol === 'file:'`) and show a blocking notice with the launch command instead of silently failing.
+2. **Ограничение file:// (внести в инструкцию запуска).** BroadcastChannel и `storage`-события не работают между вкладками, открытыми как `file://` — каждая такая вкладка имеет opaque origin, и вкладки не считаются одним origin. `fetch('tasks.json')` c `file://` также блокируется. Синхронизация требует раздачи обеих страниц с одного origin по http(s): локально — `python3 -m http.server 8000` из корня репозитория (страницы на `http://localhost:8000/platform/...`), в проде — деплой статикой в общий набор онбординг-страниц. IF the pages are opened via `file://`, THEN each page SHALL detect it (`location.protocol === 'file:'`) and show a blocking notice with the launch command instead of silently failing.
 3. **Браузеры.** Основной сценарий — десктопные Chromium/Firefox/Safari последних двух мажорных версий. Mobile — best-effort: страницы не ломаются и читаемы, но сценарий интервью — десктопный.
 4. **Производительность.** Зеркало кода — debounce 300 ms, полезная нагрузка ≤ 50 000 символов; обновление зеркала не вызывает layout shift вне блока кода; `tasks.json` v1 ≤ 200 KB.
 5. **Доступность.** Семантический HTML, ARIA-паттерны по разделу 8, контраст ≥ 4.5:1 для текста, полная клавиатурная навигация, `prefers-reduced-motion` учитывается на обеих страницах.

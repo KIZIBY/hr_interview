@@ -7,8 +7,8 @@ import fs from 'fs';
 const req = createRequire('/Users/nikolaykoreshkov/.nvm/versions/node/v22.22.2/lib/node_modules/@playwright/cli/node_modules/x');
 const { chromium } = req('playwright');
 
-const BASE = 'http://localhost:8000';
-const TASKS_PATH = '/Users/nikolaykoreshkov/Documents/Claude/Projects/hr_interview/tasks.json';
+const BASE = 'http://localhost:8000/platform';
+const TASKS_PATH = '/Users/nikolaykoreshkov/Documents/Claude/Projects/hr_interview/platform/tasks.json';
 
 const tasksData = JSON.parse(fs.readFileSync(TASKS_PATH, 'utf8')).tasks;
 

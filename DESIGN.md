@@ -1,13 +1,13 @@
 # DESIGN.md — визуальный контракт микро-платформы интервью
 
-Относится к: `interviewer.html`, `candidate.html`, `guide.html` (см. `PRD.md`).
+Относится к: `platform/interviewer.html`, `platform/candidate.html`, `platform/guide.html` (см. `PRD.md`).
 
 ## 1. Источник истины
 
-Дизайн-система — **X5 Group Design System** из этого репозитория: `X5_Group_Design_System/README.md` (канон правил, при конфликте выигрывает он) + `X5_Group_Design_System/SKILL.md`. Все токены — из `X5_Group_Design_System/colors_and_type.css`; этот файл **импортируется первым** на каждой странице:
+Дизайн-система — **X5 Group Design System** из этого репозитория: `X5_Group_Design_System/README.md` (канон правил, при конфликте выигрывает он) + `X5_Group_Design_System/SKILL.md`. Все токены — из `X5_Group_Design_System/colors_and_type.css`; этот файл **импортируется первым** на каждой странице (страницы лежат в `platform/`, поэтому путь относительный — `../`):
 
 ```html
-<link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css">
+<link rel="stylesheet" href="../X5_Group_Design_System/colors_and_type.css">
 ```
 
 Hex-значения в коде страниц не хардкодятся — только CSS-переменные. Шрифты — из `X5_Group_Design_System/fonts/` (подключены через `@font-face` в том же CSS), логотипы — из `X5_Group_Design_System/assets/logos/`. Образцы вёрстки — `X5_Group_Design_System/slides/` и `preview/*.html`.
