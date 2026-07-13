@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Интервью FDE — навигация по репозиторию</title>
+  <title>Интервью FDE — вводная</title>
   <link rel="stylesheet" href="X5_Group_Design_System/colors_and_type.css" />
   <style>
     * { box-sizing: border-box; }
@@ -15,81 +15,176 @@
       background: var(--x5-surface);
       font-size: var(--fs-body);
       line-height: 1.5;
-      padding: 48px 24px 120px;
+      padding: 56px 24px 120px;
     }
-    .wrap { max-width: 860px; margin: 0 auto; }
-    h1 { font-size: var(--fs-h3); font-weight: 500; margin: 0 0 8px; }
-    .lede { color: var(--x5-ink-muted); margin: 0 0 40px; max-width: 60ch; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: var(--fs-h3); font-weight: 500; margin: 0 0 12px; }
+    .lede { color: var(--x5-ink-muted); margin: 0 0 44px; max-width: 58ch; }
     h2 {
       font-size: var(--fs-caption); font-weight: 500; color: var(--x5-ink-quiet);
-      letter-spacing: .02em; margin: 32px 0 10px;
+      letter-spacing: .02em; margin: 36px 0 12px;
     }
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+    :focus-visible { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+
+    /* платформа: копируемые ссылки */
+    .copy-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      border: 1px solid var(--x5-divider); border-radius: var(--radius-card);
+      padding: 16px 20px; margin-bottom: 10px;
+    }
+    .copy-row .meta { width: 240px; flex-shrink: 0; }
+    @media (max-width: 640px) { .copy-row .meta { width: 100%; } }
+    .copy-row .t { font-weight: 500; }
+    .copy-row .d { font-size: var(--fs-caption); color: var(--x5-ink-muted); margin-top: 2px; }
+    button.copy-link {
+      font: inherit; font-family: var(--font-mono); font-size: var(--fs-caption);
+      color: var(--x5-ink); background: var(--x5-surface-soft);
+      border: 1px solid var(--x5-divider); border-radius: var(--radius-sm);
+      padding: 8px 12px; cursor: pointer; text-align: left;
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
+    }
+    button.copy-link:hover { background: var(--x5-surface-alt); border-color: var(--x5-divider-strong); }
+    button.copy-link.copied { border-color: var(--x5-success); }
+    .copy-state {
+      font-size: var(--fs-caption); color: var(--x5-ink-quiet);
+      min-width: 96px;
+    }
+    .copy-state.on { color: var(--x5-success); }
+    a.open-link {
+      font-size: var(--fs-caption); color: var(--x5-ink-muted);
+      text-decoration: none; border-bottom: 1px dashed var(--x5-divider-strong);
+      white-space: nowrap;
+    }
+    a.open-link:hover { color: var(--x5-ink); }
+
+    /* документы: обычные ссылки-карточки */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
     a.card {
       display: block; text-decoration: none; color: inherit;
       border: 1px solid var(--x5-divider); border-radius: var(--radius-card);
-      padding: 18px 20px;
+      padding: 16px 18px;
       transition: background var(--dur-fast) var(--ease-standard);
     }
     a.card:hover { background: var(--x5-surface-soft); }
-    a.card .t { font-weight: 500; margin-bottom: 4px; }
+    a.card .t { font-weight: 500; margin-bottom: 3px; }
     a.card .d { font-size: var(--fs-caption); color: var(--x5-ink-muted); }
-    a.card .f { font-family: var(--font-mono); font-size: 11px; color: var(--x5-ink-quiet); display: block; margin-bottom: 8px; }
+
     .note {
       margin-top: 40px; background: var(--x5-surface-soft); border: 1px solid var(--x5-divider);
       border-radius: var(--radius-sm); padding: 12px 16px;
-      font-size: var(--fs-caption); color: var(--x5-ink-muted); max-width: 70ch;
+      font-size: var(--fs-caption); color: var(--x5-ink-muted); max-width: 66ch;
     }
     .note code { font-family: var(--font-mono); background: var(--x5-surface); padding: 1px 5px; border-radius: 4px; }
     .brand-logo { position: fixed; left: 24px; bottom: 16px; height: 22px; opacity: .9; pointer-events: none; }
-    :focus-visible { outline: 2px solid var(--x5-ink); outline-offset: 2px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Интервью FDE — материалы технического этапа</h1>
-    <p class="lede">Платформа для проведения технического интервью Forward Deployed Engineer (этап 2
-    из 3) и хендбуки интервьюера. Что это и как запускать — в <a href="README.md">README.md</a>.</p>
+    <h1>Техническое интервью FDE — этап 2</h1>
+    <p class="lede">60 минут: разговор, живой код и мини-дизайн. Интервьюер ведёт сессию с пульта,
+    кандидат работает на своей странице — вкладки синхронизируются сами. Подробности —
+    в <a href="README.md">README.md</a>.</p>
 
-    <h2>Платформа интервью — две вкладки одного браузера</h2>
-    <div class="cards">
-      <a class="card" href="platform/interviewer.html">
-        <span class="f">platform/interviewer.html</span>
-        <span class="t">Пульт интервьюера</span>
-        <span class="d">Банк задач, таймер с таймбоксами, зеркало кода кандидата, оценочный лист GO/NO-GO</span>
-      </a>
-      <a class="card" href="platform/candidate.html">
-        <span class="f">platform/candidate.html</span>
-        <span class="t">Страница кандидата</span>
-        <span class="d">Условие задачи и редактор кода — единственная вкладка, которую видит кандидат</span>
-      </a>
-      <a class="card" href="platform/guide.html">
-        <span class="f">platform/guide.html</span>
-        <span class="t">Гайд интервьюера</span>
-        <span class="d">Флоу этапа, пять зон, памятка решений всех задач — только для интервьюера</span>
-      </a>
+    <h2>Платформа — ссылки копируются по клику</h2>
+    <div class="copy-row">
+      <div class="meta">
+        <div class="t">Пульт интервьюера</div>
+        <div class="d">банк задач, таймер, зеркало кода, оценка</div>
+      </div>
+      <button class="copy-link" type="button" data-path="platform/interviewer.html" title="Скопировать ссылку"></button>
+      <span class="copy-state" aria-live="polite"></span>
+      <a class="open-link" href="platform/interviewer.html">открыть</a>
+    </div>
+    <div class="copy-row">
+      <div class="meta">
+        <div class="t">Страница кандидата</div>
+        <div class="d">условие и редактор — отправьте эту ссылку кандидату</div>
+      </div>
+      <button class="copy-link" type="button" data-path="platform/candidate.html" title="Скопировать ссылку"></button>
+      <span class="copy-state" aria-live="polite"></span>
+      <a class="open-link" href="platform/candidate.html">открыть</a>
     </div>
 
-    <h2>Хендбуки — самодостаточные документы, можно пересылать файлом</h2>
+    <h2>Документы интервьюера</h2>
     <div class="cards">
-      <a class="card" href="handbooks/interview-stage-2-handbook.html">
-        <span class="f">handbooks/interview-stage-2-handbook.html</span>
-        <span class="t">Этап 02 — техническое</span>
-        <span class="d">Метод, тайминг, зоны, банк задач с решениями во всплывающих карточках, скоркарта</span>
+      <a class="card" href="platform/guide.html" target="_blank" rel="noopener">
+        <div class="t">Гайд интервьюера</div>
+        <div class="d">флоу этапа, пять зон, памятка решений задач</div>
       </a>
-      <a class="card" href="handbooks/interview-stage-3-handbook.html">
-        <span class="f">handbooks/interview-stage-3-handbook.html</span>
-        <span class="t">Этап 03 — финал</span>
-        <span class="d">Зрелость, ownership, системное мышление — интервью с лидом команды</span>
+      <a class="card" href="handbooks/interview-stage-2-handbook.html" target="_blank" rel="noopener">
+        <div class="t">Хендбук — этап 02</div>
+        <div class="d">метод, тайминг, банк задач с решениями, скоркарта</div>
+      </a>
+      <a class="card" href="handbooks/interview-stage-3-handbook.html" target="_blank" rel="noopener">
+        <div class="t">Хендбук — этап 03</div>
+        <div class="d">финал с лидом: зрелость, ownership, ценности</div>
       </a>
     </div>
 
     <div class="note">
-      Страницы платформы требуют http-сервера (синхронизация вкладок не работает с file://):
-      в корне репозитория выполните <code>python3 -m http.server 8000</code> и откройте
-      <code>http://localhost:8000</code>. Хендбуки работают и без сервера, двойным кликом.
+      Страницы платформы работают через локальный http-сервер: в корне репозитория
+      выполните <code>python3 -m http.server 8000</code>. Гайд и хендбуки — только
+      для интервьюера, кандидату уходит одна ссылка — на его страницу.
     </div>
   </div>
   <img class="brand-logo" src="X5_Group_Design_System/assets/logos/x5-logo-dark.svg" alt="" />
+
+  <script>
+  (function () {
+    'use strict';
+
+    function fullUrl(path) {
+      if (location.protocol === 'file:') return path;
+      var base = location.href.replace(/[^/]*$/, '');
+      return base + path;
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise(function (resolve, reject) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy') ? resolve() : reject(new Error('execCommand')); }
+        catch (e) { reject(e); }
+        document.body.removeChild(ta);
+      });
+    }
+
+    document.querySelectorAll('button.copy-link').forEach(function (btn) {
+      var url = fullUrl(btn.getAttribute('data-path'));
+      btn.textContent = url;
+      btn.setAttribute('aria-label', 'Скопировать ссылку ' + url);
+      var state = btn.parentNode.querySelector('.copy-state');
+      var timer = null;
+
+      btn.addEventListener('click', function () {
+        copyText(url).then(function () {
+          btn.classList.add('copied');
+          state.textContent = 'скопировано';
+          state.classList.add('on');
+        }).catch(function () {
+          state.textContent = 'не удалось — выделите вручную';
+          state.classList.remove('on');
+        }).finally(function () {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(function () {
+            btn.classList.remove('copied');
+            state.textContent = '';
+            state.classList.remove('on');
+          }, 2000);
+        });
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
